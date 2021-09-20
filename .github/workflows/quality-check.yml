@@ -1,4 +1,4 @@
-name: actions/check-formatting
+name: quality-check
 
 on:
   - pull_request
@@ -20,4 +20,4 @@ jobs:
         with:
           flutter-version: '2.2.2'
       - name: Verify code quality
-        run: flutter format ./lib --set-exit-if-changed --line-length 500
+        run: .github/workflows/quality-check.sh
