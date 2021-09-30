@@ -1,3 +1,6 @@
 {
-  "appTitle": "rescado"
+  "appTitle": "Rescado",
+  "tabbarDiscover": "Discover",
+  "tabbarSwipe": "Swipe",
+  "tabbarProfile": "Profile"
 }
