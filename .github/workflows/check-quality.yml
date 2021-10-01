@@ -12,21 +12,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
     steps:
       - name: Setup Java 12
+        id: setup-java
         uses: actions/setup-java@v2.3.1
         with:
           distribution: 'adopt'
           java-version: '12'
       - name: Setup Flutter 2.5.2
+        id: setup-flutter
         uses: subosito/flutter-action@v1.5.3
         with:
           channel: 'stable'
           flutter-version: '2.5.2'
       - name: Checkout codebase
+        id: checkout-codebase
         uses: actions/checkout@v2.3.4
       - name: Fetch dependencies
+        id: fetch-dependencies
         run: flutter pub get
       - name: Verify code quality
+        id: verify-quality
         run: .github/workflows/check-quality.sh
+      - name: Send status to Slack
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+        if: always()
