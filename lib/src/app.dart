@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rescado/src/theme.dart';
-
-import 'views/sample_item_details_view.dart';
-import 'views/main_view.dart';
-import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
+import 'package:rescado/src/views/main_view.dart';
+import 'package:rescado/src/settings/settings_controller.dart';
+import 'package:rescado/src/settings/settings_view.dart';
 
 class RescadoApp extends StatelessWidget {
   const RescadoApp({

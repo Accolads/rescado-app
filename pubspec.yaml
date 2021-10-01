@@ -26,6 +26,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/photos/
 
   fonts:
    - family: M+ Rounded 1c
