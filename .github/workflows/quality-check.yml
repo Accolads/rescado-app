@@ -15,9 +15,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '12.x'
-      - name: Setup Flutter 2.2.2
-        uses: subosito/flutter-action@v1
+      - name: Setup Flutter 2.5
+        uses: subosito/flutter-action@v1.5.2
         with:
-          flutter-version: '2.2.2'
+          flutter-version: '2.5.x'
       - name: Verify code quality
         run: .github/workflows/quality-check.sh
