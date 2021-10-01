@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rescado/src/widgets/big_button.dart';
 
 class BigCard extends StatelessWidget {
+  final String imageUrl;
   final String mainLabel;
   final String subLabel;
+  final Function likeAction;
+  final Function dislikeAction;
 
   const BigCard({
     Key? key,
+    required this.imageUrl,
     required this.mainLabel,
     required this.subLabel,
+    required this.likeAction,
+    required this.dislikeAction,
   }) : super(key: key);
 
   @override
@@ -33,17 +41,17 @@ class BigCard extends StatelessWidget {
             child: Stack(
               alignment: AlignmentDirectional.bottomStart,
               children: [
-                const SizedBox(
+                SizedBox(
                   width: double.infinity,
                   height: 400.0,
                   child: Image(
-                    image: AssetImage('assets/photos/loebas.jpg'),
+                    image: NetworkImage(imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                    top: 30.0,
+                    top: 33.0,
                     right: 20.0,
                     bottom: 20.0,
                     left: 20.0,
@@ -78,12 +86,25 @@ class BigCard extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Text('❌'),
-              Text('❤️'),
-            ],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                BigButton(
+                  color: const Color(0xFFEE575F),
+                  icon: FontAwesomeIcons.times,
+                  altText: 'Nope!', // TODO i18n
+                  onPressed: dislikeAction,
+                ),
+                BigButton(
+                  color: const Color(0xFFEE575F),
+                  icon: FontAwesomeIcons.solidHeart,
+                  altText: 'Like!', // TODO i18n,
+                  onPressed: likeAction,
+                ),
+              ],
+            ),
           )
         ],
       ),
