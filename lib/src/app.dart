@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:rescado/src/theme.dart';
+import 'package:rescado/config/themes.dart';
+import 'package:rescado/src/views/animal_detail_view.dart';
 import 'package:rescado/src/views/main_view.dart';
 import 'package:rescado/src/settings/settings_controller.dart';
-import 'package:rescado/src/settings/settings_view.dart';
 
 class RescadoApp extends StatelessWidget {
   const RescadoApp({
@@ -35,19 +35,10 @@ class RescadoApp extends StatelessWidget {
           theme: RescadoTheme.light,
           darkTheme: RescadoTheme.dark,
           themeMode: settingsController.themeMode,
-          onGenerateRoute: (RouteSettings routeSettings) {
-            return MaterialPageRoute<void>(
-              settings: routeSettings,
-              builder: (BuildContext context) {
-                switch (routeSettings.name) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case MainView.routeName:
-                  default:
-                    return const MainView();
-                }
-              },
-            );
+          home: const MainView(),
+          routes: {
+            MainView.id: (context) => const MainView(),
+            AnimalDetailView.id: (context) => const AnimalDetailView(),
           },
         );
       },

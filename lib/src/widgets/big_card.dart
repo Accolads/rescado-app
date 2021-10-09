@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rescado/config/constants.dart';
 import 'package:rescado/src/widgets/big_button.dart';
 
 class BigCard extends StatelessWidget {
   final String imageUrl;
   final String mainLabel;
   final String subLabel;
-  final Function likeAction;
-  final Function dislikeAction;
+  final Function onLike;
+  final Function onDislike;
+  final Function onTap;
 
   const BigCard({
     Key? key,
     required this.imageUrl,
     required this.mainLabel,
     required this.subLabel,
-    required this.likeAction,
-    required this.dislikeAction,
+    required this.onLike,
+    required this.onDislike,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -36,54 +39,60 @@ class BigCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: Stack(
-              alignment: AlignmentDirectional.bottomStart,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 400.0,
-                  child: Image(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(
-                    top: 33.0,
-                    right: 20.0,
-                    bottom: 20.0,
-                    left: 20.0,
-                  ),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: <Color>[
-                        // TODO hardcoded colors! Won't follow theme!
-                        Color(0x00000000),
-                        Color(0x80000000),
-                        Color(0x80000000),
-                      ],
+          GestureDetector(
+            onTap: () => onTap(),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: Stack(
+                alignment: AlignmentDirectional.bottomStart,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 400.0,
+                    child: Hero(
+                      tag: imageUrl,
+                      child: Image(
+                        image: NetworkImage(imageUrl),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        mainLabel,
-                        style: Theme.of(context).textTheme.headline2,
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 33.0,
+                      right: 20.0,
+                      bottom: 20.0,
+                      left: 20.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          // TODO hardcoded colors! Won't follow theme!
+                          Color(0x00000000),
+                          Color(0x80000000),
+                          Color(0x80000000),
+                        ],
                       ),
-                      Text(
-                        subLabel,
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          mainLabel,
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                        Text(
+                          subLabel,
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -95,13 +104,13 @@ class BigCard extends StatelessWidget {
                   color: const Color(0xFFEE575F),
                   icon: FontAwesomeIcons.times,
                   altText: 'Nope!', // TODO i18n
-                  onPressed: dislikeAction,
+                  onPressed: onDislike,
                 ),
                 BigButton(
                   color: const Color(0xFFEE575F),
                   icon: FontAwesomeIcons.solidHeart,
                   altText: 'Like!', // TODO i18n,
-                  onPressed: likeAction,
+                  onPressed: onLike,
                 ),
               ],
             ),

@@ -1,63 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rescado/src/views/animal_detail_view.dart';
 import 'package:rescado/src/widgets/big_card.dart';
 import 'package:tcard/tcard.dart';
-
-// temp data
-// TODO how to lnk likeAction/dislikeAction to _controller hmmm ð
-List<Widget> cards = [
-  BigCard(
-    imageUrl: 'https://loremflickr.com/600/600/dog?1',
-    mainLabel: 'Loebas',
-    subLabel: 'Golden Retriever',
-    likeAction: () {
-      // ignore: avoid_print
-      print('Like!');
-    },
-    dislikeAction: () {
-      // ignore: avoid_print
-      print('Nope!');
-    },
-  ),
-  BigCard(
-    imageUrl: 'https://loremflickr.com/600/600/dog?2',
-    mainLabel: 'Yako',
-    subLabel: 'Duitse Herder x Spaanse Mastino',
-    likeAction: () {
-      // ignore: avoid_print
-      print('Like!');
-    },
-    dislikeAction: () {
-      // ignore: avoid_print
-      print('Nope!');
-    },
-  ),
-  BigCard(
-    imageUrl: 'https://loremflickr.com/600/600/cat?3',
-    mainLabel: 'Minou',
-    subLabel: 'Gewoon een poes',
-    likeAction: () {
-      // ignore: avoid_print
-      print('Like!');
-    },
-    dislikeAction: () {
-      // ignore: avoid_print
-      print('Nope!');
-    },
-  ),
-  BigCard(
-    imageUrl: 'https://loremflickr.com/600/600/dog?4',
-    mainLabel: 'Pluto',
-    subLabel: 'Cartoonhond',
-    likeAction: () {
-      // ignore: avoid_print
-      print('Like!');
-    },
-    dislikeAction: () {
-      // ignore: avoid_print
-      print('Nope!');
-    },
-  ),
-];
 
 class SwipeView extends StatefulWidget {
   const SwipeView({
@@ -79,6 +23,83 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
+    // temp data
+// TODO how to lnk likeAction/dislikeAction to _controller hmmm ð
+    List<Widget> cards = [
+      BigCard(
+        imageUrl: 'https://loremflickr.com/600/600/dog?1',
+        mainLabel: 'Loebas',
+        subLabel: 'Golden Retriever',
+        onLike: () {
+          // ignore: avoid_print
+          print('Like!');
+        },
+        onDislike: () {
+          // ignore: avoid_print
+          print('Nope!');
+        },
+        onTap: () {
+          // ignore: avoid_print
+          print('Hello!');
+          Navigator.pushNamed(context, AnimalDetailView.id);
+        },
+      ),
+      BigCard(
+        imageUrl: 'https://loremflickr.com/600/600/dog?2',
+        mainLabel: 'Yako',
+        subLabel: 'Duitse Herder x Spaanse Mastino',
+        onLike: () {
+          // ignore: avoid_print
+          print('Like!');
+        },
+        onDislike: () {
+          // ignore: avoid_print
+          print('Nope!');
+        },
+        onTap: () {
+          // ignore: avoid_print
+          print('Hello!');
+          Navigator.pushNamed(context, AnimalDetailView.id);
+        },
+      ),
+      BigCard(
+        imageUrl: 'https://loremflickr.com/600/600/cat?3',
+        mainLabel: 'Minou',
+        subLabel: 'Gewoon een poes',
+        onLike: () {
+          // ignore: avoid_print
+          print('Like!');
+        },
+        onDislike: () {
+          // ignore: avoid_print
+          print('Nope!');
+        },
+        onTap: () {
+          // ignore: avoid_print
+          print('Hello!');
+          Navigator.pushNamed(context, AnimalDetailView.id);
+        },
+      ),
+      BigCard(
+        imageUrl: 'https://loremflickr.com/600/600/dog?4',
+        mainLabel: 'Pluto',
+        subLabel: 'Cartoonhond',
+        onLike: () {
+          // ignore: avoid_print
+          print('Like!');
+        },
+        onDislike: () {
+          // ignore: avoid_print
+          print('Nope!');
+        },
+        onTap: () {
+          // ignore: avoid_print
+          print('Hello!');
+          Navigator.pushNamed(context, AnimalDetailView.id);
+        },
+      ),
+    ];
+
     return Column(
       children: <Widget>[
         const Text('Temp text above'),

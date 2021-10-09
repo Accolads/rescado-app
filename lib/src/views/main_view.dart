@@ -6,7 +6,7 @@ import 'profile_view.dart';
 import 'swipe_view.dart';
 
 class MainView extends StatefulWidget {
-  static const routeName = '/';
+  static const id = 'MainView';
 
   const MainView({Key? key}) : super(key: key);
 
