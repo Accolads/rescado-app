@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rescado/src/controllers/animal_controller.dart';
 
-import 'src/app.dart';
+import 'src/rescado_app.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
+
+//todo where
+final animalController = ChangeNotifierProvider((ref) => AnimalController());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,5 +17,9 @@ void main() async {
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
 
-  runApp(RescadoApp(settingsController: settingsController));
+  runApp(
+    ProviderScope(
+      child: RescadoApp(settingsController: settingsController),
+    ),
+  );
 }

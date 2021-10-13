@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rescado/src/views/shelter_detail_view.dart';
 import 'package:rescado/src/widgets/big_button.dart';
 
 class ShelterInfoCard extends StatelessWidget {
   final String imageUrl;
   final String mainLabel;
   final String subLabel;
-  final Function action;
 
-  const ShelterInfoCard({Key? key, required this.imageUrl, required this.mainLabel, required this.subLabel, required this.action}) : super(key: key);
+  const ShelterInfoCard({Key? key, required this.imageUrl, required this.mainLabel, required this.subLabel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +46,10 @@ class ShelterInfoCard extends StatelessWidget {
           ),
         ),
         BigButton(
-          // TODO Make button size small/medium/big?
           color: Colors.lightBlue,
           icon: FontAwesomeIcons.infoCircle,
           altText: 'Shelter info', //TODO i18n
-          onPressed: () => action,
+          onPressed: () => Navigator.pushNamed(context, ShelterDetailView.id),
         ),
       ],
     );

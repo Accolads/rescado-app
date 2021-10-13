@@ -27,7 +27,7 @@ class BigButton extends StatelessWidget {
         semanticLabel: altText,
         size: 25.0,
       ),
-      onPressed: () => onPressed,
+      onPressed: () => onPressed(),
     );
   }
 }

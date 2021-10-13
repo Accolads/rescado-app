@@ -8,9 +8,9 @@ analyzer:
     implicit-casts: false
     implicit-dynamic: false
   errors:
+    dead_code: info
     invalid_assignment: warning
     missing_return: error
-    dead_code: info
 
 linter:
   rules:

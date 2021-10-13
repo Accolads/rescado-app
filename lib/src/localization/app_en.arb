@@ -2,5 +2,22 @@
   "appTitle": "Rescado",
   "tabbarDiscover": "Discover",
   "tabbarSwipe": "Swipe",
-  "tabbarProfile": "Profile"
+  "tabbarProfile": "Profile",
+
+  "animalSexLabel" : "Sex",
+  "animalAgeLabel" : "Age",
+  "animalYearLabel" : "year",
+
+  "weightLabel": "Weight",
+  "weightKgUnit": "kg",
+
+  "likeAnimal": "Like {animalName}",
+  "@likeAnimal": {
+    "placeholders": {
+      "animalName": {}
+    }
+  },
+
+  "back": "Back",
+  "share": "Share"
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rescado/config/constants.dart';
+import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/widgets/big_button.dart';
 
 class BigCard extends StatelessWidget {
   final String imageUrl;
   final String mainLabel;
   final String subLabel;
+  final String heroTag;
   final Function onLike;
   final Function onDislike;
   final Function onTap;
@@ -16,6 +17,7 @@ class BigCard extends StatelessWidget {
     required this.imageUrl,
     required this.mainLabel,
     required this.subLabel,
+    required this.heroTag,
     required this.onLike,
     required this.onDislike,
     required this.onTap,
@@ -41,58 +43,67 @@ class BigCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => onTap(),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: Stack(
-                alignment: AlignmentDirectional.bottomStart,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 400.0,
-                    child: Hero(
-                      tag: imageUrl,
-                      child: Image(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
+            child: Hero(
+              tag: heroTag,
+              child: Material(
+                type: MaterialType.transparency,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomStart,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 400.0,
+                        child: Image(
+                          image: NetworkImage(imageUrl),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          top: 33.0,
+                          right: 20.0,
+                          bottom: 20.0,
+                          left: 20.0,
+                        ),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: <Color>[
+                              // TODO hardcoded colors! Won't follow theme!
+                              Color(0x00000000),
+                              Color(0x80000000),
+                              Color(0x80000000),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              mainLabel,
+                              style: RescadoStyle.cardTitle(context, true),
+                            ),
+                            Text(
+                              subLabel,
+                              style: RescadoStyle.cardSubTitle(context, true),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 33.0,
-                      right: 20.0,
-                      bottom: 20.0,
-                      left: 20.0,
-                    ),
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                          // TODO hardcoded colors! Won't follow theme!
-                          Color(0x00000000),
-                          Color(0x80000000),
-                          Color(0x80000000),
-                        ],
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          mainLabel,
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
-                        Text(
-                          subLabel,
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                ),
               ),
+            ),
+          ),
+          Hero(
+            tag: heroTag + 'abc',
+            child: Material(
+              child: Container(),
             ),
           ),
           Expanded(

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:rescado/config/themes.dart';
+import 'package:rescado/src/styles/rescado_theme.dart';
 import 'package:rescado/src/views/animal_detail_view.dart';
 import 'package:rescado/src/views/main_view.dart';
 import 'package:rescado/src/settings/settings_controller.dart';
+import 'package:rescado/src/views/shelter_detail_view.dart';
 
 class RescadoApp extends StatelessWidget {
   const RescadoApp({
@@ -39,6 +40,7 @@ class RescadoApp extends StatelessWidget {
           routes: {
             MainView.id: (context) => const MainView(),
             AnimalDetailView.id: (context) => const AnimalDetailView(),
+            ShelterDetailView.id: (context) => const ShelterDetailView(),
           },
         );
       },
