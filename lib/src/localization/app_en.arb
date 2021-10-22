@@ -5,6 +5,8 @@
   "tabbarProfile": "Profile",
 
   "animalSexLabel" : "Sex",
+  "animalSexMale": "Male",
+  "animalSexFemale": "Female",
   "animalAgeLabel" : "Age",
   "animalYearLabel" : "year",
 
@@ -17,6 +19,8 @@
       "animalName": {}
     }
   },
+
+  "likeViewTitle": "My likes",
 
   "back": "Back",
   "share": "Share"

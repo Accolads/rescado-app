@@ -17,7 +17,7 @@ class ShelterModel {
       city: json['city'] as String,
       country: json['country'] as String,
       coordinates: CoordinatesModel.fromJson(json['coordinates'] as Map<String, dynamic>),
-      logo: json['logo'] as String,
+      logo: json['logo']['reference'] as String,
     );
   }
 }

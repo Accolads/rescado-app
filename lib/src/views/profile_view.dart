@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:rescado/src/views/likes_view.dart';
 import 'package:rescado/src/widgets/page_title.dart';
 
 class ProfileView extends StatelessWidget {
@@ -15,6 +15,10 @@ class ProfileView extends StatelessWidget {
             PageTitle(
               label: AppLocalizations.of(context)!.tabbarProfile,
             ),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, LikesView.id),
+              child: const Text('Bekijk likes'),
+            )
           ],
         ),
       ),

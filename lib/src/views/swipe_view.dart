@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rescado/main.dart';
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/services/animal_service.dart';
 import 'package:rescado/src/views/animal_detail_view.dart';
@@ -25,9 +23,6 @@ class _SwipeViewState extends State<SwipeView> {
   void initState() {
     AnimalService.getAnimals().then((animals) {
       setState(() => animalModels.addAll(animals));
-      if (animals.isNotEmpty) {
-        context.read(animalController).updateCurrentAnimal(animalModels.first);
-      }
     });
     super.initState();
   }
@@ -39,19 +34,15 @@ class _SwipeViewState extends State<SwipeView> {
   }
 
   void onSwipe(int index, SwipInfo swipeInfo) {
-    // ignore: avoid_print
-    print('$index : ${swipeInfo.cardIndex}');
-    if (index < animalModels.length) {
-      context.read(animalController).updateCurrentAnimal(animalModels[index]);
-    }
-
     AnimalModel swipedAnimal = animalModels[_index];
-    AnimalService.processSwipe(swipedAnimal.id, swipeInfo.direction == SwipDirection.Right);
+    if (swipeInfo.direction == SwipDirection.Right) AnimalService.processSwipe(swipedAnimal.id);
 
-    setState(() {
-      ++_index;
-    });
+    setState(() => ++_index);
   }
+
+  void onLike() => _controller.forward(direction: SwipDirection.Right);
+
+  void onDislike() => _controller.forward(direction: SwipDirection.Left);
 
   List<BigCard> mapAnimals() {
     return animalModels
@@ -61,9 +52,17 @@ class _SwipeViewState extends State<SwipeView> {
             mainLabel: animal.name,
             subLabel: animal.breed,
             heroTag: '${animal.id}',
-            onLike: () => _controller.forward(direction: SwipDirection.Right),
-            onDislike: () => _controller.forward(direction: SwipDirection.Left),
-            onTap: () => Navigator.pushNamed(context, AnimalDetailView.id),
+            onLike: () => onLike(),
+            onDislike: () => onDislike(),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute<AnimalDetailView>(
+                builder: (context) => AnimalDetailView(
+                  animal: animal,
+                  onLike: onLike,
+                ),
+              ),
+            ),
           ),
         )
         .toList();

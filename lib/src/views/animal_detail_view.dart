@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rescado/main.dart';
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/widgets/animal_feature_card.dart';
@@ -11,15 +9,30 @@ import 'package:rescado/src/widgets/dotted_divider.dart';
 import 'package:rescado/src/widgets/image_slider.dart';
 import 'package:rescado/src/widgets/shelter_info_card.dart';
 
-class AnimalDetailView extends ConsumerWidget {
+class AnimalDetailView extends StatefulWidget {
   static const id = 'AnimalDetailView';
 
-  const AnimalDetailView({Key? key}) : super(key: key);
+  final AnimalModel animal;
+  final Function? onLike;
+
+  const AnimalDetailView({required this.animal, this.onLike, Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final AnimalModel animal = watch(animalController).currentAnimal!;
+  State<AnimalDetailView> createState() => _AnimalDetailViewState();
+}
 
+class _AnimalDetailViewState extends State<AnimalDetailView> {
+  bool _liked = false;
+
+  void onLike() => setState(() => _liked = true);
+
+  void onReturn() {
+    Navigator.pop(context);
+    if (_liked) widget.onLike!();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -32,7 +45,7 @@ class AnimalDetailView extends ConsumerWidget {
               color: Theme.of(context).primaryColor,
               icon: FontAwesomeIcons.chevronLeft,
               altText: AppLocalizations.of(context)!.back,
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => onReturn(),
             ),
             actions: [
               BigButton(
@@ -47,13 +60,13 @@ class AnimalDetailView extends ConsumerWidget {
               children: [
                 Positioned.fill(
                   child: ImageSlider(
-                    heroTag: '${animal.id}',
-                    images: animal.photos,
+                    heroTag: 'HeroTag_${widget.animal.id}',
+                    images: widget.animal.photos,
                   ),
                 ),
                 Positioned(
                   child: Hero(
-                    tag: '${animal.id}abc',
+                    tag: 'HeroTag_${widget.animal.id}_container',
                     child: Material(
                       type: MaterialType.transparency,
                       child: Container(
@@ -88,22 +101,23 @@ class AnimalDetailView extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              animal.name,
+                              widget.animal.name,
                               style: RescadoStyle.cardTitle(context),
                             ),
                             Text(
-                              animal.breed,
+                              widget.animal.breed,
                               style: RescadoStyle.cardSubTitle(context),
                             ),
                           ],
                         ),
                       ),
-                      BigButton(
-                        color: const Color(0xFFEE575F),
-                        icon: FontAwesomeIcons.heart,
-                        altText: AppLocalizations.of(context)!.likeAnimal(animal.name),
-                        onPressed: () {}, //TODO how to animate?
-                      ),
+                      if (widget.onLike != null)
+                        BigButton(
+                          color: const Color(0xFFEE575F),
+                          icon: _liked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                          altText: AppLocalizations.of(context)!.likeAnimal(widget.animal.name),
+                          onPressed: onLike,
+                        ),
                     ],
                   ),
                   const SizedBox(height: 27),
@@ -111,28 +125,31 @@ class AnimalDetailView extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AnimalFeatureCard(
-                        mainLabel: animal.sex, //TODO
+                        mainLabel: widget.animal.sex == 'MALE' ? AppLocalizations.of(context)!.animalSexMale : AppLocalizations.of(context)!.animalSexFemale, //TODO
                         subLabel: AppLocalizations.of(context)!.animalSexLabel,
                       ),
-                      AnimalFeatureCard(mainLabel: '${animal.age} ${AppLocalizations.of(context)!.animalYearLabel}', subLabel: AppLocalizations.of(context)!.animalAgeLabel),
                       AnimalFeatureCard(
-                        mainLabel: '${animal.weight} ${AppLocalizations.of(context)!.weightKgUnit}',
+                        mainLabel: '${widget.animal.age} ${AppLocalizations.of(context)!.animalYearLabel}',
+                        subLabel: AppLocalizations.of(context)!.animalAgeLabel,
+                      ),
+                      AnimalFeatureCard(
+                        mainLabel: '${widget.animal.weight} ${AppLocalizations.of(context)!.weightKgUnit}',
                         subLabel: AppLocalizations.of(context)!.weightLabel,
                       ),
                     ],
                   ),
                   const SizedBox(height: 27),
                   ShelterInfoCard(
-                    imageUrl: animal.shelter.logo,
-                    mainLabel: animal.shelter.name,
-                    subLabel: '${animal.shelter.city}, ${animal.shelter.country}',
+                    imageUrl: widget.animal.shelter.logo,
+                    mainLabel: widget.animal.shelter.name,
+                    subLabel: '${widget.animal.shelter.city}, ${widget.animal.shelter.country}',
                   ),
                   const DottedDivider(
                     color: Color(0xFF707070),
                   ),
                   SafeArea(
                     top: false,
-                    child: Text(animal.description),
+                    child: Text(widget.animal.description),
                   ),
                 ],
               ),

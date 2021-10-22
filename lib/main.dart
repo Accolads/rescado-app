@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rescado/src/controllers/animal_controller.dart';
+import 'package:rescado/src/services/api_client.dart';
 
 import 'src/rescado_app.dart';
 import 'src/settings/settings_controller.dart';
@@ -16,6 +17,8 @@ void main() async {
 
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
+
+  await ApiClient().initializeToken();
 
   runApp(
     ProviderScope(

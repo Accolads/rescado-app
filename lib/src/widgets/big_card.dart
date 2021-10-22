@@ -44,7 +44,7 @@ class BigCard extends StatelessWidget {
           GestureDetector(
             onTap: () => onTap(),
             child: Hero(
-              tag: heroTag,
+              tag: 'HeroTag_$heroTag',
               child: Material(
                 type: MaterialType.transparency,
                 child: ClipRRect(
@@ -101,7 +101,7 @@ class BigCard extends StatelessWidget {
             ),
           ),
           Hero(
-            tag: heroTag + 'abc',
+            tag: 'HeroTag_${heroTag}_container',
             child: Material(
               child: Container(),
             ),
