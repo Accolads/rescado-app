@@ -1,35 +1,35 @@
+import 'package:rescado/src/models/image_model.dart';
 import 'package:rescado/src/models/shelter_model.dart';
+
 
 class AnimalModel {
   int id;
   String kind;
   String breed;
   String name;
-  String description;
+  String? description;
   String sex;
   int? age;
   int? weight;
   bool? vaccinated;
   bool? castrated;
-  List<String> photos;
+  List<ImageModel> photos;
   ShelterModel shelter;
 
   AnimalModel({required this.id, required this.kind, required this.breed, required this.name, required this.description, required this.sex, required this.age, required this.weight, required this.vaccinated, required this.castrated, required this.photos, required this.shelter});
 
-  factory AnimalModel.fromJson(Map<String, dynamic> json) {
-    return AnimalModel(
-      id: json['id'] as int,
-      kind: json['kind'] as String,
-      breed: json['breed'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      sex: json['sex'] as String,
-      age: json['age'] as int?,
-      weight: json['weight'] as int?,
-      vaccinated: json['vaccinated'] as bool?,
-      castrated: json['sterilized'] as bool?,
-      photos: (json['photos'].cast<dynamic>() as List<dynamic>).map((dynamic e) => (e['reference'] as String)).toList(), //TODO
-      shelter: ShelterModel.fromJson(json['shelter'] as Map<String, dynamic>),
-    );
-  }
+  factory AnimalModel.fromJson(Map<String, dynamic> json) => AnimalModel(
+    id: json['id'] as int,
+    kind: json['kind'] as String,
+    breed: json['breed'] as String,
+    name: json['name'] as String,
+    description: json['description'] as String?,
+    sex: json['sex'] as String,
+    age: json['age'] as int?,
+    weight: json['weight'] as int?,
+    vaccinated: json['vaccinated'] as bool?,
+    castrated: json['castrated'] as bool?,
+    photos: (json['photos'] as List<dynamic>).map((dynamic e) => ImageModel.fromJson(e as Map<String, dynamic>)).toList(),
+    shelter: ShelterModel.fromJson(json['shelter'] as Map<String, dynamic>),
+  );
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:rescado/src/models/animal_model.dart';
-import 'package:rescado/src/services/animal_service.dart';
+import 'package:rescado/src/services/like_service.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/views/animal_detail_view.dart';
 
@@ -19,7 +20,7 @@ class _LikesViewState extends State<LikesView> {
 
   @override
   void initState() {
-    AnimalService.getLikedAnimals().then((a) {
+    LikeService.getLikedAnimals().then((a) {
       setState(() => animals.addAll(a));
     });
     super.initState();
@@ -69,7 +70,7 @@ class _LikesViewState extends State<LikesView> {
                               tag: 'HeroTag_${animal.id}',
                               child: CircleAvatar(
                                 radius: 32.0,
-                                backgroundImage: NetworkImage(animal.photos.first),
+                                backgroundImage: NetworkImage(animal.photos.first.reference),
                               ),
                             ),
                           ),

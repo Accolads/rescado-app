@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:platform_info/platform_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:platform_info/platform_info.dart';
 import 'package:rescado/src/services/local_storage_service.dart';
 
 class ApiClient extends http.BaseClient {
   static final ApiClient _instance = ApiClient._internal();
   final Client _client = Client();
 
-  static const String host = 'http://localhost:8282';
+  static const String host = 'https://rescado.qrivi.dev';
 
   late String authorization;
   String acceptLanguage = 'en';
@@ -30,6 +29,7 @@ class ApiClient extends http.BaseClient {
   Future<void> initializeToken() async {
     try {
       authorization = await LocalStorage.getToken();
+      await _refresh();
     } on ArgumentError {
       await _register();
     }
@@ -76,10 +76,28 @@ class ApiClient extends http.BaseClient {
       }),
     );
 
+    final status = JwtDecoder.decode(authorization)['status'] as String;
     if (response.statusCode == 200) {
-      authorization = response.headers[HttpHeaders.authorizationHeader]!.substring(8);
+      authorization = response.headers[HttpHeaders.authorizationHeader]!.substring(7);
+      LocalStorage.saveToken(authorization);
+    }else if (status == 'ANONYMOUS') {
+      await _recover();
+    } else {
+      //TODO login screen
+    }
+  }
+
+  Future<void> _recover() async {
+    Response response = await _instance.post(
+      Uri.parse('$host/api/auth/recover'),
+      body: jsonEncode(<String, String>{
+        'uuid': JwtDecoder.decode(authorization)['sub'] as String
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      authorization = response.headers[HttpHeaders.authorizationHeader]!.substring(7);
       LocalStorage.saveToken(authorization);
     }
-    //TODO else navigate to login view
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/views/shelter_detail_view.dart';
 import 'package:rescado/src/widgets/big_button.dart';
 
@@ -28,18 +29,11 @@ class ShelterInfoCard extends StatelessWidget {
               children: [
                 Text(
                   mainLabel,
-                  style: const TextStyle(
-                    //TODO theme
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: RescadoStyle.cardSmallTitle(context),
                 ),
                 Text(
                   subLabel,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: RescadoStyle.cardSubTitle(context),
                 ),
               ],
             ),
@@ -49,7 +43,7 @@ class ShelterInfoCard extends StatelessWidget {
           color: Colors.lightBlue,
           icon: FontAwesomeIcons.infoCircle,
           altText: 'Shelter info', //TODO i18n
-          onPressed: () => Navigator.pushNamed(context, ShelterDetailView.id),
+          onPressed: () => Navigator.pushNamed(context, ShelterDetailView.id), //TODO onPressed
         ),
       ],
     );

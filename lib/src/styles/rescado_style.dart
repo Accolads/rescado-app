@@ -48,4 +48,11 @@ class RescadoStyle {
         fontWeight: FontWeight.w400,
         color: inverted ? Theme.of(context).primaryColorDark.withOpacity(0.6) : Theme.of(context).primaryColor.withOpacity(0.6),
       );
+
+  //  Small titles used in cards
+  static TextStyle cardSmallTitle(BuildContext context, [bool inverted = false]) => TextStyle(
+        fontSize: 16.0,
+        fontWeight: FontWeight.w800,
+        color: inverted ? Theme.of(context).primaryColorDark.withOpacity(0.6) : Theme.of(context).primaryColor.withOpacity(0.6),
+      );
 }

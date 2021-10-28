@@ -61,7 +61,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                 Positioned.fill(
                   child: ImageSlider(
                     heroTag: 'HeroTag_${widget.animal.id}',
-                    images: widget.animal.photos,
+                    images: widget.animal.photos.map((e) => e.reference).toList(),
                   ),
                 ),
                 Positioned(
@@ -140,7 +140,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                   ),
                   const SizedBox(height: 27),
                   ShelterInfoCard(
-                    imageUrl: widget.animal.shelter.logo,
+                    imageUrl: widget.animal.shelter.logo.reference,
                     mainLabel: widget.animal.shelter.name,
                     subLabel: '${widget.animal.shelter.city}, ${widget.animal.shelter.country}',
                   ),
@@ -149,7 +149,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                   ),
                   SafeArea(
                     top: false,
-                    child: Text(widget.animal.description),
+                    child: Text(widget.animal.description ?? ''),
                   ),
                 ],
               ),

@@ -5,7 +5,6 @@ import 'package:rescado/src/settings/settings_controller.dart';
 import 'package:rescado/src/styles/rescado_theme.dart';
 import 'package:rescado/src/views/likes_view.dart';
 import 'package:rescado/src/views/main_view.dart';
-import 'package:rescado/src/views/shelter_detail_view.dart';
 
 class RescadoApp extends StatelessWidget {
   const RescadoApp({
@@ -39,7 +38,6 @@ class RescadoApp extends StatelessWidget {
           home: const MainView(),
           routes: {
             MainView.id: (context) => const MainView(),
-            ShelterDetailView.id: (context) => const ShelterDetailView(),
             LikesView.id: (context) => const LikesView(),
           },
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rescado/src/styles/rescado_style.dart';
 
 class AnimalFeatureCard extends StatelessWidget {
   final String mainLabel;
@@ -11,7 +12,7 @@ class AnimalFeatureCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24.0),
       decoration: BoxDecoration(
-        color: const Color(0x88FBD45C), //TODO color from theme
+        color: Theme.of(context).colorScheme.secondary.withOpacity(0.50),
         borderRadius: BorderRadius.circular(25.0),
       ),
       child: Column(
@@ -27,10 +28,7 @@ class AnimalFeatureCard extends StatelessWidget {
           ),
           Text(
             subLabel,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
+            style: RescadoStyle.cardSubTitle(context),
           )
         ],
       ),
