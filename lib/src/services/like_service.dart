@@ -21,7 +21,7 @@ class LikeService {
   static Future<List<AnimalModel>> getLikedAnimals() async {
     Response response = await ApiClient().get(Uri.parse('${ApiClient.host}/api/likes?detailed=true'));
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List<dynamic>).map((dynamic data) => AnimalModel.fromJson(data['animal'] as Map<String, dynamic>)).toList();
+      return (jsonDecode(response.body) as List<dynamic>).map((dynamic data) => AnimalModel.fromJson(data['animal'] as Map<String, dynamic>, DateTime.now())).toList();
     } else {
       throw Exception('Failed fetching animals ${response.body}');
     }

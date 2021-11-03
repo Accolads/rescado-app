@@ -80,7 +80,7 @@ class ApiClient extends http.BaseClient {
     if (response.statusCode == 200) {
       authorization = response.headers[HttpHeaders.authorizationHeader]!.substring(7);
       LocalStorage.saveToken(authorization);
-    }else if (status == 'ANONYMOUS') {
+    } else if (status == 'ANONYMOUS') {
       await _recover();
     } else {
       //TODO login screen
@@ -90,9 +90,7 @@ class ApiClient extends http.BaseClient {
   Future<void> _recover() async {
     Response response = await _instance.post(
       Uri.parse('$host/api/auth/recover'),
-      body: jsonEncode(<String, String>{
-        'uuid': JwtDecoder.decode(authorization)['sub'] as String
-      }),
+      body: jsonEncode(<String, String>{'uuid': JwtDecoder.decode(authorization)['sub'] as String}),
     );
 
     if (response.statusCode == 200) {

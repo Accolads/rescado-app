@@ -15,11 +15,9 @@ class ShelterInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Image(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.fill,
-          height: 42,
-          width: 42,
+        CircleAvatar(
+          backgroundImage: NetworkImage(imageUrl),
+          radius: 20.0,
         ),
         Expanded(
           child: Padding(

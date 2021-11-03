@@ -8,7 +8,7 @@
   "animalSexMale": "Male",
   "animalSexFemale": "Female",
   "animalAgeLabel" : "Age",
-  "animalYearLabel" : "year",
+  "animalYearLabel" : "yrs",
 
   "weightLabel": "Weight",
   "weightKgUnit": "kg",

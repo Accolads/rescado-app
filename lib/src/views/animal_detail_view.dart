@@ -24,7 +24,7 @@ class AnimalDetailView extends StatefulWidget {
 class _AnimalDetailViewState extends State<AnimalDetailView> {
   bool _liked = false;
 
-  void onLike() => setState(() => _liked = true);
+  void toggleLike() => setState(() => _liked = !_liked);
 
   void onReturn() {
     Navigator.pop(context);
@@ -90,7 +90,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
           SliverToBoxAdapter(
             child: Container(
               color: Theme.of(context).backgroundColor,
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -116,11 +116,11 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                           color: const Color(0xFFEE575F),
                           icon: _liked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
                           altText: AppLocalizations.of(context)!.likeAnimal(widget.animal.name),
-                          onPressed: onLike,
+                          onPressed: toggleLike,
                         ),
                     ],
                   ),
-                  const SizedBox(height: 27),
+                  const SizedBox(height: 27.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -129,7 +129,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                         subLabel: AppLocalizations.of(context)!.animalSexLabel,
                       ),
                       AnimalFeatureCard(
-                        mainLabel: '${widget.animal.age} ${AppLocalizations.of(context)!.animalYearLabel}',
+                        mainLabel: '${widget.animal.age == 0 ? '>1' : widget.animal.age} ${AppLocalizations.of(context)!.animalYearLabel}',
                         subLabel: AppLocalizations.of(context)!.animalAgeLabel,
                       ),
                       AnimalFeatureCard(
@@ -138,7 +138,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 27),
+                  const SizedBox(height: 25),
                   ShelterInfoCard(
                     imageUrl: widget.animal.shelter.logo.reference,
                     mainLabel: widget.animal.shelter.name,
@@ -147,10 +147,8 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                   const DottedDivider(
                     color: Color(0xFF707070),
                   ),
-                  SafeArea(
-                    top: false,
-                    child: Text(widget.animal.description ?? ''),
-                  ),
+                  Text(widget.animal.description),
+                  const SizedBox(height: 50.0),
                 ],
               ),
             ),
