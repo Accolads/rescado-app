@@ -40,7 +40,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             stretch: true,
             pinned: false,
-            expandedHeight: MediaQuery.of(context).size.height * 0.4,
+            expandedHeight: MediaQuery.of(context).size.height * 0.5,
             leading: BigButton(
               color: Theme.of(context).primaryColor,
               icon: FontAwesomeIcons.chevronLeft,
