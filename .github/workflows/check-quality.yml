@@ -7,6 +7,7 @@ on:
       - main
   pull_request:
     branches:
+      - develop
       - main
 
 jobs:
@@ -30,7 +31,9 @@ jobs:
           flutter-version: '2.5.2'
       - name: Checkout codebase
         id: checkout-codebase
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
       - name: Fetch dependencies
         id: fetch-dependencies
         run: flutter pub get
@@ -42,4 +45,4 @@ jobs:
         with:
           status: ${{ job.status }}
           steps: ${{ toJson(steps) }}
-        if: always()
+        if: failure()
