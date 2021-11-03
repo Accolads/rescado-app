@@ -61,7 +61,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                 Positioned.fill(
                   child: ImageSlider(
                     heroTag: 'HeroTag_${widget.animal.id}',
-                    images: widget.animal.photos.map((e) => e.reference).toList(),
+                    imagesUrls: widget.animal.photos.map((e) => e.reference).toList(),
                   ),
                 ),
                 Positioned(

@@ -2,10 +2,10 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 
 class ImageSlider extends StatefulWidget {
-  final List<String> images;
+  final List<String> imagesUrls;
   final String heroTag;
 
-  const ImageSlider({Key? key, required this.images, required this.heroTag}) : super(key: key);
+  const ImageSlider({Key? key, required this.imagesUrls, required this.heroTag}) : super(key: key);
 
   @override
   State<ImageSlider> createState() => _ImageSliderState();
@@ -13,11 +13,23 @@ class ImageSlider extends StatefulWidget {
 
 class _ImageSliderState extends State<ImageSlider> {
   final PageController _controller = PageController();
+  final List<NetworkImage> _images = [];
   int _index = 0;
 
   void dotsTapped(double index) {
     _controller.animateToPage(index.toInt(), duration: const Duration(milliseconds: 400), curve: Curves.ease);
     setState(() => _index = index.toInt());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    for (var imageUrl in widget.imagesUrls) {
+      NetworkImage image = NetworkImage(imageUrl);
+      _images.add(image);
+      precacheImage(image, context);
+    }
   }
 
   @override
@@ -27,7 +39,7 @@ class _ImageSliderState extends State<ImageSlider> {
       children: [
         PageView.builder(
           controller: _controller,
-          itemCount: widget.images.length,
+          itemCount: _images.length,
           onPageChanged: (int index) => setState(() => _index = index),
           itemBuilder: (_, i) {
             return Hero(
@@ -35,7 +47,7 @@ class _ImageSliderState extends State<ImageSlider> {
               child: Material(
                 type: MaterialType.transparency,
                 child: Image(
-                  image: NetworkImage(widget.images[i]),
+                  image: _images[i],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -45,7 +57,7 @@ class _ImageSliderState extends State<ImageSlider> {
         Padding(
           padding: const EdgeInsets.all(40.0),
           child: DotsIndicator(
-            dotsCount: widget.images.length,
+            dotsCount: _images.length,
             position: _index.toDouble(),
             onTap: dotsTapped,
             decorator: DotsDecorator(
