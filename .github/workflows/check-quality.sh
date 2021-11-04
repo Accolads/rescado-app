@@ -4,7 +4,7 @@ RESCADO_ANALYSIS_FAILED=false
 RESCADO_FORMATTING_FAILED=false
 
 # Check formatting and analysis
-if ! flutter format ./lib --set-exit-if-changed --line-length 500; then
+if ! flutter format ./lib --set-exit-if-changed --line-length 500 --output none; then
   RESCADO_FORMATTING_FAILED=true
 fi
 if ! flutter analyze; then
