@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rescado/src/services/api_client.dart';
 import 'package:rescado/src/settings/settings_controller.dart';
 import 'package:rescado/src/styles/rescado_theme.dart';
+import 'package:rescado/src/views/error_view.dart';
 import 'package:rescado/src/views/likes_view.dart';
+import 'package:rescado/src/views/login_view.dart';
 import 'package:rescado/src/views/main_view.dart';
 
 class RescadoApp extends StatelessWidget {
@@ -16,6 +19,19 @@ class RescadoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget firstScreen;
+
+    switch (ApiClient().status) {
+      case ApiClientStatus.authenticated:
+        firstScreen = const MainView();
+        break;
+      case ApiClientStatus.expired:
+        firstScreen = const LoginView();
+        break;
+      default:
+        firstScreen = const ErrorView();
+    }
+
     return AnimatedBuilder(
       animation: settingsController,
       builder: (BuildContext context, Widget? child) {
@@ -35,7 +51,7 @@ class RescadoApp extends StatelessWidget {
           theme: RescadoTheme.light,
           darkTheme: RescadoTheme.dark,
           themeMode: settingsController.themeMode,
-          home: const MainView(),
+          home: firstScreen,
           routes: {
             MainView.id: (context) => const MainView(),
             LikesView.id: (context) => const LikesView(),

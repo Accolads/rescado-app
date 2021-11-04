@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rescado/src/models/shelter_model.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 
 // Placeholder view. Will be completely replaced when implemented.
-class ShelterDetailView extends StatelessWidget {
-  static const id = 'ShelterDetailView';
-  final ShelterModel shelter;
+class LoginView extends StatelessWidget {
+  static const id = 'LoginView';
 
-  const ShelterDetailView({Key? key, required this.shelter}) : super(key: key);
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,7 @@ class ShelterDetailView extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         foregroundColor: Theme.of(context).primaryColor,
         title: Text(
-          shelter.name,
+          'LoginView',
           style: RescadoStyle.viewTitle(context),
         ),
         shape: const RoundedRectangleBorder(
@@ -25,9 +23,9 @@ class ShelterDetailView extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
-          shelter.city,
+          'login',
         ),
       ),
     );

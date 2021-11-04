@@ -6,6 +6,7 @@ import 'package:rescado/src/services/like_service.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/views/animal_detail_view.dart';
 
+// Placeholder view. Will be completely replaced when implemented.
 class LikesView extends StatefulWidget {
   static const id = 'LikesView';
 
