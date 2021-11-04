@@ -26,7 +26,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
 
   void toggleLike() => setState(() => _liked = !_liked);
 
-  void onReturn() {
+  void goBack() {
     Navigator.pop(context);
     if (_liked) widget.onLike!();
   }
@@ -34,18 +34,19 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor, // required for clean Hero animation and bottom overflow on iOS
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).primaryColor,
             stretch: true,
             pinned: false,
-            expandedHeight: MediaQuery.of(context).size.height * 0.5,
+            expandedHeight: MediaQuery.of(context).size.height / 2,
             leading: BigButton(
               color: Theme.of(context).primaryColor,
               icon: FontAwesomeIcons.chevronLeft,
               altText: AppLocalizations.of(context)!.back,
-              onPressed: () => onReturn(),
+              onPressed: () => goBack(),
             ),
             actions: [
               BigButton(

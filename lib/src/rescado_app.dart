@@ -7,12 +7,12 @@ import 'package:rescado/src/views/likes_view.dart';
 import 'package:rescado/src/views/main_view.dart';
 
 class RescadoApp extends StatelessWidget {
+  final SettingsController settingsController;
+
   const RescadoApp({
     Key? key,
     required this.settingsController,
   }) : super(key: key);
-
-  final SettingsController settingsController;
 
   @override
   Widget build(BuildContext context) {

@@ -1,32 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RescadoStyle {
-  // region Light theme colors
-
-  static Color get lightThemeTextColor => Colors.black;
-
-  static Color get lightThemeTextColorInverted => Colors.white;
-
-  static Color get lightThemeAccentColorLight => const Color(0xFFFBD45C);
-
-  static Color get lightThemeBackgroundColor => Colors.white;
-
-  static Color get lightThemeScaffoldColor => const Color(0xFFFAFAFA);
-
-  // endregion
-  // region Dark theme colors
-
-  static Color get darkThemeTextColor => Colors.white;
-
-  static Color get darkThemeTextColorInverted => Colors.black;
-
-  static Color get darkThemeAccentColorLight => const Color(0xFFFBD45C);
-
-  static Color get darkThemeBackgroundColor => Colors.black;
-
-  static Color get darkThemeScaffoldColor => const Color(0xFF050505);
-
-  // endregion
+  // region Text styles
 
   // Main titles at the top of a view
   static TextStyle viewTitle(BuildContext context) => TextStyle(
@@ -55,4 +30,32 @@ class RescadoStyle {
         fontWeight: FontWeight.w800,
         color: inverted ? Theme.of(context).primaryColorDark.withOpacity(0.6) : Theme.of(context).primaryColor.withOpacity(0.6),
       );
+
+  //endregion
+  // region Light theme colors
+
+  static Color get lightThemeTextColor => Colors.black;
+
+  static Color get lightThemeTextColorInverted => Colors.white;
+
+  static Color get lightThemeAccentColorLight => const Color(0xFFFBD45C);
+
+  static Color get lightThemeBackgroundColor => Colors.white;
+
+  static Color get lightThemeScaffoldColor => const Color(0xFFFAFAFA);
+
+  // endregion
+  // region Dark theme colors
+
+  static Color get darkThemeTextColor => Colors.white;
+
+  static Color get darkThemeTextColorInverted => Colors.black;
+
+  static Color get darkThemeAccentColorLight => const Color(0xFFFBD45C);
+
+  static Color get darkThemeBackgroundColor => Colors.black;
+
+  static Color get darkThemeScaffoldColor => const Color(0xFF050505);
+
+// endregion
 }

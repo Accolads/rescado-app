@@ -11,8 +11,10 @@ class RescadoTheme {
         primaryColor: RescadoStyle.lightThemeTextColor,
         primaryColorDark: RescadoStyle.lightThemeTextColorInverted,
         backgroundColor: RescadoStyle.lightThemeBackgroundColor,
-        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
-        colorScheme: const ColorScheme.light().copyWith(secondary: RescadoStyle.lightThemeAccentColorLight),
+        scaffoldBackgroundColor: RescadoStyle.lightThemeScaffoldColor,
+        colorScheme: const ColorScheme.light().copyWith(
+          secondary: RescadoStyle.lightThemeAccentColorLight,
+        ),
         // Material
         appBarTheme: AppBarTheme(
           backgroundColor: RescadoStyle.lightThemeScaffoldColor,

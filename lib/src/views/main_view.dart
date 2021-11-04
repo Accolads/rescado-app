@@ -36,11 +36,11 @@ class _MainViewState extends State<MainView> {
           ),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.tabbarSwipe,
-            icon: const Icon(Icons.ac_unit),
+            icon: const Icon(Icons.volunteer_activism),
           ),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.tabbarProfile,
-            icon: const Icon(Icons.supervised_user_circle_outlined),
+            icon: const Icon(Icons.account_circle),
           ),
         ],
       ),
