@@ -29,4 +29,9 @@ class LocalStorage {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(_tokenKey, token);
   }
+
+  static void removeToken() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove(_tokenKey);
+  }
 }

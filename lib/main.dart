@@ -18,11 +18,10 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await ApiClient().initialize();
 
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
-
-  await ApiClient().initializeToken();
 
   runApp(
     ProviderScope(
