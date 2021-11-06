@@ -25,6 +25,9 @@ class BigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NetworkImage image = NetworkImage(imageUrl);
+    precacheImage(image, context);
+
     return Container(
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
@@ -56,7 +59,7 @@ class BigCard extends StatelessWidget {
                         width: double.infinity,
                         height: 400.0,
                         child: Image(
-                          image: NetworkImage(imageUrl),
+                          image: image,
                           fit: BoxFit.cover,
                         ),
                       ),
