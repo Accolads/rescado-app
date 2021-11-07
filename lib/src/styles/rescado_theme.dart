@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 
 class RescadoTheme {
@@ -17,6 +18,9 @@ class RescadoTheme {
         ),
         // Material
         appBarTheme: AppBarTheme(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarBrightness: Brightness.light,
+          ),
           backgroundColor: RescadoStyle.lightThemeScaffoldColor,
           elevation: 0,
         ),
