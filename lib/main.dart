@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:rescado/src/controllers/animal_controller.dart';
 import 'package:rescado/src/services/api_client.dart';
+import 'package:rescado/src/views/error_view.dart';
+import 'package:rescado/src/views/login_view.dart';
+import 'package:rescado/src/views/main_view.dart';
 
 import 'src/rescado_app.dart';
 import 'src/settings/settings_controller.dart';
@@ -20,12 +23,27 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await ApiClient().initialize();
 
+  final Widget firstScreen;
+  switch (ApiClient().status) {
+    case ApiClientStatus.authenticated:
+      firstScreen = const MainView();
+      break;
+    case ApiClientStatus.expired:
+      firstScreen = const LoginView();
+      break;
+    default:
+      firstScreen = const ErrorView();
+  }
+
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
 
   runApp(
     ProviderScope(
-      child: RescadoApp(settingsController: settingsController),
+      child: RescadoApp(
+        firstScreen: firstScreen,
+        settingsController: settingsController,
+      ),
     ),
   );
 }

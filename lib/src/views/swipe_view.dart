@@ -82,6 +82,7 @@ class _SwipeViewState extends State<SwipeView> {
         if (animals.isNotEmpty)
           Center(
             child: TCard(
+              delaySlideFor: 250,
               size: const Size(370, 570),
               cards: _toCards(animals),
               controller: _controller,
