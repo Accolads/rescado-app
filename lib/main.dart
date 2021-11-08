@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:rescado/src/controllers/animal_controller.dart';
+import 'package:rescado/src/providers/animal_provider.dart';
 import 'package:rescado/src/services/api_client.dart';
 import 'package:rescado/src/views/error_view.dart';
 import 'package:rescado/src/views/login_view.dart';
@@ -13,7 +13,7 @@ import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
 // TODO Is this the best place to instantiate ChangeNotifierProviders?
-final animalController = ChangeNotifierProvider((ref) => AnimalController());
+final animalProvider = ChangeNotifierProvider((ref) => AnimalProvider());
 
 void main() async {
   const bool isRelease = bool.fromEnvironment('dart.vm.product');

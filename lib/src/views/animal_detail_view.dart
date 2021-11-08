@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rescado/main.dart';
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/widgets/animal_feature_card.dart';
@@ -9,30 +11,16 @@ import 'package:rescado/src/widgets/dotted_divider.dart';
 import 'package:rescado/src/widgets/image_slider.dart';
 import 'package:rescado/src/widgets/shelter_info_card.dart';
 
-class AnimalDetailView extends StatefulWidget {
+class AnimalDetailView extends ConsumerWidget {
   static const id = 'AnimalDetailView';
 
   final AnimalModel animal;
-  final Function? onLike;
+  final bool renderLike;
 
-  const AnimalDetailView({required this.animal, this.onLike, Key? key}) : super(key: key);
-
-  @override
-  State<AnimalDetailView> createState() => _AnimalDetailViewState();
-}
-
-class _AnimalDetailViewState extends State<AnimalDetailView> {
-  bool _liked = false;
-
-  void toggleLike() => setState(() => _liked = !_liked);
-
-  void goBack() {
-    Navigator.pop(context);
-    if (_liked) widget.onLike!();
-  }
+  const AnimalDetailView({Key? key, required this.animal, required this.renderLike}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor, // required for clean Hero animation and bottom overflow on iOS
       body: CustomScrollView(
@@ -46,7 +34,7 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
               color: Theme.of(context).primaryColor,
               icon: FontAwesomeIcons.chevronLeft,
               altText: AppLocalizations.of(context)!.back,
-              onPressed: () => goBack(),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
               BigButton(
@@ -61,13 +49,13 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
               children: [
                 Positioned.fill(
                   child: ImageSlider(
-                    heroTag: 'HeroTag_${widget.animal.id}',
-                    imagesUrls: widget.animal.photos.map((e) => e.reference).toList(),
+                    heroTag: 'HeroTag_${animal.id}',
+                    imagesUrls: animal.photos.map((e) => e.reference).toList(),
                   ),
                 ),
                 Positioned(
                   child: Hero(
-                    tag: 'HeroTag_${widget.animal.id}_container',
+                    tag: 'HeroTag_${animal.id}_container',
                     child: Material(
                       type: MaterialType.transparency,
                       child: Container(
@@ -102,23 +90,23 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.animal.name,
+                              animal.name,
                               style: RescadoStyle.cardTitle(context),
                             ),
                             Text(
-                              widget.animal.breed,
+                              animal.breed,
                               style: RescadoStyle.cardSubTitle(context),
                             ),
                           ],
                         ),
                       ),
-                      if (widget.onLike != null)
+                      if (renderLike)
                         BigButton(
                           color: const Color(0xFFEE575F),
-                          icon: _liked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-                          altText: AppLocalizations.of(context)!.likeAnimal(widget.animal.name),
-                          onPressed: toggleLike,
-                        ),
+                          icon: ref.watch(animalProvider).likedCurrentAnimal ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                          altText: AppLocalizations.of(context)!.likeAnimal(animal.name),
+                          onPressed: () => ref.read(animalProvider).updateLikedCurrentAnimal(),
+                        )
                     ],
                   ),
                   const SizedBox(height: 27.0),
@@ -126,29 +114,29 @@ class _AnimalDetailViewState extends State<AnimalDetailView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AnimalFeatureCard(
-                        mainLabel: widget.animal.sex == 'MALE' ? AppLocalizations.of(context)!.animalSexMale : AppLocalizations.of(context)!.animalSexFemale, //TODO
+                        mainLabel: animal.sex == 'MALE' ? AppLocalizations.of(context)!.animalSexMale : AppLocalizations.of(context)!.animalSexFemale, //TODO
                         subLabel: AppLocalizations.of(context)!.animalSexLabel,
                       ),
                       AnimalFeatureCard(
-                        mainLabel: '${widget.animal.age == 0 ? '>1' : widget.animal.age} ${AppLocalizations.of(context)!.animalYearLabel}',
+                        mainLabel: '${animal.age == 0 ? '>1' : animal.age} ${AppLocalizations.of(context)!.animalYearLabel}',
                         subLabel: AppLocalizations.of(context)!.animalAgeLabel,
                       ),
                       AnimalFeatureCard(
-                        mainLabel: '${widget.animal.weight} ${AppLocalizations.of(context)!.weightKgUnit}',
+                        mainLabel: '${animal.weight} ${AppLocalizations.of(context)!.weightKgUnit}',
                         subLabel: AppLocalizations.of(context)!.weightLabel,
                       ),
                     ],
                   ),
                   const SizedBox(height: 25),
                   ShelterInfoCard(
-                    imageUrl: widget.animal.shelter.logo.reference,
-                    mainLabel: widget.animal.shelter.name,
-                    subLabel: '${widget.animal.shelter.city}, ${widget.animal.shelter.country}',
+                    imageUrl: animal.shelter.logo.reference,
+                    mainLabel: animal.shelter.name,
+                    subLabel: '${animal.shelter.city}, ${animal.shelter.country}',
                   ),
                   const DottedDivider(
                     color: Color(0xFF707070),
                   ),
-                  Text(widget.animal.description),
+                  Text(animal.description),
                   const SizedBox(height: 50.0),
                 ],
               ),

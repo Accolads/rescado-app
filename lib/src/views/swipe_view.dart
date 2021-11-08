@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rescado/main.dart';
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/services/animal_service.dart';
 import 'package:rescado/src/services/like_service.dart';
@@ -8,16 +10,16 @@ import 'package:tcard/tcard.dart';
 
 import 'animal_detail_view.dart';
 
-class SwipeView extends StatefulWidget {
+class SwipeView extends ConsumerStatefulWidget {
   const SwipeView({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SwipeView> createState() => _SwipeViewState();
+  _SwipeViewState createState() => _SwipeViewState();
 }
 
-class _SwipeViewState extends State<SwipeView> {
+class _SwipeViewState extends ConsumerState<SwipeView> {
   final TCardController _controller = TCardController();
   List<AnimalModel> animals = [];
 
@@ -53,6 +55,14 @@ class _SwipeViewState extends State<SwipeView> {
     _controller.reset(cards: _toCards(animals));
   }
 
+  void onReturnAnimal() {
+    bool likedCurrent = ref.read(animalProvider).likedCurrentAnimal;
+    if (likedCurrent) {
+      _controller.forward(direction: SwipDirection.Right);
+      ref.read(animalProvider).resetLikedCurrentAnimal();
+    }
+  }
+
   List<BigCard> _toCards(List<AnimalModel> animals) {
     return animals
         .map((animal) => BigCard(
@@ -62,15 +72,16 @@ class _SwipeViewState extends State<SwipeView> {
               heroTag: '${animal.id}',
               onLike: () => _controller.forward(direction: SwipDirection.Right),
               onDislike: () => _controller.forward(direction: SwipDirection.Left),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<AnimalDetailView>(
-                  builder: (context) => AnimalDetailView(
-                    animal: animal,
-                    onLike: () => _controller.forward(direction: SwipDirection.Right),
-                  ),
-                ),
-              ),
+              onTap: () => Navigator.of(context)
+                  .push(
+                    MaterialPageRoute<bool>(
+                      builder: (_) => AnimalDetailView(
+                        animal: animal,
+                        renderLike: true,
+                      ),
+                    ),
+                  )
+                  .then((_) => onReturnAnimal()),
             ))
         .toList();
   }

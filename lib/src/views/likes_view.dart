@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/services/like_service.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
@@ -54,13 +53,18 @@ class _LikesViewState extends State<LikesView> {
                 itemCount: animals.length,
                 itemBuilder: (_, index) {
                   AnimalModel animal = animals[index];
+                  NetworkImage image = NetworkImage(animal.photos.first.reference);
+                  precacheImage(image, context);
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: GestureDetector(
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute<AnimalDetailView>(
-                          builder: (context) => AnimalDetailView(animal: animal),
+                          builder: (context) => AnimalDetailView(
+                            animal: animal,
+                            renderLike: false,
+                          ),
                         ),
                       ),
                       child: Row(
@@ -71,7 +75,7 @@ class _LikesViewState extends State<LikesView> {
                               tag: 'HeroTag_${animal.id}',
                               child: CircleAvatar(
                                 radius: 32.0,
-                                backgroundImage: NetworkImage(animal.photos.first.reference),
+                                backgroundImage: image,
                               ),
                             ),
                           ),
