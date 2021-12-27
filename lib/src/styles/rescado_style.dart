@@ -44,6 +44,10 @@ class RescadoStyle {
 
   static Color get lightThemeScaffoldColor => const Color(0xFFFAFAFA);
 
+  static Color get lightThemeIconColor => const Color(0xFF888888);
+
+  static Color get lightThemeActiveIconColor => Colors.black;
+
   // endregion
   // region Dark theme colors
 
@@ -56,6 +60,10 @@ class RescadoStyle {
   static Color get darkThemeBackgroundColor => Colors.black;
 
   static Color get darkThemeScaffoldColor => const Color(0xFF050505);
+
+  static Color get darkThemeIconColor => const Color(0xFF888888);
+
+  static Color get darkThemeActiveIconColor => Colors.white;
 
 // endregion
 }

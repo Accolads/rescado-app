@@ -45,7 +45,7 @@ class _LikesViewState extends State<LikesView> {
       body: Padding(
         padding: const EdgeInsets.only(
           top: 36,
-          right: 20,
+          right: 20.0,
           left: 20.0,
         ),
         child: animals.isNotEmpty

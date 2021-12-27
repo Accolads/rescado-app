@@ -55,9 +55,11 @@ class _SwipeViewState extends ConsumerState<SwipeView> {
     _controller.reset(cards: _toCards(animals));
   }
 
-  void onReturnAnimal() {
+  void onReturnAnimal() async {
     bool likedCurrent = ref.read(animalProvider).likedCurrentAnimal;
     if (likedCurrent) {
+      //TODO find better solution
+      await Future.delayed(const Duration(milliseconds: 50), () {});
       _controller.forward(direction: SwipDirection.Right);
       ref.read(animalProvider).resetLikedCurrentAnimal();
     }

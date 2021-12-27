@@ -37,9 +37,6 @@ class RescadoTheme {
             ),
           ),
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: RescadoStyle.lightThemeAccentColorLight,
-        ),
       );
 
   static ThemeData get dark => RescadoTheme.light.copyWith(); // TODO configure proper dark theme

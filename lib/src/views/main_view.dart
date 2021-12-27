@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rescado/src/widgets/circle_tab_indicator.dart';
 
 import 'discover_view.dart';
 import 'profile_view.dart';
@@ -19,30 +21,40 @@ class _MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: const [DiscoverView(), SwipeView(), ProfileView()],
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        body: const SafeArea(
+          child: TabBarView(
+            children: [DiscoverView(), SwipeView(), ProfileView()],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (int index) => setState(() => _selectedIndex = index),
-        items: [
-          BottomNavigationBarItem(
-            label: AppLocalizations.of(context)!.tabbarDiscover,
-            icon: const Icon(Icons.home),
+        bottomNavigationBar: Container(
+          color: Colors.red,
+          child: SafeArea(
+            child: TabBar(
+              indicator: CircleTabIndicator(color: Colors.green, radius: 4),
+              // padding: const EdgeInsets.symmetric(vertical: 10.0),
+              tabs: [
+                Tab(
+                  icon: SvgPicture.asset(
+                    'assets/icons/compass.svg',
+                  ),
+                ),
+                Tab(
+                  icon: SvgPicture.asset(
+                    'assets/icons/paw.svg',
+                  ),
+                ),
+                Tab(
+                  icon: SvgPicture.asset(
+                    'assets/icons/user.svg',
+                  ),
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            label: AppLocalizations.of(context)!.tabbarSwipe,
-            icon: const Icon(Icons.volunteer_activism),
-          ),
-          BottomNavigationBarItem(
-            label: AppLocalizations.of(context)!.tabbarProfile,
-            icon: const Icon(Icons.account_circle),
-          ),
-        ],
+        ),
       ),
     );
   }
