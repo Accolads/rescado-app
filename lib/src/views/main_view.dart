@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rescado/src/widgets/circle_tab_indicator.dart';
 
@@ -17,7 +16,7 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  int _selectedIndex = 1;
+  int _tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,35 +25,47 @@ class _MainViewState extends State<MainView> {
       child: Scaffold(
         body: const SafeArea(
           child: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             children: [DiscoverView(), SwipeView(), ProfileView()],
           ),
         ),
         bottomNavigationBar: Container(
-          color: Colors.red,
+          color: Theme.of(context).backgroundColor,
           child: SafeArea(
             child: TabBar(
-              indicator: CircleTabIndicator(color: Colors.green, radius: 4),
-              // padding: const EdgeInsets.symmetric(vertical: 10.0),
+              indicator: CircleTabIndicator(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 7.0),
+              onTap: (value) => setState(() {
+                _tabIndex = value;
+              }),
               tabs: [
-                Tab(
-                  icon: SvgPicture.asset(
-                    'assets/icons/compass.svg',
-                  ),
+                buildTab(
+                  'assets/icons/compass.svg',
+                  _tabIndex == 0,
                 ),
-                Tab(
-                  icon: SvgPicture.asset(
-                    'assets/icons/paw.svg',
-                  ),
+                buildTab(
+                  'assets/icons/paw.svg',
+                  _tabIndex == 1,
                 ),
-                Tab(
-                  icon: SvgPicture.asset(
-                    'assets/icons/user.svg',
-                  ),
-                ),
+                buildTab(
+                  'assets/icons/user.svg',
+                  _tabIndex == 2,
+                )
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTab(String svgAsset, bool active) {
+    return Tab(
+      icon: SvgPicture.asset(
+        svgAsset,
+        color: active ? Theme.of(context).tabBarTheme.labelColor : Theme.of(context).tabBarTheme.unselectedLabelColor,
       ),
     );
   }

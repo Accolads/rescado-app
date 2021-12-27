@@ -37,6 +37,10 @@ class RescadoTheme {
             ),
           ),
         ),
+        tabBarTheme: TabBarTheme(
+          labelColor: RescadoStyle.lightThemeActiveIconColor,
+          unselectedLabelColor: RescadoStyle.lightThemeIconColor,
+        ),
       );
 
   static ThemeData get dark => RescadoTheme.light.copyWith(); // TODO configure proper dark theme
