@@ -6,6 +6,7 @@ import 'package:rescado/main.dart';
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/widgets/animal_feature_card.dart';
+import 'package:rescado/src/widgets/app_bar_button.dart';
 import 'package:rescado/src/widgets/big_button.dart';
 import 'package:rescado/src/widgets/dotted_divider.dart';
 import 'package:rescado/src/widgets/image_slider.dart';
@@ -30,18 +31,30 @@ class AnimalDetailView extends ConsumerWidget {
             stretch: true,
             pinned: false,
             expandedHeight: MediaQuery.of(context).size.height / 2,
-            leading: BigButton(
-              color: Theme.of(context).primaryColor,
-              icon: FontAwesomeIcons.chevronLeft,
-              altText: AppLocalizations.of(context)!.back,
-              onPressed: () => Navigator.pop(context),
+            leadingWidth: 56,
+            toolbarHeight: 46,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: AppBarButton(
+                color: Theme.of(context).primaryColor,
+                icon: FontAwesomeIcons.chevronLeft,
+                altText: AppLocalizations.of(context)!.back,
+                onPressed: () => Navigator.pop(context),
+              ),
             ),
             actions: [
-              BigButton(
-                color: Theme.of(context).primaryColor,
-                icon: FontAwesomeIcons.shareAlt,
-                altText: AppLocalizations.of(context)!.back,
-                onPressed: () {},
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: SizedBox(
+                  width: 46,
+                  height: 46,
+                  child: AppBarButton(
+                    color: Theme.of(context).primaryColor,
+                    icon: FontAwesomeIcons.shareAlt,
+                    altText: AppLocalizations.of(context)!.back,
+                    onPressed: () {},
+                  ),
+                ),
               )
             ],
             flexibleSpace: Stack(
