@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:platform_info/platform_info.dart';
 import 'package:rescado/main.dart';
 import 'package:rescado/src/models/animal_model.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
@@ -37,7 +37,7 @@ class AnimalDetailView extends ConsumerWidget {
               padding: const EdgeInsets.only(left: 10.0),
               child: AppBarButton(
                 color: Theme.of(context).primaryColor,
-                icon: FontAwesomeIcons.chevronLeft,
+                svgAsset: RescadoStyle.iconChevronLeft,
                 altText: AppLocalizations.of(context)!.back,
                 onPressed: () => Navigator.pop(context),
               ),
@@ -50,7 +50,7 @@ class AnimalDetailView extends ConsumerWidget {
                   height: 46,
                   child: AppBarButton(
                     color: Theme.of(context).primaryColor,
-                    icon: FontAwesomeIcons.shareAlt,
+                    svgAsset: Platform.instance.isAndroid? RescadoStyle.iconShareAndroid : RescadoStyle.iconShareiOS,
                     altText: AppLocalizations.of(context)!.back,
                     onPressed: () {},
                   ),
@@ -116,7 +116,7 @@ class AnimalDetailView extends ConsumerWidget {
                       if (renderLike)
                         BigButton(
                           color: const Color(0xFFEE575F),
-                          icon: ref.watch(animalProvider).likedCurrentAnimal ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                          svgAsset: ref.watch(animalProvider).likedCurrentAnimal ? RescadoStyle.iconHeartFilled : RescadoStyle.iconHeartBroken,
                           altText: AppLocalizations.of(context)!.likeAnimal(animal.name),
                           onPressed: () => ref.read(animalProvider).updateLikedCurrentAnimal(),
                         )

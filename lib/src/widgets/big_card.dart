@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/widgets/big_button.dart';
 
@@ -116,13 +115,13 @@ class BigCard extends StatelessWidget {
               children: [
                 BigButton(
                   color: const Color(0xFFEE575F),
-                  icon: FontAwesomeIcons.times,
+                  svgAsset: RescadoStyle.iconCross,
                   altText: 'Nope!', // TODO i18n
                   onPressed: onDislike,
                 ),
                 BigButton(
                   color: const Color(0xFFEE575F),
-                  icon: FontAwesomeIcons.solidHeart,
+                  svgAsset: RescadoStyle.iconHeartFilled,
                   altText: 'Like!', // TODO i18n,
                   onPressed: onLike,
                 ),

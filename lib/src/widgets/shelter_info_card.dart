@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/views/shelter_detail_view.dart';
 import 'package:rescado/src/widgets/big_button.dart';
@@ -39,7 +38,7 @@ class ShelterInfoCard extends StatelessWidget {
         ),
         BigButton(
           color: Colors.lightBlue,
-          icon: FontAwesomeIcons.infoCircle,
+          svgAsset: RescadoStyle.iconInfo,
           altText: 'Shelter info', //TODO i18n
           onPressed: () => Navigator.pushNamed(context, ShelterDetailView.id), //TODO onPressed
         ),

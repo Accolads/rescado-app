@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RescadoStyle {
+  RescadoStyle._();
+
   // region Text styles
 
   // Main titles at the top of a view
@@ -32,6 +34,43 @@ class RescadoStyle {
       );
 
   //endregion
+
+  // region Icon assets
+
+  static String get iconArrowUp => 'assets/icons/arrow-up.svg';
+
+  static String get iconChevronLeft => 'assets/icons/chevron-left.svg';
+
+  static String get iconCompass => 'assets/icons/compass.svg';
+
+  static String get iconCross => 'assets/icons/cross.svg';
+
+  static String get iconEnvelope => 'assets/icons/envelope.svg';
+
+  static String get iconHeartBroken => 'assets/icons/heart-broken.svg';
+
+  static String get iconHeartFilled => 'assets/icons/heart-filled.svg';
+
+  static String get iconHeartOutline => 'assets/icons/heart-outline.svg';
+
+  static String get iconInfo => 'assets/icons/info.svg';
+
+  static String get iconKey => 'assets/icons/key.svg';
+
+  static String get iconLogo => 'assets/icons/logo.svg';
+
+  static String get iconRefresh => 'assets/icons/refresh.svg';
+
+  static String get iconShareAndroid => 'assets/icons/share-android.svg';
+
+  static String get iconShareiOS => 'assets/icons/share-ios.svg';
+
+  static String get iconUserPlus => 'assets/icons/user-plus.svg';
+
+  static String get iconUsers => 'assets/icons/users.svg';
+
+  // endregion
+
   // region Light theme colors
 
   static Color get lightThemeTextColor => Colors.black;

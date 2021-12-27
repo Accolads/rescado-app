@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AppBarButton extends StatelessWidget {
   final Color color;
-  final IconData icon;
+  final String svgAsset;
   final String altText;
   final Function onPressed;
 
   const AppBarButton({
     Key? key,
     required this.color,
-    required this.icon,
+    required this.svgAsset,
     required this.altText,
     required this.onPressed,
   }) : super(key: key);
@@ -18,11 +18,11 @@ class AppBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: FaIcon(
-        icon,
+      child: SvgPicture.asset(
+        svgAsset,
         color: color,
-        semanticLabel: altText,
-        size: 23.0,
+        semanticsLabel: altText,
+        width: 23.0,
       ),
       onPressed: () => onPressed(),
     );
