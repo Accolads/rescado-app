@@ -65,6 +65,8 @@ class RescadoStyle {
 
   static String get iconShareiOS => 'assets/icons/share-ios.svg';
 
+  static String get iconUser => 'assets/icons/user.svg';
+
   static String get iconUserPlus => 'assets/icons/user-plus.svg';
 
   static String get iconUsers => 'assets/icons/users.svg';

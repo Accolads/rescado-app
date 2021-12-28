@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rescado/src/styles/rescado_style.dart';
 import 'package:rescado/src/widgets/circle_tab_indicator.dart';
 
 import 'discover_view.dart';
@@ -42,15 +43,15 @@ class _MainViewState extends State<MainView> {
               }),
               tabs: [
                 buildTab(
-                  'assets/icons/compass.svg',
+                  RescadoStyle.iconCompass,
                   _tabIndex == 0,
                 ),
                 buildTab(
-                  'assets/icons/paw.svg',
+                  RescadoStyle.iconLogo,
                   _tabIndex == 1,
                 ),
                 buildTab(
-                  'assets/icons/user.svg',
+                  RescadoStyle.iconUser,
                   _tabIndex == 2,
                 )
               ],
