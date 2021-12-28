@@ -3,25 +3,20 @@
   "tabbarDiscover": "Discover",
   "tabbarSwipe": "Swipe",
   "tabbarProfile": "Profile",
-
-  "animalSexLabel" : "Sex",
+  "animalSexLabel": "Sex",
   "animalSexMale": "Male",
   "animalSexFemale": "Female",
-  "animalAgeLabel" : "Age",
-  "animalYearLabel" : "yrs",
-
+  "animalAgeLabel": "Age",
+  "animalYearLabel": "yrs",
   "weightLabel": "Weight",
   "weightKgUnit": "kg",
-
   "likeAnimal": "Like {animalName}",
   "@likeAnimal": {
     "placeholders": {
       "animalName": {}
     }
   },
-
   "likeViewTitle": "My likes",
-
   "back": "Back",
   "share": "Share"
 }

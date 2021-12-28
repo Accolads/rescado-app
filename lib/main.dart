@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:rescado/src/providers/animal_provider.dart';
-import 'package:rescado/src/services/api_client.dart';
-import 'package:rescado/src/views/error_view.dart';
-import 'package:rescado/src/views/login_view.dart';
-import 'package:rescado/src/views/main_view.dart';
-
-import 'src/rescado_app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
+import 'package:rescado/src/core/providers/animal_provider.dart';
+import 'package:rescado/src/core/services/api_client.dart';
+import 'package:rescado/src/rescado_app.dart';
+import 'package:rescado/src/ui/views/error/error_view.dart';
+import 'package:rescado/src/ui/views/login/login_view.dart';
+import 'package:rescado/src/ui/views/main_view.dart';
+import 'package:rescado/src/ui/views/settings/settings_view.dart';
 
 // TODO Is this the best place to instantiate ChangeNotifierProviders?
 final animalProvider = ChangeNotifierProvider((ref) => AnimalProvider());
@@ -26,13 +24,13 @@ void main() async {
   final Widget firstScreen;
   switch (ApiClient().status) {
     case ApiClientStatus.authenticated:
-      firstScreen = const MainView();
+      firstScreen = MainView();
       break;
     case ApiClientStatus.expired:
-      firstScreen = const LoginView();
+      firstScreen = LoginView();
       break;
     default:
-      firstScreen = const ErrorView();
+      firstScreen = ErrorView();
   }
 
   final settingsController = SettingsController(SettingsService());
