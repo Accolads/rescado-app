@@ -15,7 +15,7 @@ class RescadoStorage {
 
   static void saveThemeMode(ThemeMode themeMode) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(_themeModeKey, themeMode.toString());
+    sharedPreferences.setString(_themeModeKey, themeMode.name);
   }
 
   static void deleteThemeMode() async {
