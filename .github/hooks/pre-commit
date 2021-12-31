@@ -1,0 +1,3 @@
+#!/bin/sh
+
+flutter format ./lib --set-exit-if-changed --line-length 500 --output none || flutter analyze

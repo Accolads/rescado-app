@@ -39,7 +39,7 @@ jobs:
         run: flutter pub get
       - name: Verify code quality
         id: verify-quality
-        run: .github/workflows/check-quality.sh
+        run: flutter format ./lib --set-exit-if-changed --line-length 500 --output none || flutter analyze
       - name: Send status to Slack
         uses: act10ns/slack@v1.2.2
         with:
