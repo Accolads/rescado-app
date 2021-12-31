@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rescado/src/ui/styles/rescado_style.dart';
+import 'package:rescado/constants/rescado_style.dart';
 
 class RescadoTheme {
   RescadoTheme._();

@@ -1,6 +1,6 @@
 import 'package:logger/logger.dart';
 
-Logger getLogger(String className) => Logger(printer: RescadoLogPrinter(className));
+Logger addLogger(String className) => Logger(printer: RescadoLogPrinter(className));
 
 class RescadoLogPrinter extends LogPrinter {
   final String className;
