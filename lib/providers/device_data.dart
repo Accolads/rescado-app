@@ -8,7 +8,7 @@ import 'package:rescado/utils/logger.dart';
 final deviceDataProvider = Provider<DeviceData>((ref) => DeviceData());
 
 class DeviceData {
-  static final _logger = addLogger('HttpClient');
+  static final _logger = addLogger('DeviceData');
 
   bool _askedForLocationPermission = false;
 

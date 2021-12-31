@@ -31,8 +31,8 @@ class UserController extends StateNotifier<AsyncValue<User?>> {
     // If we get a token, we should always attempt to refresh the session first.
     try {
       await _read(authenticationRepositoryProvider).refresh(); // do something with the returned ApiAuthentication...
-    } on ApiException catch (exception) {
-      state = AsyncError(exception.messages.first);
+    } on ApiException catch (error) {
+      state = AsyncError(error.messages.first);
       // We should handle this properly. First message will start with something like "[expiredToken]" indicating what to do in the UI.
       // If expired, we should also check the token to see if it's anonymous, and if so try recover()ing the session before setting an AsyncError.
       // Also: AsyncError should always be last resort and is not necessary if expired. Just put a user with status UserStatus.expired in the state and handle in the UI.
