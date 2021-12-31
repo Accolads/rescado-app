@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:rescado/constants/rescado_constants.dart';
+import 'package:rescado/constants/rescado_storage.dart';
 import 'package:rescado/exceptions/api_exception.dart';
 import 'package:rescado/exceptions/offline_exception.dart';
 import 'package:rescado/exceptions/server_exception.dart';
@@ -60,28 +61,37 @@ class ApiClient extends http.BaseClient {
 
   // BaseClient.get(), but with response processing and error handling.
   Future<Map<String, dynamic>> getJson(Uri url, {Map<String, String>? headers}) async => _parseResponse(
-        await super.get(url, headers: headers).timeout(RescadoConstants.timeout),
+        await super.get(url, headers: await _authIfNeeded(url, headers)).timeout(RescadoConstants.timeout),
       );
 
   // BaseClient.post(), but with response processing and error handling.
   Future<Map<String, dynamic>> postJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
-        await super.post(url, headers: headers, body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+        await super.post(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
 
   // BaseClient.put(), but with response processing and error handling.
   Future<Map<String, dynamic>> putJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
-        await super.put(url, headers: headers, body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+        await super.put(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
 
   // BaseClient.patch(), but with response processing and error handling.
   Future<Map<String, dynamic>> patchJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
-        await super.patch(url, headers: headers, body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+        await super.patch(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
 
   // BaseClient.delete(), but with response processing and error handling.
   Future<Map<String, dynamic>> deleteJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
-        await super.delete(url, headers: headers, body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+        await super.delete(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
+
+  // If the url is not a public url, add the authorization header.
+  Future<Map<String, String>?> _authIfNeeded(Uri url, Map<String, String>? headers) async {
+    if (!url.path.contains('/auth/')) {
+      headers ??= {};
+      headers[HttpHeaders.authorizationHeader] = 'Bearer ${(await RescadoStorage.getToken()) ?? 'no-token-in-storage'}';
+    }
+    return headers;
+  }
 
   // Function to parse the JSON returned by the server as soon as the response gets in. Also handles errors thrown by the API and wraps other exceptions if thrown.
   Map<String, dynamic> _parseResponse(http.Response response) {
