@@ -3,14 +3,19 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rescado/utils/logger.dart';
 
 final deviceDataProvider = Provider<DeviceData>((ref) => DeviceData());
 
 class DeviceData {
+  static final _logger = addLogger('HttpClient');
+
   bool _askedForLocationPermission = false;
 
   // Gets the device's current location coordinates.
   Future<Position?> getLocation() async {
+    _logger.d('getLocation()');
+
     // If location services are disabled, we can return null straightaway.
     if (!(await Geolocator.isLocationServiceEnabled())) {
       return null;
@@ -34,6 +39,8 @@ class DeviceData {
 
   // Gets the device's "user agent"
   Future<String> getUserAgent() async {
+    _logger.d('getUserAgent()');
+
     if (Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
       var release = androidInfo.version.release;
@@ -56,6 +63,8 @@ class DeviceData {
 
   // Gets the device's current locale.
   Future<String> getLocale() async {
+    _logger.d('getLocale()');
+
     return Future.value(Platform.localeName);
   }
 }

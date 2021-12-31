@@ -6,8 +6,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rescado/constants/rescado_constants.dart';
 import 'package:rescado/constants/rescado_storage.dart';
 import 'package:rescado/models/api_authentication.dart';
-import 'package:rescado/providers/device_data.dart';
 import 'package:rescado/providers/api_client.dart';
+import 'package:rescado/providers/device_data.dart';
 import 'package:rescado/utils/logger.dart';
 
 final authenticationRepositoryProvider = Provider<AuthenticationRepository>((ref) => ApiAuthenticationRepository(ref.read));

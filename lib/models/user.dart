@@ -1,7 +1,13 @@
-import 'package:rescado/models/api_authentication.dart';
+enum UserStatus {
+  newbie, // there was no JWT found in storage
+  anonymous, // when connected with token linked to an anonymous account
+  identified, // when connected with token linked to an account with user data
+  expired, // when attempted to connect with a token that was expired and the session could not be recovered
+  blocked, // when attempted to connect with a token linked to a blocked account
+}
 
 class User {
-  AuthenticationStatus status;
+  UserStatus status;
   String? email;
   String? name;
 
@@ -12,7 +18,7 @@ class User {
   });
 
   User copyWith({
-    AuthenticationStatus? status,
+    UserStatus? status,
     String? email,
     String? name,
   }) =>

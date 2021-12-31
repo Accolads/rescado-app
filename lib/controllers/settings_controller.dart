@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/constants/rescado_storage.dart';
 import 'package:rescado/models/settings.dart';
+import 'package:rescado/utils/logger.dart';
 
 final settingsControllerProvider = StateNotifierProvider<SettingsController, Settings>(
-  (ref) => SettingsController(ref.read).._initialize(),
+  (ref) => SettingsController().._initialize(),
 );
 
 class SettingsController extends StateNotifier<Settings> {
-  final Reader _read;
+  static final _logger = addLogger('SettingsController');
 
-  SettingsController(this._read) : super(Settings());
+  SettingsController() : super(Settings());
 
   void _initialize() async {
+    _logger.d('initialize()');
+
     var themeMode = await RescadoStorage.getThemeMode();
     if (themeMode == ThemeMode.dark || themeMode == ThemeMode.light) {
       state = Settings(
@@ -22,6 +25,8 @@ class SettingsController extends StateNotifier<Settings> {
   }
 
   void setThemeMode(ThemeMode themeMode) {
+    _logger.d('setThemeMode()');
+
     if (themeMode == state.themeMode) {
       return;
     }
