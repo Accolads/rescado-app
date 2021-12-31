@@ -99,9 +99,8 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       body: location == null
           ? null
           : jsonEncode({
-              // If the app makes this call, there should always be a token in storage. Only if we fk up during development, and it'll show in the logs.
-              'uuid': token == null ? 'no-token-in-storage' : JwtDecoder.decode(token)['sub'] as String,
-              'token': token == null ? 'no-token-in-storage' : JwtDecoder.decode(token)['refreshToken'] as String,
+              'uuid': JwtDecoder.decode(token)['sub'] as String,
+              'token': JwtDecoder.decode(token)['refreshToken'] as String,
               'latitude': location.latitude,
               'longitude': location.longitude,
             }),
@@ -128,8 +127,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       body: location == null
           ? null
           : jsonEncode({
-              // If the app makes this call, there should always be a token in storage. Only if we fk up during development, and it'll show in the logs.
-              'uuid': token == null ? 'no-token-in-storage' : JwtDecoder.decode(token)['sub'] as String,
+              'uuid': JwtDecoder.decode(token)['sub'] as String,
               'latitude': location.latitude,
               'longitude': location.longitude,
             }),

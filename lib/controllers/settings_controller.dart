@@ -16,7 +16,7 @@ class SettingsController extends StateNotifier<Settings> {
     var themeMode = await RescadoStorage.getThemeMode();
     if (themeMode == ThemeMode.dark || themeMode == ThemeMode.light) {
       state = Settings(
-        themeMode: themeMode!,
+        themeMode: themeMode,
       );
     }
   }
@@ -25,11 +25,8 @@ class SettingsController extends StateNotifier<Settings> {
     if (themeMode == state.themeMode) {
       return;
     }
-    if (themeMode == ThemeMode.system) {
-      RescadoStorage.deleteThemeMode();
-    } else {
-      RescadoStorage.saveThemeMode(themeMode);
-    }
+    RescadoStorage.saveThemeMode(themeMode);
+
     state = Settings(
       themeMode: themeMode,
     );

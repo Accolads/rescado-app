@@ -7,10 +7,10 @@ class RescadoStorage {
   static const _themeModeKey = 'theme';
   static const _tokenKey = 'token';
 
-  static Future<ThemeMode?> getThemeMode() async {
+  static Future<ThemeMode> getThemeMode() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? themeMode = sharedPreferences.getString(_themeModeKey);
-    return themeMode == null ? null : ThemeMode.values.byName(themeMode);
+    return themeMode == null ? ThemeMode.system : ThemeMode.values.byName(themeMode);
   }
 
   static void saveThemeMode(ThemeMode themeMode) async {
@@ -23,9 +23,9 @@ class RescadoStorage {
     sharedPreferences.remove(_themeModeKey);
   }
 
-  static Future<String?> getToken() async {
+  static Future<String> getToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString(_tokenKey);
+    return sharedPreferences.getString(_tokenKey) ?? 'no-token-in-storage';
   }
 
   static void saveToken(String token) async {

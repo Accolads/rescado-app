@@ -88,7 +88,7 @@ class ApiClient extends http.BaseClient {
   Future<Map<String, String>?> _authIfNeeded(Uri url, Map<String, String>? headers) async {
     if (!url.path.contains('/auth/')) {
       headers ??= {};
-      headers[HttpHeaders.authorizationHeader] = 'Bearer ${(await RescadoStorage.getToken()) ?? 'no-token-in-storage'}';
+      headers[HttpHeaders.authorizationHeader] = 'Bearer ${await RescadoStorage.getToken()}';
     }
     return headers;
   }
