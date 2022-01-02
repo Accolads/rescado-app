@@ -33,6 +33,16 @@ class RescadoStyle {
         color: inverted ? Theme.of(context).primaryColorDark.withOpacity(0.6) : Theme.of(context).primaryColor.withOpacity(0.6),
       );
 
+  //  Small titles used in cards
+  static TextStyle cardText(BuildContext context) => TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: Theme.of(context).primaryColor);
+
+  // Action Button labels
+  static TextStyle actionButtonLabel(BuildContext context) => TextStyle(
+        fontSize: 12.0,
+        fontWeight: FontWeight.w500,
+        color: Theme.of(context).primaryColor,
+      );
+
   //endregion
 
   // region Icon assets
