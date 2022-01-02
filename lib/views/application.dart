@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/controllers/settings_controller.dart';
+import 'package:rescado/views/swipeable_card.dart';
 
 // Quick demo to test controllers. The trick is to use ConsumerWidget or HookConsumerWidget once we start animating.
 class Application extends ConsumerWidget {
@@ -28,39 +31,12 @@ class ProviderTest extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Provider Test'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text('Cmd+Shift+A om snel System appearance te togglen in de iOS simulator. 👍'),
-              const SizedBox(height: 75.0),
-              // To write to a controller, read it's notifier and you have access to its state altering methods. ☺️
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(settingsControllerProvider.notifier).setThemeMode(ThemeMode.system);
-                    },
-                    child: const Text('System'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(settingsControllerProvider.notifier).setThemeMode(ThemeMode.light);
-                    },
-                    child: const Text('Light'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(settingsControllerProvider.notifier).setThemeMode(ThemeMode.dark);
-                    },
-                    child: const Text('Dark'),
-                  ),
-                ],
-              ),
-            ],
+      body: SafeArea(
+        child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(20.0),
+          child: SwipeableCard(
+            imageUrl: 'https://placekitten.com/600/900?${Random()..nextInt(100)}',
           ),
         ),
       ),

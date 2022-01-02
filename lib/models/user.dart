@@ -7,9 +7,9 @@ enum UserStatus {
 }
 
 class User {
-  UserStatus status;
-  String? email;
-  String? name;
+  UserStatus status; // the user's status regarding permissions in the app
+  String? email; // the user's e-mail address
+  String? name; // the user's known name
 
   User({
     required this.status,

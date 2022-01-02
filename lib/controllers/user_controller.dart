@@ -6,11 +6,11 @@ import 'package:rescado/models/user.dart';
 import 'package:rescado/repositories/authentication_repository.dart';
 import 'package:rescado/utils/logger.dart';
 
-final userControllerProvider = StateNotifierProvider<UserController, AsyncValue<User?>>(
+final userControllerProvider = StateNotifierProvider<UserController, AsyncValue<User>>(
   (ref) => UserController(ref.read).._initialize(),
 );
 
-class UserController extends StateNotifier<AsyncValue<User?>> {
+class UserController extends StateNotifier<AsyncValue<User>> {
   static final _logger = addLogger('UserController');
 
   final Reader _read;
@@ -18,6 +18,7 @@ class UserController extends StateNotifier<AsyncValue<User?>> {
   UserController(this._read) : super(const AsyncValue.loading());
 
   void _initialize() async {
+    _logger.d('initialize()');
     state = const AsyncValue.loading();
 
     // TODO write app-start logic (checking token, registering or refreshing/recovering, create instance of User). I've already started below.

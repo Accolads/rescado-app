@@ -8,6 +8,7 @@ final settingsControllerProvider = StateNotifierProvider<SettingsController, Set
   (ref) => SettingsController().._initialize(),
 );
 
+// Controller to manage the user's app preferences.
 class SettingsController extends StateNotifier<Settings> {
   static final _logger = addLogger('SettingsController');
 
