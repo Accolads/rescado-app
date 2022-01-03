@@ -12,6 +12,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  animations: ^2.0.2
   device_info_plus: ^3.2.0
   flutter_hooks: ^0.18.1
   flutter_svg: ^1.0.0
@@ -45,6 +46,8 @@ flutter:
 
   assets:
     - assets/icons/
+    - assets/illustrations/
+    - assets/logo/
    # - assets/images/
    # - assets/photos/
 
