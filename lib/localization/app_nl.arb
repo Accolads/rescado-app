@@ -1,0 +1,39 @@
+{
+  "@@locale" : "nl",
+
+  "errorTitleOffline": "Verbinding mislukt",
+  "errorBodyOffline": "Ziet ernaar uit dat we onze servers niet kunnen vinden. Kan je je verbinding even controleren?",
+
+  "labelAge": "Leeftijd",
+  "labelBack": "Terug",
+  "labelDiscover": "Ontdekken",
+  "labelFemaleCat": "Kattin",
+  "labelFemaleDog": "Teefje",
+  "labelMaleCat": "Kater",
+  "labelMaleDog": "Reu",
+  "labelProfile": "Profiel",
+  "labelRetry": "Opnieuw proberen",
+  "labelSex": "Geslacht",
+  "labelShare": "Delen",
+  "labelSwipe": "Swipen",
+  "labelWeight": "Gewicht",
+
+  "unitKilogram": "{value} kg",
+  "@unitKilogram": {
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  },
+  "unitYear": "{value,plural, =0{<1 jaar} other{{value} jaar}}",
+  "@unitYear": {
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  }
+}

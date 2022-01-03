@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/constants/rescado_theme.dart';
 import 'package:rescado/controllers/settings_controller.dart';
@@ -12,6 +13,8 @@ class Application extends ConsumerWidget {
     return MaterialApp(
       title: 'Rescado',
       restorationScopeId: 'rescado',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: RescadoTheme.light,
       darkTheme: RescadoTheme.dark,
       themeMode: ref.watch(settingsControllerProvider).themeMode,

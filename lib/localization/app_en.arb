@@ -1,22 +1,39 @@
 {
-  "appTitle": "Rescado",
-  "tabbarDiscover": "Discover",
-  "tabbarSwipe": "Swipe",
-  "tabbarProfile": "Profile",
-  "animalSexLabel": "Sex",
-  "animalSexMale": "Male",
-  "animalSexFemale": "Female",
-  "animalAgeLabel": "Age",
-  "animalYearLabel": "yrs",
-  "weightLabel": "Weight",
-  "weightKgUnit": "kg",
-  "likeAnimal": "Like {animalName}",
-  "@likeAnimal": {
+  "@@locale" : "en",
+
+  "errorTitleOffline": "Cannot connect",
+  "errorBodyOffline": "It appears we cannot connect to our servers. Can you check your internet connection and try again?",
+
+  "labelAge": "Age",
+  "labelBack": "Back",
+  "labelDiscover": "Discover",
+  "labelFemaleCat": "Female",
+  "labelFemaleDog": "Female",
+  "labelMaleCat": "Male",
+  "labelMaleDog": "Male",
+  "labelProfile": "Profile",
+  "labelRetry": "Try again",
+  "labelSex": "Sex",
+  "labelShare": "Share",
+  "labelSwipe": "Swipe",
+  "labelWeight": "Weight",
+
+  "unitKilogram": "{value} kg",
+  "@unitKilogram": {
     "placeholders": {
-      "animalName": {}
+      "value": {
+        "type": "int",
+        "format": "compact"
+      }
     }
   },
-  "likeViewTitle": "My likes",
-  "back": "Back",
-  "share": "Share"
+  "unitYear": "{value,plural, =0{<1 yr} =1{1 yr} other{{value} yrs}}",
+  "@unitYear": {
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  }
 }
