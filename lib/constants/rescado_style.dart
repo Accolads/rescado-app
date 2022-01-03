@@ -89,6 +89,12 @@ class RescadoStyle {
 
   // region Illustration assets
 
+  static String get illustrationCuteCatOutside => 'assets/illustrations/cute-cat-outside.svg'; // TODO cleanup if unused
+
+  static String get illustrationWomanHoldingAHeart => 'assets/illustrations/woman-holding-a-heart.svg'; // TODO cleanup if unused
+
+  static String get illustrationWomanOnChairWithPhone => 'assets/illustrations/woman-on-chair-with-phone.svg'; // TODO cleanup if unused
+  
   static String get illustrationWomanWithWrench => 'assets/illustrations/woman-with-wrench.svg';
 
   //endregion
