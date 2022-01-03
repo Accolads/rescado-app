@@ -3,13 +3,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/constants/rescado_style.dart';
 import 'package:rescado/controllers/user_controller.dart';
-import 'package:rescado/models/user.dart';
 import 'package:rescado/views/buttons/action_button.dart';
 import 'package:rescado/views/cards/action_card.dart';
 import 'package:rescado/views/main_view.dart';
 
 // Initial view to take care of authentication. Shows a loading animation and handles authentication errors.
 class SplashView extends StatefulWidget {
+  static const viewId = 'SplashView';
+
   const SplashView({
     Key? key,
   }) : super(key: key);
@@ -70,44 +71,43 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
             ),
             Positioned(
               bottom: 40.0,
-              child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                // TODO WIP
-                return ref.watch(userControllerProvider).when(
-                  data: (User user) {
-                    Navigator.pushReplacement<void, void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const MainView(),
-                      ),
-                    );
-                    return const SizedBox(height: 1.0);
-                  },
-                  error: (Object error, StackTrace? stackTrace) {
-                    _animationController.reset();
-                    return ActionCard(
-                      title: 'error occurred',
-                      body: 'dayum ngl this kinda sucks',
-                      animated: true,
-                      svgAsset: RescadoStyle.illustrationWomanWithWrench,
-                      actionButton: ActionButton(
-                        label: 'Try again',
-                        svgAsset: RescadoStyle.iconRefresh,
-                        onPressed: () {
-                          print('trigger retry in controller pls'); //ignore: avoid_print
-                        },
-                      ),
-                    );
-                  },
-                  loading: () {
-                    _animationController.repeat(reverse: true);
-                    return const SizedBox(height: 1.0);
-                  },
-                );
-              }),
+              child: Consumer(
+                builder: (_, WidgetRef ref, __) {
+                  // TODO WIP
+                  return ref.watch(userControllerProvider).when(
+                      data: (_) {
+                        // A bit too hacky to my liking but we need to return a widget and using Navigator otherwise shortcuts the flow, resulting in errors.
+                        Future.delayed(Duration.zero, () => Navigator.pushReplacementNamed(context, MainView.viewId));
+                        return _buildPlaceholder();
+                      },
+                      error: (Object error, StackTrace? stackTrace) {
+                        _animationController.reset();
+                        return ActionCard(
+                          title: 'error occurred',
+                          body: 'dayum ngl this kinda sucks',
+                          animated: true,
+                          svgAsset: RescadoStyle.illustrationWomanWithWrench,
+                          actionButton: ActionButton(
+                            label: 'Try again',
+                            svgAsset: RescadoStyle.iconRefresh,
+                            onPressed: () {
+                              print('trigger retry in controller pls'); //ignore: avoid_print
+                            },
+                          ),
+                        );
+                      },
+                      loading: () => _buildPlaceholder());
+                },
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildPlaceholder() {
+    _animationController.repeat(reverse: true);
+    return const SizedBox(height: 1.0);
   }
 }

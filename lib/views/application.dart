@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/constants/rescado_theme.dart';
 import 'package:rescado/controllers/settings_controller.dart';
+import 'package:rescado/views/main_view.dart';
 import 'package:rescado/views/splash_view.dart';
 
 class Application extends ConsumerWidget {
@@ -19,6 +20,10 @@ class Application extends ConsumerWidget {
       darkTheme: RescadoTheme.dark,
       themeMode: ref.watch(settingsControllerProvider).themeMode,
       home: const SplashView(),
+      routes: {
+        MainView.viewId: (context) => const MainView(),
+        SplashView.viewId: (context) => const SplashView(),
+      },
     );
   }
 }

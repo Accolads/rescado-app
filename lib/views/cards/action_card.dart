@@ -78,10 +78,12 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
     );
   }
 
+  // Builds the "body" below the title. Renders text and, if provided an SVG, renders the SVG on its left.
   Widget _buildBody(BuildContext context) {
     if (widget.svgAsset == null) {
       return _buildContent(context);
     }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end, // Glues SVG and body with button to the bottom
       children: [
@@ -97,6 +99,7 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
     );
   }
 
+  // Builds the actual text content that is shown in the card. If an action button is provided, renders it as well.
   Widget _buildContent(BuildContext context) {
     if (widget.actionButton == null) {
       return Padding(
