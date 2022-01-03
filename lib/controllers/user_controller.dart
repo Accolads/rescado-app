@@ -22,9 +22,11 @@ class UserController extends StateNotifier<AsyncValue<User>> {
     state = const AsyncValue.loading();
 
     // TODO write app-start logic (checking token, registering or refreshing/recovering, create instance of User). I've already started below.
+    await Future<dynamic>.delayed(const Duration(milliseconds: 4000));
 
     // If we have no token, this is first-time user... and we should present the option to log in (instead of auto registering new account?)
     if ((await RescadoStorage.getToken()).contains('no-token')) {
+      _logger.i('noobie');
       state = AsyncValue.data(User(status: UserStatus.newbie));
       return;
     }

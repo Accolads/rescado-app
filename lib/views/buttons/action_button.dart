@@ -99,7 +99,8 @@ class _ActionButtonState extends State<ActionButton> with SingleTickerProviderSt
             child: SizedBox(
               width: 20.0,
               height: 20.0,
-              child: SvgPicture.asset( // TODO Make this SVG wiggle when the button is being held down :-)
+              child: SvgPicture.asset(
+                // TODO Make this SVG wiggle when the button is being held down :-)
                 widget.svgAsset,
                 color: Theme.of(context).colorScheme.secondary,
                 fit: BoxFit.contain,

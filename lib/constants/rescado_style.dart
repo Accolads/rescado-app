@@ -35,17 +35,17 @@ class RescadoStyle {
 
   //  Small titles used in cards, buttons or popups that prompt for action
   static TextStyle actionLabel(BuildContext context) => TextStyle(
-    fontSize: 12.0,
-    fontWeight: FontWeight.w500,
-    color: Theme.of(context).primaryColor,
-  );
+        fontSize: 12.0,
+        fontWeight: FontWeight.w500,
+        color: Theme.of(context).primaryColor,
+      );
 
   //  Small text used in cards, buttons or popups that prompt for action
   static TextStyle actionBody(BuildContext context) => TextStyle(
-    fontSize: 12.0,
-    fontWeight: FontWeight.w400,
-    color: Theme.of(context).primaryColor,
-  );
+        fontSize: 12.0,
+        fontWeight: FontWeight.w400,
+        color: Theme.of(context).primaryColor,
+      );
 
   //endregion
 

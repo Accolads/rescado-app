@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/controllers/swipe_controller.dart';
 import 'package:rescado/models/swipedata.dart';
 
+// WIP. Orphan file currently unused and in the wrong location.
 class SwipeableCard extends ConsumerWidget {
   final String imageUrl;
 
@@ -33,7 +34,7 @@ class SwipeableCard extends ConsumerWidget {
                 builder: (_, constraints) {
                   final center = constraints.smallest.center(Offset.zero);
                   return AnimatedContainer(
-                      curve: Curves.easeOutCubic,
+                      curve: Curves.elasticOut,
                       duration: Duration(seconds: swipeData.isDragged ? 0 : 1),
                       transform: Matrix4.identity()
                         ..translate(center.dx, center.dy) // rotate around center

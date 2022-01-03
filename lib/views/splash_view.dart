@@ -6,6 +6,7 @@ import 'package:rescado/controllers/user_controller.dart';
 import 'package:rescado/models/user.dart';
 import 'package:rescado/views/buttons/action_button.dart';
 import 'package:rescado/views/cards/action_card.dart';
+import 'package:rescado/views/main_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);
@@ -67,25 +68,17 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
             Positioned(
               bottom: 40.0,
               child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                // TODO WIP
                 return ref.watch(userControllerProvider).when(
-                  // data: (User user) {
-                  //   // Navigator.replace...
-                  //   return Text('Goed bezig, ${user.status.name}. Je bent nu ingelogd');
-                  // },
-                  data: (User user){
-                    _animationController.stop(canceled: true);
-                    return ActionCard(
-                      title: 'error occurred',
-                      body: 'dayum ngl this kinda sucks',
-                      animated: true,
-                      svgAsset: RescadoStyle.illustrationWomanWithWrench,
-                      actionButton: ActionButton(
-                        label: 'Try again',
-                        svgAsset: RescadoStyle.iconRefresh,
-                        onPressed: () {
-                          print('trigger retry in controller pls');
-                        },
+                  data: (User user) {
+                    Navigator.pushReplacement<void, void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const MainView(),
                       ),
+                    );
+                    return const SizedBox(
+                      height: 1.0,
                     );
                   },
                   error: (Object error, StackTrace? stackTrace) {
@@ -99,14 +92,14 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                         label: 'Try again',
                         svgAsset: RescadoStyle.iconRefresh,
                         onPressed: () {
-                          print('trigger retry in controller pls');
+                          print('trigger retry in controller pls'); //ignore: avoid_print
                         },
                       ),
                     );
                   },
                   loading: () {
                     _animationController.repeat(reverse: true);
-                    return const SizedBox(height: 1);
+                    return const SizedBox(height: 1.0);
                   },
                 );
               }),
