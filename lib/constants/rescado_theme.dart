@@ -14,7 +14,8 @@ class RescadoTheme {
         backgroundColor: RescadoStyle.lightThemeBackgroundColor,
         scaffoldBackgroundColor: RescadoStyle.lightThemeScaffoldColor,
         colorScheme: const ColorScheme.light().copyWith(
-          secondary: RescadoStyle.lightThemeAccentColorLight,
+          secondary: RescadoStyle.lightThemeAccentColorDark,
+          secondaryVariant: RescadoStyle.lightThemeAccentColorLight,
         ),
         // Material
         appBarTheme: AppBarTheme(
@@ -30,7 +31,7 @@ class RescadoTheme {
             minimumSize: const Size(60.0, 60.0),
             padding: const EdgeInsets.all(0.0),
             primary: RescadoStyle.lightThemeBackgroundColor,
-            shadowColor: RescadoStyle.lightThemeAccentColorLight,
+            shadowColor: RescadoStyle.lightThemeAccentColorDark,
             splashFactory: NoSplash.splashFactory,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100.0),
