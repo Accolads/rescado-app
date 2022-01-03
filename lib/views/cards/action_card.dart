@@ -90,7 +90,7 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
           width: 90.0,
         ),
         Expanded(
-          // Take up all the remain// ing space to the right of the SVG
+          // Take up all the remaining space to the right of the SVG
           child: _buildContent(context),
         ),
       ],

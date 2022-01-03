@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/controllers/swipe_controller.dart';
 import 'package:rescado/models/swipedata.dart';
 
-// WIP. Orphan file currently unused and in the wrong location.
+// WIP. Orphan file currently unused and in the wrong location. Final implementation won't be a/one card either so naming is nok as well.
 class SwipeableCard extends ConsumerWidget {
   final String imageUrl;
 

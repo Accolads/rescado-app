@@ -8,8 +8,11 @@ import 'package:rescado/views/buttons/action_button.dart';
 import 'package:rescado/views/cards/action_card.dart';
 import 'package:rescado/views/main_view.dart';
 
+// Initial view to take care of authentication. Shows a loading animation and handles authentication errors.
 class SplashView extends StatefulWidget {
-  const SplashView({Key? key}) : super(key: key);
+  const SplashView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SplashView> createState() => _SplashViewState();
@@ -77,12 +80,10 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                         builder: (BuildContext context) => const MainView(),
                       ),
                     );
-                    return const SizedBox(
-                      height: 1.0,
-                    );
+                    return const SizedBox(height: 1.0);
                   },
                   error: (Object error, StackTrace? stackTrace) {
-                    _animationController.stop(canceled: true);
+                    _animationController.reset();
                     return ActionCard(
                       title: 'error occurred',
                       body: 'dayum ngl this kinda sucks',
