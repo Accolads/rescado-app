@@ -5,9 +5,9 @@ class ApiException implements Exception {
   List<String> get messages => _messages;
   List<String> get keys => _keys;
 
-   ApiException(List<String> messages){
-    _messages=messages;
-    _keys= messages.map<String>((message) => message.substring(1, message.indexOf(']'))).toList();
+  ApiException(List<String> messages) {
+    _messages = messages;
+    _keys = messages.map<String>((message) => message.substring(1, message.indexOf(']'))).toList();
   }
 
   @override

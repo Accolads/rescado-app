@@ -19,12 +19,12 @@ class User {
 
   User({
     required this.status,
-     this.account,
+    this.account,
     this.email,
-     this.appleLinked,
-     this.googleLinked,
-     this.facebookLinked,
-     this.twitterLinked,
+    this.appleLinked,
+    this.googleLinked,
+    this.facebookLinked,
+    this.twitterLinked,
   });
 
   User copyWith({
