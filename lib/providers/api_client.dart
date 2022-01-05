@@ -17,7 +17,7 @@ final httpClientProvider = Provider<ApiClient>(
 
 // Wrapper around http that adds logging and some headers to requests, and logging, parsing and error handling to responses.
 class ApiClient extends http.BaseClient {
-  static final _logger = addLogger('HttpClient');
+  static final _logger = addLogger('ApiClient');
 
   final http.Client _client = http.Client();
 
@@ -39,8 +39,8 @@ class ApiClient extends http.BaseClient {
       final responseString = await response.stream.bytesToString();
       String prettyPrint = jsonEncode(jsonDecode(responseString));
       final _res = '''Response: ${response.request.toString()} (${response.statusCode})
-      Headers: ${response.headers}
-      Payload: $prettyPrint''';
+ ↳ Headers: ${response.headers}
+ ↳ Payload: $prettyPrint''';
       _logger.d(_res.toString());
       return http.StreamedResponse(
         http.ByteStream.fromBytes(utf8.encode(responseString)),
