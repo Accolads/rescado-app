@@ -31,7 +31,7 @@ class DeviceData {
     if (permission == LocationPermission.denied && !_askedForLocationPermission) {
       _askedForLocationPermission = true;
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
         return null;
       }
     }
@@ -60,7 +60,7 @@ class DeviceData {
       return 'Apple $name ($systemName $version)'; // eg. Apple iPhone 12 Pro (iOS 15.1)
     }
 
-    return 'Unknown Device';
+    return 'Unknown device';
   }
 
   // Gets the device's current locale.

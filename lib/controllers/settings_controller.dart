@@ -17,7 +17,7 @@ class SettingsController extends StateNotifier<Settings> {
   void _initialize() async {
     _logger.d('initialize()');
 
-    var themeMode = await RescadoStorage.getThemeMode();
+    final themeMode = await RescadoStorage.getThemeMode();
     if (themeMode == ThemeMode.dark || themeMode == ThemeMode.light) {
       state = Settings(
         themeMode: themeMode,

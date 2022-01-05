@@ -45,12 +45,10 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,
       },
-      body: location == null
-          ? null
-          : jsonEncode({
-              'latitude': location.latitude,
-              'longitude': location.longitude,
-            }),
+      body: jsonEncode({
+        'latitude': location?.latitude,
+        'longitude': location?.longitude,
+      }),
     );
 
     RescadoStorage.saveToken(response['token'] as String);
@@ -98,14 +96,12 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,
       },
-      body: location == null
-          ? null
-          : jsonEncode({
-              'uuid': JwtDecoder.decode(token)['sub'] as String,
-              'token': JwtDecoder.decode(token)['refreshToken'] as String,
-              'latitude': location.latitude,
-              'longitude': location.longitude,
-            }),
+      body: jsonEncode({
+        'uuid': JwtDecoder.decode(token)['sub'] as String,
+        'token': JwtDecoder.decode(token)['refreshToken'] as String,
+        'latitude': location?.latitude,
+        'longitude': location?.longitude,
+      }),
     );
 
     RescadoStorage.saveToken(response['token'] as String);
@@ -126,13 +122,11 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,
       },
-      body: location == null
-          ? null
-          : jsonEncode({
-              'uuid': JwtDecoder.decode(token)['sub'] as String,
-              'latitude': location.latitude,
-              'longitude': location.longitude,
-            }),
+      body: jsonEncode({
+        'uuid': JwtDecoder.decode(token)['sub'] as String,
+        'latitude': location?.latitude,
+        'longitude': location?.longitude,
+      }),
     );
 
     RescadoStorage.saveToken(response['token'] as String);
