@@ -9,8 +9,18 @@ class RescadoLogPrinter extends LogPrinter {
 
   @override
   List<String> log(LogEvent event) {
-    var emoji = PrettyPrinter.levelEmojis[event.level]!;
-    return ['$emoji ${DateTime.now()}  ${_format(event.level)}  [$className]: ${event.message}'];
+    final now =DateTime.now();
+    final emoji = PrettyPrinter.levelEmojis[event.level]!;
+    final print = ['$emoji $now  ${_format(event.level)}  [$className]: ${event.message}'];
+
+    if(event.error != null) {
+      print.add('🙈  $now    ↳ ${event.error.toString()}');
+    }
+    if(event.stackTrace != null) {
+      print.add(event.stackTrace.toString());
+    }
+
+    return print;
   }
 
   String _format(Level level) => level.toString().toUpperCase().substring(6);
