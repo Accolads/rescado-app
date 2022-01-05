@@ -5,7 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/utils/logger.dart';
 
-final deviceDataProvider = Provider<DeviceData>((ref) => DeviceData());
+final deviceDataProvider = Provider<DeviceData>(
+  (ref) => DeviceData(),
+);
 
 class DeviceData {
   static final _logger = addLogger('DeviceData');

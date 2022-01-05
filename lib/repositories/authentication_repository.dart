@@ -10,13 +10,15 @@ import 'package:rescado/providers/api_client.dart';
 import 'package:rescado/providers/device_data.dart';
 import 'package:rescado/utils/logger.dart';
 
-final authenticationRepositoryProvider = Provider<AuthenticationRepository>((ref) => ApiAuthenticationRepository(ref.read));
+final authenticationRepositoryProvider = Provider<AuthenticationRepository>(
+  (ref) => ApiAuthenticationRepository(ref.read),
+);
 
 // All API endpoints regarding authentication.
 abstract class AuthenticationRepository {
   Future<ApiAuthentication> register();
 
-  Future<ApiAuthentication> login(String email, String password);
+  Future<ApiAuthentication> login({required String email, required String password});
 
   Future<ApiAuthentication> refresh();
 
@@ -34,9 +36,9 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
   Future<ApiAuthentication> register() async {
     _logger.d('register()');
 
-    var endpoint = Uri.parse('${RescadoConstants.api}/auth/register');
-    var userAgent = await _read(deviceDataProvider).getUserAgent();
-    var location = await _read(deviceDataProvider).getLocation();
+    final endpoint = Uri.parse('${RescadoConstants.api}/auth/register');
+    final userAgent = await _read(deviceDataProvider).getUserAgent();
+    final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(httpClientProvider).postJson(
       endpoint,
@@ -56,12 +58,12 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
   }
 
   @override
-  Future<ApiAuthentication> login(String email, String password) async {
+  Future<ApiAuthentication> login({required String email, required String password}) async {
     _logger.d('login()');
 
-    var endpoint = Uri.parse('${RescadoConstants.api}/auth/login');
-    var userAgent = await _read(deviceDataProvider).getUserAgent();
-    var location = await _read(deviceDataProvider).getLocation();
+    final endpoint = Uri.parse('${RescadoConstants.api}/auth/login');
+    final userAgent = await _read(deviceDataProvider).getUserAgent();
+    final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(httpClientProvider).postJson(
       endpoint,
@@ -86,10 +88,10 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
   Future<ApiAuthentication> refresh() async {
     _logger.d('refresh()');
 
-    var endpoint = Uri.parse('${RescadoConstants.api}/auth/refresh');
-    var token = await RescadoStorage.getToken();
-    var userAgent = await _read(deviceDataProvider).getUserAgent();
-    var location = await _read(deviceDataProvider).getLocation();
+    final endpoint = Uri.parse('${RescadoConstants.api}/auth/refresh');
+    final token = await RescadoStorage.getToken();
+    final userAgent = await _read(deviceDataProvider).getUserAgent();
+    final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(httpClientProvider).postJson(
       endpoint,
@@ -114,10 +116,10 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
   Future<ApiAuthentication> recover() async {
     _logger.d('recover()');
 
-    var endpoint = Uri.parse('${RescadoConstants.api}/auth/recover');
-    var token = await RescadoStorage.getToken();
-    var userAgent = await _read(deviceDataProvider).getUserAgent();
-    var location = await _read(deviceDataProvider).getLocation();
+    final endpoint = Uri.parse('${RescadoConstants.api}/auth/recover');
+    final token = await RescadoStorage.getToken();
+    final userAgent = await _read(deviceDataProvider).getUserAgent();
+    final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(httpClientProvider).postJson(
       endpoint,

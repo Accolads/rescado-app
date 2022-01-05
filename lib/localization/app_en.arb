@@ -1,8 +1,11 @@
 {
   "@@locale" : "en",
 
-  "errorTitleOffline": "Cannot connect",
-  "errorBodyOffline": "It appears we cannot connect to our servers. Can you check your internet connection and try again?",
+  "errorTitleAuthGeneric": "Something's wrong on the other side",
+  "errorBodyAuthGeneric": "The servers are not responding as expected. This is an issue on our end. Sorry about that!",
+
+  "errorTitleAuthOffline": "Looks like you're offline",
+  "errorBodyAuthOffline": "Looks like we can't reach our servers! Can you check your internet connection and try again?",
 
   "labelAge": "Age",
   "labelBack": "Back",

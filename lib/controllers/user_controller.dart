@@ -1,10 +1,13 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rescado/constants/rescado_storage.dart';
 import 'package:rescado/exceptions/api_exception.dart';
-import 'package:rescado/models/api_authentication.dart';
+import 'package:rescado/models/account.dart';
 import 'package:rescado/models/user.dart';
+import 'package:rescado/repositories/account_repository.dart';
 import 'package:rescado/repositories/authentication_repository.dart';
 import 'package:rescado/utils/logger.dart';
+import 'package:rescado/utils/mapper.dart';
 
 final userControllerProvider = StateNotifierProvider<UserController, AsyncValue<User>>(
   (ref) => UserController(ref.read).._initialize(),
@@ -21,38 +24,79 @@ class UserController extends StateNotifier<AsyncValue<User>> {
     _logger.d('initialize()');
     state = const AsyncValue.loading();
 
-    // TODO write app-start logic (checking token, registering or refreshing/recovering, create instance of User). I've already started below.
-    await Future<dynamic>.delayed(const Duration(milliseconds: 4000));
+    // TODO This is purely aesthetic. Remove this line below when we are tired of the nicely animated logo. If you read this in February, remove it.
+    await Future<dynamic>.delayed(const Duration(milliseconds: 4444));
 
-    // If we have no token, this is first-time user... and we should present the option to log in (instead of auto registering new account?)
-    if ((await RescadoStorage.getToken()).contains('no-token')) {
-      _logger.i('noobie');
-      state = AsyncValue.data(User(status: UserStatus.newbie));
-      return;
-    }
-
-    // If we get a token, we should always attempt to refresh the session first.
-    try {
-      await _read(authenticationRepositoryProvider).refresh(); // do something with the returned ApiAuthentication...
-    } on ApiException catch (error) {
-      state = AsyncError(error.messages.first);
-      // We should handle this properly. First message will start with something like "[expiredToken]" indicating what to do in the UI.
-      // If expired, we should also check the token to see if it's anonymous, and if so try recover()ing the session before setting an AsyncError.
-      // Also: AsyncError should always be last resort and is not necessary if expired. Just put a user with status UserStatus.expired in the state and handle in the UI.
-      return;
-    }
-    // catch more like ServerException and OfflineException...
+    // Handle authentication as soon as this controller is loaded.
+    renewSession();
   }
 
-  void registerNewUser() async {
+  // Will attempt to create if necessary, refresh if possible, or recover a dead session if the user was anonymous. Fetches account details if applicable.
+  void renewSession() async {
+    _logger.d('renewSession()');
     state = const AsyncValue.loading();
 
-    // Just a showcase method for now <3
-    var authentication = await _read(authenticationRepositoryProvider).register(); // try-catch...
-    if (authentication.status != AuthenticationStatus.anonymous) {
-      _logger.e('simply impossible to get here ✌️');
-      return;
+    try {
+      final token = await RescadoStorage.getToken();
+
+      if (token == 'no-token-in-storage') {
+        // TODO Do we want to consider, in the future, offering the user the option to log in before automatically creating an account?
+        _logger.i('Creating a new account for a first-time user.');
+        await _read(authenticationRepositoryProvider).register();
+
+        _logger.i('User registration was successful.');
+        state = AsyncValue.data(await _fetchUserData());
+        return;
+      }
+
+      try {
+        _logger.i('Attempting to refresh the session using the refresh token in the JWT.');
+        await _read(authenticationRepositoryProvider).refresh();
+      } on ApiException catch (exception) {
+        if (exception.keys.first == 'TokenExpired') {
+          _logger.w('The session is expired.');
+
+          if (JwtDecoder.decode(token)['status'] == 'ANONYMOUS') {
+            _logger.i('User was anonymous. Attempting to recover the session with our UUID.');
+            await _read(authenticationRepositoryProvider).recover();
+          } else {
+            _logger.i('User was not anonymous. Will need to log in manually to continue.');
+            state = AsyncValue.data(User(status: UserStatus.expired));
+            return;
+          }
+        } else {
+          // The only other ApiException is a TokenMismatch. That can technically never happen in the app (I think) but we'll throw it again just in case.
+          rethrow;
+        }
+      }
+
+      _logger.i('Session renewal was successful.');
+      state = AsyncValue.data(await _fetchUserData());
+    } catch (error, stackTrace) {
+      // This is purely UX. Hitting the retry button must make it look like something is happening too, even if the result is instant.
+      await Future<dynamic>.delayed(const Duration(milliseconds: 4444));
+
+      _logger.e('Session renewal failed.', error, stackTrace);
+      state = AsyncValue.error(error);
     }
-    state = AsyncValue.data(User(status: UserStatus.anonymous));
+  }
+
+  Future<User> _fetchUserData() async {
+    _logger.i('Fetching the current user\'s account data.');
+    final accountData = await _read(accountRepositoryProvider).getAccount();
+
+    return User(
+      status: RescadoMapper.mapUserStatus(accountData.status),
+      account: Account(
+        uuid: accountData.uuid,
+        name: accountData.name,
+        avatar: accountData.avatar?.reference,
+      ),
+      email: accountData.email,
+      appleLinked: accountData.appleLinked,
+      googleLinked: accountData.googleLinked,
+      facebookLinked: accountData.facebookLinked,
+      twitterLinked: accountData.twitterLinked,
+    );
   }
 }

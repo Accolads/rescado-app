@@ -1,27 +1,13 @@
-enum AuthenticationStatus {
-  anonymous,
-  enrolled,
-  volunteer,
-  blocked,
-  unknown, // if we get a status from the API we cannot map.
-}
+import 'package:rescado/models/api_account.dart';
 
 class ApiAuthentication {
-  final AuthenticationStatus status;
+  final ApiAccountStatus status;
 
   ApiAuthentication._({
     required this.status,
   });
 
-  factory ApiAuthentication.fromJson(Map<String, dynamic> json) {
-    try {
-      return ApiAuthentication._(
-        status: AuthenticationStatus.values.byName(json['status'] as String),
+  factory ApiAuthentication.fromJson(Map<String, dynamic> json) => ApiAuthentication._(
+        status: ApiAccountStatus.values.byName((json['status'] as String).toLowerCase()),
       );
-    } on ArgumentError catch (_) {
-      return ApiAuthentication._(
-        status: AuthenticationStatus.unknown,
-      );
-    }
-  }
 }

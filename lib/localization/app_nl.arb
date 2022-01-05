@@ -1,8 +1,11 @@
 {
   "@@locale" : "nl",
 
-  "errorTitleOffline": "Verbinding mislukt",
-  "errorBodyOffline": "Ziet ernaar uit dat we onze servers niet kunnen vinden. Kan je je verbinding even controleren?",
+  "errorTitleAuthGeneric": "Er is iets mis aan de overkant",
+  "errorBodyAuthGeneric": "De servers lijken niet te werken zoals het hoort. Helemaal niet jouw fout. Sorry hiervoor!",
+
+  "errorTitleAuthOffline": "Je bent precies offline",
+  "errorBodyAuthOffline": "Het lukt niet om de servers te pingen. Kan je je verbinding controleren en nog eens proberen?",
 
   "labelAge": "Leeftijd",
   "labelBack": "Terug",
@@ -12,7 +15,7 @@
   "labelMaleCat": "Kater",
   "labelMaleDog": "Reu",
   "labelProfile": "Profiel",
-  "labelRetry": "Opnieuw proberen",
+  "labelRetry": "Herproberen",
   "labelSex": "Geslacht",
   "labelShare": "Delen",
   "labelSwipe": "Swipen",

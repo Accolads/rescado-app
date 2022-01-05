@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/constants/rescado_style.dart';
 import 'package:rescado/controllers/user_controller.dart';
+import 'package:rescado/exceptions/offline_exception.dart';
+import 'package:rescado/models/user.dart';
+import 'package:rescado/views/authentication_view.dart';
 import 'package:rescado/views/buttons/action_button.dart';
-import 'package:rescado/views/cards/action_card.dart';
+import 'package:rescado/views/containers/action_card.dart';
 import 'package:rescado/views/main_view.dart';
 
 // Initial view to take care of authentication. Shows a loading animation and handles authentication errors.
@@ -73,25 +77,27 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
               bottom: 40.0,
               child: Consumer(
                 builder: (_, WidgetRef ref, __) {
-                  // TODO WIP
                   return ref.watch(userControllerProvider).when(
-                      data: (_) {
-                        // A bit too hacky to my liking but we need to return a widget and using Navigator otherwise shortcuts the flow, resulting in errors.
-                        Future.delayed(Duration.zero, () => Navigator.pushReplacementNamed(context, MainView.viewId));
+                      data: (User user) {
+                        var nextViewId = (user.status == UserStatus.anonymous || user.status == UserStatus.identified) ? MainView.viewId : AuthenticationView.viewId;
+                        // Future.delayed(Duration.zero) is a bit too hacky to my liking but we need to return a widget and using Navigator otherwise shortcuts the flow, resulting in errors.
+                        Future.delayed(Duration.zero, () => Navigator.pushReplacementNamed(context, nextViewId));
                         return _buildPlaceholder();
                       },
-                      error: (Object error, StackTrace? stackTrace) {
+                      error: (Object error, _) {
                         _animationController.reset();
+                        final isOffline = error is OfflineException;
+
                         return ActionCard(
-                          title: 'error occurred',
-                          body: 'dayum ngl this kinda sucks',
+                          title: isOffline ? AppLocalizations.of(context)!.errorTitleAuthOffline : AppLocalizations.of(context)!.errorTitleAuthGeneric,
+                          body: isOffline ? AppLocalizations.of(context)!.errorBodyAuthOffline : AppLocalizations.of(context)!.errorBodyAuthGeneric,
                           animated: true,
                           svgAsset: RescadoStyle.illustrationWomanWithWrench,
                           actionButton: ActionButton(
-                            label: 'Try again',
+                            label: AppLocalizations.of(context)!.labelRetry,
                             svgAsset: RescadoStyle.iconRefresh,
                             onPressed: () {
-                              print('trigger retry in controller pls'); //ignore: avoid_print
+                              ref.read(userControllerProvider.notifier).renewSession();
                             },
                           ),
                         );

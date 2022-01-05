@@ -11,7 +11,9 @@ import 'package:rescado/exceptions/offline_exception.dart';
 import 'package:rescado/exceptions/server_exception.dart';
 import 'package:rescado/utils/logger.dart';
 
-final httpClientProvider = Provider<ApiClient>((ref) => ApiClient());
+final httpClientProvider = Provider<ApiClient>(
+  (ref) => ApiClient(),
+);
 
 // Wrapper around http that adds logging and some headers to requests, and logging, parsing and error handling to responses.
 class ApiClient extends http.BaseClient {
