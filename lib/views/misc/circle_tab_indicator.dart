@@ -10,17 +10,15 @@ class CircleTabIndicator extends Decoration {
 }
 
 class _CirclePainter extends BoxPainter {
+  final double _radius;
   final Paint _paint;
-  final double radius = 7.5;
 
   _CirclePainter(Color color)
-      : _paint = Paint()
+      : _radius = 8.0,
+        _paint = Paint()
           ..color = color
           ..isAntiAlias = true;
 
   @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
-    final Offset circleOffset = offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 48);
-    canvas.drawCircle(circleOffset, radius, _paint);
-  }
+  void paint(Canvas canvas, Offset offset, ImageConfiguration config) => canvas.drawCircle(offset + Offset(config.size!.width / 2, -_radius), _radius, _paint);
 }
