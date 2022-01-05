@@ -13,10 +13,10 @@ class ApiAccount {
   final String uuid;
   final String? name;
   final String? email;
-  final bool appleLinked;
-  final bool googleLinked;
-  final bool facebookLinked;
-  final bool twitterLinked;
+  final bool? appleLinked;
+  final bool? googleLinked;
+  final bool? facebookLinked;
+  final bool? twitterLinked;
   final ApiImage? avatar;
 
   ApiAccount._({
@@ -25,10 +25,10 @@ class ApiAccount {
     required this.uuid,
     this.name,
     this.email,
-    required this.appleLinked,
-    required this.googleLinked,
-    required this.facebookLinked,
-    required this.twitterLinked,
+    this.appleLinked,
+    this.googleLinked,
+    this.facebookLinked,
+    this.twitterLinked,
     this.avatar,
   });
 
@@ -38,10 +38,10 @@ class ApiAccount {
         uuid: json['uuid'] as String,
         name: json['name'] as String?,
         email: json['email'] as String?,
-        appleLinked: json['appleLinked'] as bool? ?? false,
-        googleLinked: json['googleLinked'] as bool? ?? false,
-        facebookLinked: json['facebookLinked'] as bool? ?? false,
-        twitterLinked: json['twitterLinked'] as bool? ?? false,
+        appleLinked: json['appleLinked'] as bool?,
+        googleLinked: json['googleLinked'] as bool?,
+        facebookLinked: json['facebookLinked'] as bool?,
+        twitterLinked: json['twitterLinked'] as bool?,
         avatar: json['avatar'] == null ? null : ApiImage.fromJson(json['avatar'] as Map<String, dynamic>),
       );
 }
