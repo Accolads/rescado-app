@@ -28,7 +28,7 @@ class ApiAccountRepository implements AccountRepository {
 
     final endpoint = Uri.parse('${RescadoConstants.api}/account');
 
-    final response = await _read(httpClientProvider).getJson(
+    final response = await _read(apiClientProvider).getJson(
       endpoint,
     );
 

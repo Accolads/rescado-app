@@ -40,7 +40,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
-    final response = await _read(httpClientProvider).postJson(
+    final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,
@@ -63,18 +63,16 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
-    final response = await _read(httpClientProvider).postJson(
+    final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,
       },
-      body: location == null
-          ? null
-          : jsonEncode({
+      body: jsonEncode({
               'email': email,
               'password': password,
-              'latitude': location.latitude,
-              'longitude': location.longitude,
+              'latitude': location?.latitude,
+              'longitude': location?.longitude,
             }),
     );
 
@@ -91,7 +89,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
-    final response = await _read(httpClientProvider).postJson(
+    final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,
@@ -117,7 +115,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
-    final response = await _read(httpClientProvider).postJson(
+    final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
         HttpHeaders.userAgentHeader: userAgent,

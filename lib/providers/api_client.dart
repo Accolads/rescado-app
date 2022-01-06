@@ -11,7 +11,7 @@ import 'package:rescado/exceptions/offline_exception.dart';
 import 'package:rescado/exceptions/server_exception.dart';
 import 'package:rescado/utils/logger.dart';
 
-final httpClientProvider = Provider<ApiClient>(
+final apiClientProvider = Provider<ApiClient>(
   (ref) => ApiClient(),
 );
 
@@ -30,20 +30,15 @@ class ApiClient extends http.BaseClient {
     request.headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
 
     // Log the request method and URL, then make the request.
-    _logger.d('Request: ${request.method} ${request.url}');
     if (const bool.fromEnvironment('dart.vm.product')) {
       return _client.send(request);
     }
-    // If we're running the app during development, add some extra logs when we get a response.
+    // If we're running the app during development, add some extra logs when we get a response. Hacky.
     return _client.send(request).then((response) async {
-      final responseString = await response.stream.bytesToString();
-      String prettyPrint = jsonEncode(jsonDecode(responseString));
-      final _res = '''Response: ${response.request.toString()} (${response.statusCode})
- ↳ Headers: ${response.headers}
- ↳ Payload: $prettyPrint''';
-      _logger.d(_res.toString());
+      final body = await response.stream.bytesToString();
+      _logRequest('Response', response.request.toString(), response.statusCode, response.headers, jsonEncode(jsonDecode(body)) );
       return http.StreamedResponse(
-        http.ByteStream.fromBytes(utf8.encode(responseString)),
+        http.ByteStream.fromBytes(utf8.encode(body)),
         response.statusCode,
         headers: response.headers,
         reasonPhrase: response.reasonPhrase,
@@ -62,29 +57,44 @@ class ApiClient extends http.BaseClient {
   }
 
   // BaseClient.get(), but with response processing and error handling.
-  Future<Map<String, dynamic>> getJson(Uri url, {Map<String, String>? headers}) async => _parseResponse(
+  Future<Map<String, dynamic>> getJson(Uri url, {Map<String, String>? headers}) async {
+    _logRequest('Request', 'GET $url', null, headers, null);
+    return _parseResponse(
         () async => await super.get(url, headers: await _authIfNeeded(url, headers)).timeout(RescadoConstants.timeout),
       );
+  }
 
   // BaseClient.post(), but with response processing and error handling.
-  Future<Map<String, dynamic>> postJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
+  Future<Map<String, dynamic>> postJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    _logRequest('Request', 'POST $url', null, headers, body as String);
+    return _parseResponse(
         () async => await super.post(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
+  }
 
   // BaseClient.put(), but with response processing and error handling.
-  Future<Map<String, dynamic>> putJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
+  Future<Map<String, dynamic>> putJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    _logRequest('Request', 'PUT $url', null, headers, body as String);
+    return _parseResponse(
         () async => await super.put(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
+  }
 
   // BaseClient.patch(), but with response processing and error handling.
-  Future<Map<String, dynamic>> patchJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
+  Future<Map<String, dynamic>> patchJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    _logRequest('Request', 'PATCH $url', null, headers, body as String);
+    return _parseResponse(
         () async => await super.patch(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
+  }
 
   // BaseClient.delete(), but with response processing and error handling.
-  Future<Map<String, dynamic>> deleteJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async => _parseResponse(
+  Future<Map<String, dynamic>> deleteJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    _logRequest('Request', 'DELETE $url', null, headers, body as String);
+    return _parseResponse(
         () async => await super.delete(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
       );
+  }
 
   // If the url is not a public url, add the authorization header.
   Future<Map<String, String>?> _authIfNeeded(Uri url, Map<String, String>? headers) async {
@@ -125,5 +135,15 @@ class ApiClient extends http.BaseClient {
       _logger.e('Something went very wrong', error, stackTrace);
       throw const ServerException();
     }
+  }
+
+  void _logRequest(String type, String request, int? status,Map<String, String>? headers, String? body){
+    if (const bool.fromEnvironment('dart.vm.product')) {
+      return;
+    }
+
+    _logger.d('''$type: $request ${status == null ? '': '($status)' }
+ ↳ Headers: $headers
+ ↳ Payload: ${body ?? 'null' }''');
   }
 }
