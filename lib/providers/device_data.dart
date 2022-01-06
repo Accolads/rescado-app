@@ -7,13 +7,15 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rescado/utils/logger.dart';
 
 final deviceDataProvider = Provider<DeviceData>(
-  (ref) => DeviceData(),
+  (ref) => DeviceData._(),
 );
 
 class DeviceData {
   static final _logger = addLogger('DeviceData');
 
   bool _askedForLocationPermission = false;
+
+  DeviceData._();
 
   // Gets the device's current location coordinates.
   Future<Position?> getLocation() async {
@@ -71,8 +73,18 @@ class DeviceData {
     final info = await PackageInfo.fromPlatform();
     final name = info.appName;
     final version = info.version;
+    return '$name v$version (${await getBuild()})';
+  }
+
+  // Gets the device's build "number"
+  Future<String> getBuild() async {
+    _logger.d('getUserAgent()');
+
+    final info = await PackageInfo.fromPlatform();
     final build = info.buildNumber;
-    return '$name v$version ($build)';
+    final version = info.version;
+    return build == version ? 'SNAPSHOT' : build;
+    // This is a workaround. I don't know why device_info_plus does not properly parse build if it's a string
   }
 
   // Gets the device's current locale.

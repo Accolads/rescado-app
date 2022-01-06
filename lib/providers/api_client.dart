@@ -5,21 +5,24 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:rescado/constants/rescado_constants.dart';
-import 'package:rescado/constants/rescado_storage.dart';
 import 'package:rescado/exceptions/api_exception.dart';
 import 'package:rescado/exceptions/offline_exception.dart';
 import 'package:rescado/exceptions/server_exception.dart';
+import 'package:rescado/providers/device_storage.dart';
 import 'package:rescado/utils/logger.dart';
 
 final apiClientProvider = Provider<ApiClient>(
-  (ref) => ApiClient(),
+  (ref) => ApiClient._(ref.read),
 );
 
 // Wrapper around http that adds logging and some headers to requests, and logging, parsing and error handling to responses.
 class ApiClient extends http.BaseClient {
   static final _logger = addLogger('ApiClient');
 
+  final Reader _read;
   final http.Client _client = http.Client();
+
+  ApiClient._(this._read);
 
   // Intercept BaseClient.send(), add some headers and logging.
   @override
@@ -99,8 +102,12 @@ class ApiClient extends http.BaseClient {
   // If the url is not a public url, add the authorization header.
   Future<Map<String, String>?> _authIfNeeded(Uri url, Map<String, String>? headers) async {
     if (!url.path.contains('/auth/')) {
-      headers ??= {};
-      headers[HttpHeaders.authorizationHeader] = 'Bearer ${await RescadoStorage.getToken()}';
+      final token = await _read(deviceStorageProvider).getApiToken();
+      if (token != null) {
+        headers ??= {};
+        headers[HttpHeaders.authorizationHeader] =token.headerValue;
+      }
+      // If token is null (which only happens if bad programming), API will respond with missing credential error which we can then handle.
     }
     return headers;
   }
@@ -117,7 +124,7 @@ class ApiClient extends http.BaseClient {
       // If the response contains a JWT token in the Authorization header, add it to the response we're returning.
       var authorization = response.headers[HttpHeaders.authorizationHeader];
       if (authorization != null && authorization.startsWith('Bearer ')) {
-        body['token'] = authorization.substring(7);
+        body['jwt'] = authorization.substring(7);
       }
       return body;
     } on SocketException {

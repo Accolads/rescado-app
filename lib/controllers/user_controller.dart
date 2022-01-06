@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:rescado/constants/rescado_storage.dart';
+import 'package:rescado/models/api_account.dart';
+import 'package:rescado/providers/device_storage.dart';
 import 'package:rescado/exceptions/api_exception.dart';
 import 'package:rescado/models/account.dart';
 import 'package:rescado/models/user.dart';
@@ -37,9 +38,9 @@ class UserController extends StateNotifier<AsyncValue<User>> {
     state = const AsyncValue.loading();
 
     try {
-      final token = await RescadoStorage.getToken();
+      final token = await _read(deviceStorageProvider).getApiToken();
 
-      if (token == 'no-token-in-storage') {
+      if (token == null) {
         // TODO Do we want to consider, in the future, offering the user the option to log in before automatically creating an account?
         _logger.i('Creating a new account for a first-time user.');
         await _read(authenticationRepositoryProvider).register();
@@ -56,7 +57,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
         if (exception.keys.first == 'TokenExpired') {
           _logger.w('The session is expired.');
 
-          if (JwtDecoder.decode(token)['status'] == 'ANONYMOUS') {
+          if (token.status == ApiAccountStatus.anonymous) {
             _logger.i('User was anonymous. Attempting to recover the session with our UUID.');
             await _read(authenticationRepositoryProvider).recover();
           } else {

@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rescado/constants/rescado_constants.dart';
-import 'package:rescado/constants/rescado_storage.dart';
 import 'package:rescado/models/api_authentication.dart';
+import 'package:rescado/models/api_token.dart';
 import 'package:rescado/providers/api_client.dart';
 import 'package:rescado/providers/device_data.dart';
+import 'package:rescado/providers/device_storage.dart';
 import 'package:rescado/utils/logger.dart';
 
 final authenticationRepositoryProvider = Provider<AuthenticationRepository>(
@@ -53,7 +54,9 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       }),
     );
 
-    RescadoStorage.saveToken(response['token'] as String);
+    _read(deviceStorageProvider).saveApiToken(
+      ApiToken.fromJwt(response['jwt'] as String),
+    );
     return ApiAuthentication.fromJson(response);
   }
 
@@ -73,14 +76,16 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({
-              'email': email,
-              'password': password,
-              'latitude': location?.latitude,
-              'longitude': location?.longitude,
-            }),
+        'email': email,
+        'password': password,
+        'latitude': location?.latitude,
+        'longitude': location?.longitude,
+      }),
     );
 
-    RescadoStorage.saveToken(response['token'] as String);
+    _read(deviceStorageProvider).saveApiToken(
+      ApiToken.fromJwt(response['jwt'] as String),
+    );
     return ApiAuthentication.fromJson(response);
   }
 
@@ -89,7 +94,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     _logger.d('refresh()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/refresh');
-    final token = await RescadoStorage.getToken();
+    final token = await _read(deviceStorageProvider).getApiToken();
     final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
@@ -101,14 +106,16 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({
-        'uuid': JwtDecoder.decode(token)['sub'] as String,
-        'token': JwtDecoder.decode(token)['refreshToken'] as String,
+        'uuid': token?.subject,
+        'token': token?.refreshToken,
         'latitude': location?.latitude,
         'longitude': location?.longitude,
       }),
     );
 
-    RescadoStorage.saveToken(response['token'] as String);
+    _read(deviceStorageProvider).saveApiToken(
+      ApiToken.fromJwt(response['jwt'] as String),
+    );
     return ApiAuthentication.fromJson(response);
   }
 
@@ -117,7 +124,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     _logger.d('recover()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/recover');
-    final token = await RescadoStorage.getToken();
+    final token = await _read(deviceStorageProvider).getApiToken();
     final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
@@ -129,13 +136,15 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({
-        'uuid': JwtDecoder.decode(token)['sub'] as String,
+        'uuid': token?.subject,
         'latitude': location?.latitude,
         'longitude': location?.longitude,
       }),
     );
 
-    RescadoStorage.saveToken(response['token'] as String);
+    _read(deviceStorageProvider).saveApiToken(
+      ApiToken.fromJwt(response['jwt'] as String),
+    );
     return ApiAuthentication.fromJson(response);
   }
 }

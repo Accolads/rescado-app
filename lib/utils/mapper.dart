@@ -14,7 +14,12 @@ class RescadoMapper {
       case ApiAccountStatus.blocked:
         return UserStatus.blocked;
       default:
-        throw Exception('Bad programming. Not all statusses were mapped.');
+        throw Exception('Bad programming. Not all statuses were mapped.');
     }
   }
+
+  static DateTime mapEpoch(int seconds) => DateTime.fromMillisecondsSinceEpoch(
+    seconds * 1000,
+    isUtc: true,
+  );
 }
