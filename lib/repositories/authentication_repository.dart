@@ -37,12 +37,14 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     _logger.d('register()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/register');
+    final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
+        RescadoConstants.deviceHeader: deviceName,
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({
@@ -60,12 +62,14 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
     _logger.d('login()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/login');
+    final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
+        RescadoConstants.deviceHeader: deviceName,
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({
@@ -86,12 +90,14 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/refresh');
     final token = await RescadoStorage.getToken();
+    final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
+        RescadoConstants.deviceHeader: deviceName,
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({
@@ -112,12 +118,14 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/recover');
     final token = await RescadoStorage.getToken();
+    final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
 
     final response = await _read(apiClientProvider).postJson(
       endpoint,
       headers: <String, String>{
+        RescadoConstants.deviceHeader: deviceName,
         HttpHeaders.userAgentHeader: userAgent,
       },
       body: jsonEncode({

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rescado/utils/logger.dart';
 
 final deviceDataProvider = Provider<DeviceData>(
@@ -39,28 +40,39 @@ class DeviceData {
     return await Geolocator.getCurrentPosition();
   }
 
-  // Gets the device's "user agent"
-  Future<String> getUserAgent() async {
-    _logger.d('getUserAgent()');
+  // Gets the device's friendly name
+  Future<String> getDeviceName() async {
+    _logger.d('getDeviceName()');
 
     if (Platform.isAndroid) {
-      var androidInfo = await DeviceInfoPlugin().androidInfo;
-      var release = androidInfo.version.release;
-      var manufacturer = androidInfo.manufacturer;
-      var model = androidInfo.model;
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      final release = androidInfo.version.release;
+      final manufacturer = androidInfo.manufacturer;
+      final model = androidInfo.model;
       return '$manufacturer $model (Android $release)'; // eg. Xiaomi Redmi Note 7 (Android 10)
     }
 
     if (Platform.isIOS) {
-      var iosInfo = await DeviceInfoPlugin().iosInfo;
-      var systemName = iosInfo.systemName;
-      var version = iosInfo.systemVersion;
-      var name = iosInfo.name;
-      // var model = iosInfo.model; // Always "iPhone", but included in $name.
+      final iosInfo = await DeviceInfoPlugin().iosInfo;
+      final systemName = iosInfo.systemName;
+      final version = iosInfo.systemVersion;
+      final name = iosInfo.name;
+      // var model = iosInfo.model; // Seems to always be "iPhone", but that's already included in $name.
       return 'Apple $name ($systemName $version)'; // eg. Apple iPhone 12 Pro (iOS 15.1)
     }
 
-    return 'Unknown device';
+    return 'Unknown';
+  }
+
+  // Gets the device's user-agent
+  Future<String> getUserAgent() async {
+    _logger.d('getUserAgent()');
+
+    final info = await PackageInfo.fromPlatform();
+    final name = info.appName;
+    final version = info.version;
+    final build = info.buildNumber;
+    return '$name v$version ($build)';
   }
 
   // Gets the device's current locale.

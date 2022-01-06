@@ -7,6 +7,9 @@ class RescadoConstants {
   // Timeout before giving up on a HTTP request
   static Duration get timeout => const Duration(seconds: 10);
 
+  // The custom header the server expects to reflect the device's name
+  static String get deviceHeader => 'user-device';
+
   // Maximum angle (in degrees) for the swipeable cards to rotate with
   static double get swipeableCardRotationAngle => 45.0;
 
