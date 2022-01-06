@@ -39,7 +39,7 @@ class ApiClient extends http.BaseClient {
     // If we're running the app during development, add some extra logs when we get a response. Hacky.
     return _client.send(request).then((response) async {
       final body = await response.stream.bytesToString();
-      _logRequest('Response', response.request.toString(), response.statusCode, response.headers, jsonEncode(jsonDecode(body)) );
+      _logRequest('Response', response.request.toString(), response.statusCode, response.headers, jsonEncode(jsonDecode(body)));
       return http.StreamedResponse(
         http.ByteStream.fromBytes(utf8.encode(body)),
         response.statusCode,
@@ -63,40 +63,40 @@ class ApiClient extends http.BaseClient {
   Future<Map<String, dynamic>> getJson(Uri url, {Map<String, String>? headers}) async {
     _logRequest('Request', 'GET $url', null, headers, null);
     return _parseResponse(
-        () async => await super.get(url, headers: await _authIfNeeded(url, headers)).timeout(RescadoConstants.timeout),
-      );
+      () async => await super.get(url, headers: await _authIfNeeded(url, headers)).timeout(RescadoConstants.timeout),
+    );
   }
 
   // BaseClient.post(), but with response processing and error handling.
   Future<Map<String, dynamic>> postJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
     _logRequest('Request', 'POST $url', null, headers, body as String);
     return _parseResponse(
-        () async => await super.post(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
-      );
+      () async => await super.post(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+    );
   }
 
   // BaseClient.put(), but with response processing and error handling.
   Future<Map<String, dynamic>> putJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
     _logRequest('Request', 'PUT $url', null, headers, body as String);
     return _parseResponse(
-        () async => await super.put(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
-      );
+      () async => await super.put(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+    );
   }
 
   // BaseClient.patch(), but with response processing and error handling.
   Future<Map<String, dynamic>> patchJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
     _logRequest('Request', 'PATCH $url', null, headers, body as String);
     return _parseResponse(
-        () async => await super.patch(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
-      );
+      () async => await super.patch(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+    );
   }
 
   // BaseClient.delete(), but with response processing and error handling.
   Future<Map<String, dynamic>> deleteJson(Uri url, {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
     _logRequest('Request', 'DELETE $url', null, headers, body as String);
     return _parseResponse(
-        () async => await super.delete(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
-      );
+      () async => await super.delete(url, headers: await _authIfNeeded(url, headers), body: body, encoding: encoding).timeout(RescadoConstants.timeout),
+    );
   }
 
   // If the url is not a public url, add the authorization header.
@@ -105,7 +105,7 @@ class ApiClient extends http.BaseClient {
       final token = await _read(deviceStorageProvider).getApiToken();
       if (token != null) {
         headers ??= {};
-        headers[HttpHeaders.authorizationHeader] =token.headerValue;
+        headers[HttpHeaders.authorizationHeader] = token.headerValue;
       }
       // If token is null (which only happens if bad programming), API will respond with missing credential error which we can then handle.
     }
@@ -144,13 +144,13 @@ class ApiClient extends http.BaseClient {
     }
   }
 
-  void _logRequest(String type, String request, int? status,Map<String, String>? headers, String? body){
+  void _logRequest(String type, String request, int? status, Map<String, String>? headers, String? body) {
     if (const bool.fromEnvironment('dart.vm.product')) {
       return;
     }
 
-    _logger.d('''$type: $request ${status == null ? '': '($status)' }
+    _logger.d('''$type: $request ${status == null ? '' : '($status)'}
  ↳ Headers: $headers
- ↳ Payload: ${body ?? 'null' }''');
+ ↳ Payload: ${body ?? 'null'}''');
   }
 }

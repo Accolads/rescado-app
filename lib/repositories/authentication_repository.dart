@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rescado/constants/rescado_constants.dart';
 import 'package:rescado/models/api_authentication.dart';
 import 'package:rescado/models/api_token.dart';

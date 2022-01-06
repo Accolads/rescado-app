@@ -3,6 +3,7 @@ class ApiException implements Exception {
   late final List<String> _keys;
 
   List<String> get messages => _messages;
+
   List<String> get keys => _keys;
 
   ApiException(List<String> messages) {

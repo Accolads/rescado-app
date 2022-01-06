@@ -1,10 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:rescado/models/api_account.dart';
-import 'package:rescado/providers/device_storage.dart';
 import 'package:rescado/exceptions/api_exception.dart';
 import 'package:rescado/models/account.dart';
+import 'package:rescado/models/api_account.dart';
 import 'package:rescado/models/user.dart';
+import 'package:rescado/providers/device_storage.dart';
 import 'package:rescado/repositories/account_repository.dart';
 import 'package:rescado/repositories/authentication_repository.dart';
 import 'package:rescado/utils/logger.dart';

@@ -14,18 +14,20 @@ class FullPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: Scrollbar(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              floating: true,
-              flexibleSpace:  PageTitle(label: title,),
-            ),
-             SliverToBoxAdapter(
-              child: body,
-            ),
-          ],
+        body: Scrollbar(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                floating: true,
+                flexibleSpace: PageTitle(
+                  label: title,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: body,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }

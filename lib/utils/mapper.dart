@@ -19,7 +19,7 @@ class RescadoMapper {
   }
 
   static DateTime mapEpoch(int seconds) => DateTime.fromMillisecondsSinceEpoch(
-    seconds * 1000,
-    isUtc: true,
-  );
+        seconds * 1000,
+        isUtc: true,
+      );
 }
