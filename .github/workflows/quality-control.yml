@@ -1,0 +1,80 @@
+name: Quality control
+
+on:
+  pull_request:
+    branches: [ develop, main ]
+  workflow_dispatch:
+
+jobs:
+  format:
+    name: Verify formatting
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Checkout codebase
+        id: checkout-codebase
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup environment
+        id: setup-environment
+        uses: ./.github/actions/setup-environment
+      - name: Run formatter
+        id: run-formatter
+        run: flutter format ./lib --set-exit-if-changed --line-length 500 --output none
+      - name: Send status to Slack
+        if: failure()
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+
+  analyze:
+    name: Perform analysis
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Checkout codebase
+        id: checkout-codebase
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup environment
+        id: setup-environment
+        uses: ./.github/actions/setup-environment
+      - name: Run analysis
+        id: run-analysis
+        run: flutter analyze
+      - name: Send status to Slack
+        if: failure()
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Checkout codebase
+        id: checkout-codebase
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup environment
+        id: setup-environment
+        uses: ./.github/actions/setup-environment
+      - name: Run tests
+        id: run-tests
+        run: flutter test
+      - name: Send status to Slack
+        if: failure()
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}

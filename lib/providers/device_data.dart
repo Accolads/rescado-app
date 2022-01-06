@@ -85,6 +85,7 @@ class DeviceData {
     final version = info.version;
     return build == version ? 'SNAPSHOT' : build;
     // This is a workaround. I don't know why device_info_plus does not properly parse build if it's a string
+    // Will be handled more cleanly when we can deduct this from the flavor used to build the app.
   }
 
   // Gets the device's current locale.
