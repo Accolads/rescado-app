@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:rescado/constants/rescado_constants.dart';
 import 'package:rescado/exceptions/api_exception.dart';
 import 'package:rescado/exceptions/offline_exception.dart';
@@ -15,42 +15,40 @@ final apiClientProvider = Provider<ApiClient>(
   (ref) => ApiClient._(ref.read),
 );
 
-// Wrapper around http that adds logging and some headers to requests, and logging, parsing and error handling to responses.
-class ApiClient extends http.BaseClient {
+// Wrapper around that adds logging and some headers to requests, and logging, parsing and error handling to responses.
+class ApiClient extends BaseClient {
   static final _logger = addLogger('ApiClient');
 
   final Reader _read;
-  final http.Client _client = http.Client();
+  final Client _client = Client();
 
   ApiClient._(this._read);
 
   // Intercept BaseClient.send(), add some headers and logging.
   @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
+  Future<StreamedResponse> send(BaseRequest request) {
     // Add some default headers to the request.
     request.headers[HttpHeaders.acceptLanguageHeader] = Platform.localeName;
     request.headers[HttpHeaders.acceptHeader] = ContentType.json.value;
     request.headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
 
-    // Log the request method and URL, then make the request.
-    if (const bool.fromEnvironment('dart.vm.product')) {
-      return _client.send(request);
-    }
     // If we're running the app during development, add some extra logs when we get a response. Hacky.
-    return _client.send(request).then((response) async {
-      final body = await response.stream.bytesToString();
-      _logRequest('Response', response.request.toString(), response.statusCode, response.headers, jsonEncode(jsonDecode(body)));
-      return http.StreamedResponse(
-        http.ByteStream.fromBytes(utf8.encode(body)),
-        response.statusCode,
-        headers: response.headers,
-        reasonPhrase: response.reasonPhrase,
-        persistentConnection: response.persistentConnection,
-        contentLength: response.contentLength,
-        isRedirect: response.isRedirect,
-        request: response.request,
-      );
-    });
+    return const bool.fromEnvironment('dart.vm.product')
+        ? _client.send(request)
+        : _client.send(request).then((response) async {
+            final body = await response.stream.bytesToString();
+            _logRequest('Response', response.request.toString(), response.statusCode, response.headers, body);
+            return StreamedResponse(
+              ByteStream.fromBytes(utf8.encode(body)),
+              response.statusCode,
+              headers: response.headers,
+              reasonPhrase: response.reasonPhrase,
+              persistentConnection: response.persistentConnection,
+              contentLength: response.contentLength,
+              isRedirect: response.isRedirect,
+              request: response.request,
+            );
+          });
   }
 
   // Probably overkill.
@@ -115,7 +113,7 @@ class ApiClient extends http.BaseClient {
   // Function to parse the JSON returned by the server as soon as the response gets in. Also handles errors thrown by the API and wraps other exceptions if thrown.
   Future<Map<String, dynamic>> _parseResponse(Function request) async {
     try {
-      final http.Response response = (await request()) as http.Response;
+      final Response response = (await request()) as Response;
       // Try to parse the JSON response and wrap it in an exception to shortcut the flow if applicable.
       var body = jsonDecode(response.body) as Map<String, dynamic>;
       if (body.containsKey('errors')) {
@@ -144,13 +142,25 @@ class ApiClient extends http.BaseClient {
     }
   }
 
-  void _logRequest(String type, String request, int? status, Map<String, String>? headers, String? body) {
+  void _logRequest(String type, String request, int? status, Object? headers, Object? payload) {
     if (const bool.fromEnvironment('dart.vm.product')) {
       return;
     }
 
+    // Log as stringified JSON for easy parsing if we need to debug them.
+    final prettyHeaders = headers == null
+        ? 'null'
+        : headers is String
+            ? jsonEncode(jsonDecode(headers))
+            : jsonEncode(headers);
+    final prettyPayload = payload == null
+        ? 'null'
+        : payload is String
+            ? jsonEncode(jsonDecode(payload))
+            : jsonEncode(payload);
+
     _logger.d('''$type: $request ${status == null ? '' : '($status)'}
- ↳ Headers: $headers
- ↳ Payload: ${body ?? 'null'}''');
+ ↳ Headers: $prettyHeaders
+ ↳ Payload: $prettyPayload''');
   }
 }
