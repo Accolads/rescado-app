@@ -9,6 +9,7 @@ jobs:
   build-apk:
     name: Android build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
@@ -22,13 +23,23 @@ jobs:
         uses: ./.github/actions/setup-environment
       - name: Build Android application
         id: build-android-app
-        run: flutter build apk --release --build-number=$GITHUB_RUN_NUMBER
+        run: |
+          # Print build info
+          APP_VERSION_NUMBER=$(sed -n 's/.*version: \([0-9\.]*\)\+.*/\1/p' pubspec.yaml)
+          echo "Version number: $APP_VERSION_NUMBER"
+          echo "Build number:   $GITHUB_RUN_NUMBER"
+          echo "artifactVersion=$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          # Make build
+          flutter build apk --release --build-number=$GITHUB_RUN_NUMBER
+          # Prepare artifact
+          mkdir artifact
+          mv build/app/outputs/flutter-apk/app-release.apk "artifact/rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.apk"
       - name: Archive Android application
         id: archive-android-app
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v2.3.1
         with:
-          name: Android build (zipped apk file, unsigned)
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: Android build ${{ env.artifactVersion }} (zipped apk file, unsigned)
+          path: artifact/*.apk
       - name: Send status to Slack
         if: failure()
         uses: act10ns/slack@v1.2.2
@@ -39,6 +50,7 @@ jobs:
   build-ipa:
     name: iOS build
     runs-on: macos-latest
+    timeout-minutes: 15
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
@@ -53,17 +65,24 @@ jobs:
       - name: Build iOS application
         id: build-ios-app
         run: |
+          # Print build info
+          APP_VERSION_NUMBER=$(sed -n 's/.*version: \([0-9\.]*\)\+.*/\1/p' pubspec.yaml)
+          echo "Version number: $APP_VERSION_NUMBER"
+          echo "Build number:   $GITHUB_RUN_NUMBER"
+          echo "artifactVersion=$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          # Make build
           flutter build ios --release --build-number=$GITHUB_RUN_NUMBER --no-codesign
-          mkdir -p Payload
-          cp -r build/ios/iphoneos/Runner.app Payload
-          zip -r -y Payload.zip Payload/Runner.app
-          mv Payload.zip app-release.ipa
+          # Prepare artifact
+          mkdir -p artifact/Payload
+          cp -r build/ios/iphoneos/Runner.app artifact/Payload
+          cd artifact
+          zip -r -y "rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.ipa" Payload/Runner.app
       - name: Archive iOS application
         id: archive-ios-app
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v2.3.1
         with:
-          name: iOS build (zipped ipa file, unsigned)
-          path: app-release.ipa
+          name: iOS build ${{ env.artifactVersion }} (zipped ipa file, unsigned)
+          path: artifact/*.ipa
       - name: Send status to Slack
         if: failure()
         uses: act10ns/slack@v1.2.2
