@@ -2,7 +2,7 @@ name: Build archiving
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, work/add-ci-timeouts ]
   workflow_dispatch:
 
 jobs:
