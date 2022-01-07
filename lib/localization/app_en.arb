@@ -1,0 +1,42 @@
+{
+  "@@locale" : "en",
+
+  "errorTitleAuthGeneric": "Something's wrong on the other side",
+  "errorBodyAuthGeneric": "The servers are not responding as expected. This is an issue on our end. Sorry about that!",
+
+  "errorTitleAuthOffline": "Looks like you're offline",
+  "errorBodyAuthOffline": "Looks like we can't reach our servers! Can you check your internet connection and try again?",
+
+  "labelAge": "Age",
+  "labelBack": "Back",
+  "labelDiscover": "Discover",
+  "labelFemaleCat": "Female",
+  "labelFemaleDog": "Female",
+  "labelMaleCat": "Male",
+  "labelMaleDog": "Male",
+  "labelProfile": "Profile",
+  "labelRetry": "Try again",
+  "labelSex": "Sex",
+  "labelShare": "Share",
+  "labelSwipe": "Swipe",
+  "labelWeight": "Weight",
+
+  "unitKilogram": "{value} kg",
+  "@unitKilogram": {
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  },
+  "unitYear": "{value,plural, =0{<1 yr} =1{1 yr} other{{value} yrs}}",
+  "@unitYear": {
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  }
+}
