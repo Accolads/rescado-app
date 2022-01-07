@@ -47,12 +47,10 @@ class ApiToken {
       issuedAt: RescadoMapper.mapEpoch(payload['iat'] as int),
       expiresAt: RescadoMapper.mapEpoch(payload['exp'] as int),
       notValidBefore: RescadoMapper.mapEpoch(payload['nbf'] as int),
-      // TODO remove null check below when merged https://github.com/Rescado/rescado-server/pull/4
-      deviceName: payload['device'] as String? ?? 'xxx',
+      deviceName: payload['device'] as String,
       userAgent: payload['agent'] as String,
-      ipAddress: payload['ipAddress'] as String? ?? 'yyy',
+      ipAddress: payload['ipAddress'] as String,
       refreshToken: payload['refreshToken'] as String,
-      // TODO remove null check below when merged https://github.com/Rescado/rescado-server/pull/4
       refreshExpiry: RescadoMapper.mapEpoch(payload['refreshExpiry'] as int),
     );
   }
