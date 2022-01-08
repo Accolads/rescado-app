@@ -15,7 +15,10 @@ class PageTitle extends StatelessWidget {
         child: Center(
           child: Text(
             label,
-            style: RescadoStyle.viewTitle(context),
+            style:  const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
       );

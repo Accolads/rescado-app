@@ -77,6 +77,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
               bottom: 40.0,
               child: Consumer(
                 builder: (_, WidgetRef ref, __) {
+                  //TODO use ref.listen(userControllerProvider, (previous, next) { });
                   return ref.watch(userControllerProvider).when(
                       data: (User user) {
                         var nextViewId = (user.status == UserStatus.anonymous || user.status == UserStatus.identified) ? MainView.viewId : AuthenticationView.viewId;
