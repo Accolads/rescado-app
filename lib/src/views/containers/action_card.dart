@@ -64,6 +64,7 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
           padding: EdgeInsets.only(top: widget._padding, left: widget._padding, right: widget._padding),
           // SVG needs to hit the bottom of the card
           child: Column(
+            mainAxisSize: MainAxisSize.min, // Don't stretch the parent container vertically
             crossAxisAlignment: CrossAxisAlignment.center, // Centers title (everything below is expanded)
             children: [
               Text(
