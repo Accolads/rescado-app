@@ -116,7 +116,7 @@ class ApiClient extends BaseClient {
       final Response response = (await request()) as Response;
 
       // If the response is an array, the request could only have been successful so zwe can return response straightaway.
-      if( response.body.startsWith('[') ){
+      if (response.body.startsWith('[')) {
         return jsonDecode(response.body);
       }
       // Try to parse the JSON response and wrap it in an exception to shortcut the flow if applicable.

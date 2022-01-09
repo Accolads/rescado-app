@@ -17,7 +17,7 @@ abstract class LikeRepository {
   Future<List<Like>> getAllLikes();
 
   Future<LikeAction> addLikes({required List<Animal> animals});
-  
+
   Future<LikeAction> deleteLikes({required List<Animal> animals});
 }
 
