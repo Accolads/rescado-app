@@ -1,7 +1,7 @@
 import 'package:rescado/src/data/models/api_account.dart';
 import 'package:rescado/src/data/models/user.dart';
 
-extension UserStatusExtension on ApiAccountStatus{
+extension UserStatusExtension on ApiAccountStatus {
   UserStatus toUserStatus() {
     switch (this) {
       case ApiAccountStatus.anonymous:

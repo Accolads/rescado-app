@@ -14,7 +14,7 @@ class PageTitle extends StatelessWidget {
         child: Center(
           child: Text(
             label,
-            style:  const TextStyle(
+            style: const TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w800,
             ),

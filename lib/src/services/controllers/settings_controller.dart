@@ -22,13 +22,13 @@ class SettingsController extends StateNotifier<Settings> {
     _logger.d('initialize()');
 
     // Fetch the user's UI preferences
-   final futures = await Future.wait([
+    final futures = await Future.wait([
       _read(deviceStorageProvider).getThemeMode(),
       _read(deviceStorageProvider).getLightThemeIdentifier(),
       _read(deviceStorageProvider).getDarkThemeIdentifier(),
-   ]);
+    ]);
 
-   // Paint the status bar colors correctly
+    // Paint the status bar colors correctly
     resetStatusBarColors();
 
     // Do nothing if the user has no preferences
@@ -57,7 +57,7 @@ class SettingsController extends StateNotifier<Settings> {
     );
   }
 
-  void setLightTheme(CustomThemeIdentifier lightThemeIdentifier){
+  void setLightTheme(CustomThemeIdentifier lightThemeIdentifier) {
     _logger.d('setLightTheme()');
 
     if (lightThemeIdentifier == state.lightTheme.identifier) {
@@ -72,7 +72,7 @@ class SettingsController extends StateNotifier<Settings> {
     );
   }
 
-  void setDarkTheme(CustomThemeIdentifier darkThemeIdentifier){
+  void setDarkTheme(CustomThemeIdentifier darkThemeIdentifier) {
     _logger.d('setDarkTheme()');
 
     if (darkThemeIdentifier == state.darkTheme.identifier) {
@@ -89,5 +89,4 @@ class SettingsController extends StateNotifier<Settings> {
   void resetStatusBarColors() => SystemChrome.setSystemUIOverlayStyle(state.activeTheme.brightness == Brightness.light ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light);
 
   void invertStatusBarColors() => SystemChrome.setSystemUIOverlayStyle(state.activeTheme.brightness == Brightness.light ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
-
 }

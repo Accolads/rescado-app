@@ -105,7 +105,7 @@ class DeviceStorage {
 
   Future<ApiToken?> getApiToken() async {
     _logger.d('getApiToken()');
-    
+
     if (_apiTokenCache == null) {
       String? apiToken = (await SharedPreferences.getInstance()).getString(_apiTokenKey);
       _apiTokenCache = apiToken == null ? null : ApiToken.fromJwt(apiToken);
@@ -125,5 +125,5 @@ class DeviceStorage {
     }
   }
 
-   /* endregion */
+  /* endregion */
 }

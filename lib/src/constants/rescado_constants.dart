@@ -29,8 +29,8 @@ class RescadoConstants {
 
   //  Small titles used in cards, buttons or popups that prompt for action
   static TextStyle get actionLabel => const TextStyle(
-    fontWeight: FontWeight.w500,
-  );
+        fontWeight: FontWeight.w500,
+      );
 
   // endregion
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 enum CustomThemeIdentifier {
   light,
@@ -22,7 +21,7 @@ class CustomTheme {
   final Color primaryColor;
 
   // The opposite from the colors above. To display on containers that already flip the colors around.
-  final Color primaryInvertedColor;
+  final Color primaryInvertedColor; // TODO If it is March and this is still not used anywher, remove this field
 
   // The primary color but slightly dimmed. Usually to indicate an option that is not selected.
   final Color primaryDimmedColor;
@@ -31,12 +30,12 @@ class CustomTheme {
   final Color backgroundColor;
 
   // The "standard" background color, but inverted.
-  final Color backgroundInvertedColor;
+  final Color backgroundInvertedColor; // TODO If it is March and this is still not used anywher, remove this field
 
   // A variant on the background color for some subtle contrast. Should be less prominent than the actual background color.
   final Color backgroundVariantColor;
 
-  // ThemeData for material widgets TODO remove properties that have no impact (aka that were just set so we could read them in custom widgets)
+  // ThemeData for material widgets
   ThemeData get themeData => ThemeData(
         fontFamily: 'M+ Rounded 1c',
         brightness: brightness,
