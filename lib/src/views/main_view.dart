@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rescado/src/constants/rescado_style.dart';
+import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/views/discover_view.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/profile_view.dart';
@@ -24,17 +24,17 @@ class _MainViewState extends State<MainView> {
 
   final _tabData = [
     _MainViewTabData(
-      svgAsset: RescadoStyle.iconCompass,
+      svgAsset: RescadoConstants.iconCompass,
       label: (BuildContext context) => AppLocalizations.of(context)!.labelDiscover,
       view: const DiscoverView(),
     ),
     _MainViewTabData(
-      svgAsset: RescadoStyle.iconLogo,
+      svgAsset: RescadoConstants.iconLogo,
       label: (BuildContext context) => AppLocalizations.of(context)!.labelSwipe,
       view: const SwipeView(),
     ),
     _MainViewTabData(
-      svgAsset: RescadoStyle.iconUser,
+      svgAsset: RescadoConstants.iconUser,
       label: (BuildContext context) => AppLocalizations.of(context)!.labelProfile,
       view: const ProfileView(),
     ),

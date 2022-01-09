@@ -7,7 +7,7 @@ enum CustomThemeIdentifier {
 }
 
 class CustomTheme {
-  final CustomThemeIdentifier id;
+  final CustomThemeIdentifier identifier;
 
   // General indication whether the theme is a "light" or "dark" theme.
   final Brightness brightness;
@@ -40,6 +40,7 @@ class CustomTheme {
   ThemeData get themeData => ThemeData(
         fontFamily: 'M+ Rounded 1c',
         brightness: brightness,
+        colorScheme: brightness == Brightness.light ? const ColorScheme.light().copyWith(secondary: accentColor) : const ColorScheme.dark().copyWith(secondary: accentColor),
         primaryColor: primaryColor,
         backgroundColor: backgroundVariantColor,
         scaffoldBackgroundColor: backgroundColor,
@@ -53,13 +54,8 @@ class CustomTheme {
         ),
       );
 
-  //  Small titles used in cards, buttons or popups that prompt for action
-  TextStyle get actionLabel => const TextStyle(
-        fontWeight: FontWeight.w500,
-      );
-
   CustomTheme._({
-    required this.id,
+    required this.identifier,
     required this.brightness,
     required this.accentColor,
     required this.accentDimmedColor,
@@ -71,8 +67,8 @@ class CustomTheme {
     required this.backgroundVariantColor,
   });
 
-  factory CustomTheme.fromId(CustomThemeIdentifier id) {
-    switch (id) {
+  factory CustomTheme.fromId(CustomThemeIdentifier identifier) {
+    switch (identifier) {
       case CustomThemeIdentifier.light:
         return CustomTheme.light();
       case CustomThemeIdentifier.dark:
@@ -81,7 +77,7 @@ class CustomTheme {
   }
 
   factory CustomTheme.light() => CustomTheme._(
-        id: CustomThemeIdentifier.light,
+        identifier: CustomThemeIdentifier.light,
         brightness: Brightness.light,
         accentColor: const Color(0xFFFBD45C),
         accentDimmedColor: const Color(0xFFFBF4E0),
@@ -94,7 +90,7 @@ class CustomTheme {
       );
 
   factory CustomTheme.dark() => CustomTheme._(
-        id: CustomThemeIdentifier.dark,
+        identifier: CustomThemeIdentifier.dark,
         brightness: Brightness.dark,
         accentColor: const Color(0xFFFBD45C),
         accentDimmedColor: const Color(0xFFFBF4E0),
@@ -105,6 +101,4 @@ class CustomTheme {
         backgroundInvertedColor: Colors.white,
         backgroundVariantColor: const Color(0xFF050505),
       );
-
-//  void invertStatusBarColors() => SystemChrome.setSystemUIOverlayStyle(brightness == Brightness.light ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
 }

@@ -1,11 +1,9 @@
 import 'package:rescado/src/data/models/api_account.dart';
 import 'package:rescado/src/data/models/user.dart';
 
-class RescadoMapper {
-  RescadoMapper._();
-
-  static UserStatus mapUserStatus(ApiAccountStatus apiAccountStatus) {
-    switch (apiAccountStatus) {
+extension UserStatusExtension on ApiAccountStatus{
+  UserStatus toUserStatus() {
+    switch (this) {
       case ApiAccountStatus.anonymous:
         return UserStatus.anonymous;
       case ApiAccountStatus.enrolled:
@@ -17,9 +15,11 @@ class RescadoMapper {
         throw Exception('Bad programming. Not all statuses were mapped.');
     }
   }
+}
 
-  static DateTime mapEpoch(int seconds) => DateTime.fromMillisecondsSinceEpoch(
-        seconds * 1000,
+extension DateTimeExtension on int {
+  DateTime toEpoch() => DateTime.fromMillisecondsSinceEpoch(
+        this * 1000,
         isUtc: true,
       );
 }

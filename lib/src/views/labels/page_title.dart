@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rescado/src/constants/rescado_style.dart';
 
 class PageTitle extends StatelessWidget {
   final String label;

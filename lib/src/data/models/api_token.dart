@@ -1,6 +1,6 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rescado/src/data/models/api_account.dart';
-import 'package:rescado/src/utils/mapper.dart';
+import 'package:rescado/src/utils/extensions.dart';
 
 class ApiToken {
   final String jwt;
@@ -44,14 +44,14 @@ class ApiToken {
       audience: payload['aud'] as String,
       subject: payload['sub'] as String,
       status: ApiAccountStatus.values.byName((payload['status'] as String).toLowerCase()),
-      issuedAt: RescadoMapper.mapEpoch(payload['iat'] as int),
-      expiresAt: RescadoMapper.mapEpoch(payload['exp'] as int),
-      notValidBefore: RescadoMapper.mapEpoch(payload['nbf'] as int),
+      issuedAt: (payload['iat'] as int).toEpoch(),
+      expiresAt: (payload['exp'] as int).toEpoch(),
+      notValidBefore: (payload['nbf'] as int).toEpoch(),
       deviceName: payload['device'] as String,
       userAgent: payload['agent'] as String,
       ipAddress: payload['ipAddress'] as String,
       refreshToken: payload['refreshToken'] as String,
-      refreshExpiry: RescadoMapper.mapEpoch(payload['refreshExpiry'] as int),
+      refreshExpiry: (payload['refreshExpiry'] as int).toEpoch(),
     );
   }
 }
