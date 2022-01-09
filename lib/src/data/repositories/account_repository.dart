@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
-import 'package:rescado/src/data/models/api_account.dart';
+import 'package:rescado/src/data/models/account.dart';
 import 'package:rescado/src/services/providers/api_client.dart';
 import 'package:rescado/src/utils/logger.dart';
 
@@ -10,9 +10,9 @@ final accountRepositoryProvider = Provider<AccountRepository>(
 
 // All API endpoints regarding account.
 abstract class AccountRepository {
-  Future<ApiAccount> getAccount();
+  Future<Account> getAccount();
 
-  Future<ApiAccount> patchAccount({required String name, required String email, required String password, required String avatar});
+  Future<Account> patchAccount({required String name, required String email, required String password, required String avatar});
 }
 
 class ApiAccountRepository implements AccountRepository {
@@ -23,20 +23,20 @@ class ApiAccountRepository implements AccountRepository {
   ApiAccountRepository(this._read);
 
   @override
-  Future<ApiAccount> getAccount() async {
+  Future<Account> getAccount() async {
     _logger.d('getAccount()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/account');
 
     final response = await _read(apiClientProvider).getJson(
       endpoint,
-    );
+    ) as Map<String, dynamic>;
 
-    return ApiAccount.fromJson(response);
+    return Account.fromJson(response);
   }
 
   @override
-  Future<ApiAccount> patchAccount({required String name, required String email, required String password, required String avatar}) {
+  Future<Account> patchAccount({required String name, required String email, required String password, required String avatar}) {
     // TODO: implement patchAccount
     throw UnimplementedError();
   }
