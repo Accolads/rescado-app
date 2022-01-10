@@ -115,13 +115,13 @@ class ApiClient extends BaseClient {
     try {
       final Response response = (await request()) as Response;
 
-      // If the response is an array, the request could only have been successful so zwe can return response straightaway.
+      // If the response is an array, the request could only have been successful so we can return response straightaway.
       if (response.body.startsWith('[')) {
         return jsonDecode(response.body);
       }
       // Try to parse the JSON response and wrap it in an exception to shortcut the flow if applicable.
       var body = jsonDecode(response.body) as Map<String, dynamic>;
-      if (response.statusCode != 200 && body.containsKey('errors')) {
+      if (response.statusCode != HttpStatus.ok && body.containsKey('errors')) {
         throw ApiException(body['errors'] as List<String>);
       }
       // If the response contains a JWT token in the Authorization header, add it to the response we're returning.
