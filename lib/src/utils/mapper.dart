@@ -1,17 +1,17 @@
-import 'package:rescado/src/data/models/api_account.dart';
+import 'package:rescado/src/data/models/account.dart';
 import 'package:rescado/src/data/models/user.dart';
 
 class RescadoMapper {
   RescadoMapper._();
 
-  static UserStatus mapUserStatus(ApiAccountStatus apiAccountStatus) {
-    switch (apiAccountStatus) {
-      case ApiAccountStatus.anonymous:
+  static UserStatus mapUserStatus(AccountStatus accountStatus) {
+    switch (accountStatus) {
+      case AccountStatus.anonymous:
         return UserStatus.anonymous;
-      case ApiAccountStatus.enrolled:
-      case ApiAccountStatus.volunteer:
+      case AccountStatus.enrolled:
+      case AccountStatus.volunteer:
         return UserStatus.identified;
-      case ApiAccountStatus.blocked:
+      case AccountStatus.blocked:
         return UserStatus.blocked;
       default:
         throw Exception('Bad programming. Not all statuses were mapped.');

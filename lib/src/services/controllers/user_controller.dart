@@ -1,6 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/account.dart';
-import 'package:rescado/src/data/models/api_account.dart';
 import 'package:rescado/src/data/models/user.dart';
 import 'package:rescado/src/data/repositories/account_repository.dart';
 import 'package:rescado/src/data/repositories/authentication_repository.dart';
@@ -24,9 +23,6 @@ class UserController extends StateNotifier<AsyncValue<User>> {
     _logger.d('initialize()');
     state = const AsyncValue.loading();
 
-    // TODO This is purely aesthetic. Remove this line below when we are tired of the nicely animated logo. If you read this in February, remove it.
-    await Future<dynamic>.delayed(const Duration(milliseconds: 4444));
-
     // Handle authentication as soon as this controller is loaded.
     renewSession();
   }
@@ -37,7 +33,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
     state = const AsyncValue.loading();
 
     try {
-      final token = await _read(deviceStorageProvider).getApiToken();
+      final token = await _read(deviceStorageProvider).getToken();
 
       if (token == null) {
         // TODO Do we want to consider, in the future, offering the user the option to log in before automatically creating an account?
@@ -56,7 +52,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
         if (exception.keys.first == 'TokenExpired') {
           _logger.w('The session is expired.');
 
-          if (token.status == ApiAccountStatus.anonymous) {
+          if (token.status == AccountStatus.anonymous) {
             _logger.i('User was anonymous. Attempting to recover the session with our UUID.');
             await _read(authenticationRepositoryProvider).recover();
           } else {
@@ -87,16 +83,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
 
     return User(
       status: RescadoMapper.mapUserStatus(accountData.status),
-      account: Account(
-        uuid: accountData.uuid,
-        name: accountData.name,
-        avatar: accountData.avatar?.reference,
-      ),
-      email: accountData.email,
-      appleLinked: accountData.appleLinked,
-      googleLinked: accountData.googleLinked,
-      facebookLinked: accountData.facebookLinked,
-      twitterLinked: accountData.twitterLinked,
+      account: accountData,
     );
   }
 }

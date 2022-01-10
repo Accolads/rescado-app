@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rescado/src/data/models/api_token.dart';
+import 'package:rescado/src/data/models/token.dart';
 import 'package:rescado/src/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,26 +41,26 @@ class DeviceStorage {
   /* endregion */
   /* region token */
 
-  final _apiTokenKey = 'apiToken';
-  ApiToken? _apiTokenCache;
+  final _tokenKey = 'token';
+  Token? _tokenCache;
 
-  Future<ApiToken?> getApiToken() async {
-    _logger.d('getApiToken()');
-    if (_apiTokenCache == null) {
-      String? apiToken = (await SharedPreferences.getInstance()).getString(_apiTokenKey);
-      _apiTokenCache = apiToken == null ? null : ApiToken.fromJwt(apiToken);
+  Future<Token?> getToken() async {
+    _logger.d('getToken()');
+    if (_tokenCache == null) {
+      String? token = (await SharedPreferences.getInstance()).getString(_tokenKey);
+      _tokenCache = token == null ? null : Token.fromJwt(token);
     }
-    return _apiTokenCache;
+    return _tokenCache;
   }
 
-  void saveApiToken(ApiToken? apiToken) async {
-    _logger.d('saveApiToken()');
-    _apiTokenCache = apiToken;
+  void saveToken(Token? token) async {
+    _logger.d('saveToken()');
+    _tokenCache = token;
     final sharedPreferences = await SharedPreferences.getInstance();
-    if (apiToken == null) {
-      sharedPreferences.remove(_apiTokenKey);
+    if (token == null) {
+      sharedPreferences.remove(_tokenKey);
     } else {
-      sharedPreferences.setString(_apiTokenKey, apiToken.jwt);
+      sharedPreferences.setString(_tokenKey, token.jwt);
     }
   }
 
