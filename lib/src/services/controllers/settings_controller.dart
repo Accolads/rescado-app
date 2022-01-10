@@ -28,9 +28,6 @@ class SettingsController extends StateNotifier<Settings> {
       _read(deviceStorageProvider).getDarkThemeIdentifier(),
     ]);
 
-    // Paint the status bar colors correctly
-    resetStatusBarColors();
-
     // Do nothing if the user has no preferences
     if (futures.every((preference) => preference == null)) {
       return;
@@ -41,6 +38,9 @@ class SettingsController extends StateNotifier<Settings> {
       lightThemeIdentifier: futures[1] as CustomThemeIdentifier?,
       darkThemeIdentifier: futures[2] as CustomThemeIdentifier?,
     );
+
+    // Correct status bar colors
+    _correctStatusBarColors();
   }
 
   void setThemeMode(ThemeMode themeMode) {
@@ -51,6 +51,7 @@ class SettingsController extends StateNotifier<Settings> {
       return;
     }
     _read(deviceStorageProvider).saveThemeMode(themeMode);
+    _correctStatusBarColors();
 
     state = state.copyWith(
       themeMode: themeMode,
@@ -65,7 +66,6 @@ class SettingsController extends StateNotifier<Settings> {
       return;
     }
     _read(deviceStorageProvider).saveLightThemeIdentifier(lightThemeIdentifier);
-    resetStatusBarColors();
 
     state = state.copyWith(
       lightThemeIdentifier: lightThemeIdentifier,
@@ -86,7 +86,29 @@ class SettingsController extends StateNotifier<Settings> {
     );
   }
 
-  void resetStatusBarColors() => SystemChrome.setSystemUIOverlayStyle(state.activeTheme.brightness == Brightness.light ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light);
+  void invertStatusBarColors() {
+    _logger.d('invertStatusBarColors()');
 
-  void invertStatusBarColors() => SystemChrome.setSystemUIOverlayStyle(state.activeTheme.brightness == Brightness.light ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    state = state.copyWith(
+      invertedStatusBar: true,
+    );
+    _correctStatusBarColors();
+  }
+
+  void resetStatusBarColors() {
+    _logger.d('resetStatusBarColors()');
+
+    state = state.copyWith(
+      invertedStatusBar: false,
+    );
+    _correctStatusBarColors();
+  }
+
+  void _correctStatusBarColors() {
+    if (state.invertedStatusBar) {
+      SystemChrome.setSystemUIOverlayStyle(state.activeTheme.brightness == Brightness.light ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(state.activeTheme.brightness == Brightness.light ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light);
+    }
+  }
 }
