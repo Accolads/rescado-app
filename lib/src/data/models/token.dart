@@ -1,13 +1,13 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:rescado/src/data/models/api_account.dart';
+import 'package:rescado/src/data/models/account.dart';
 import 'package:rescado/src/utils/extensions.dart';
 
-class ApiToken {
+class Token {
   final String jwt;
   final String issuer;
   final String audience;
   final String subject; // aka account uuid
-  final ApiAccountStatus status;
+  final AccountStatus status;
   final DateTime issuedAt;
   final DateTime expiresAt;
   final DateTime notValidBefore;
@@ -19,7 +19,7 @@ class ApiToken {
 
   String get headerValue => 'Bearer $jwt';
 
-  ApiToken._({
+  Token._({
     required this.jwt,
     required this.issuer,
     required this.audience,
@@ -35,15 +35,15 @@ class ApiToken {
     required this.refreshExpiry,
   });
 
-  factory ApiToken.fromJwt(String jwt) {
+  factory Token.fromJwt(String jwt) {
     final payload = JwtDecoder.decode(jwt);
 
-    return ApiToken._(
+    return Token._(
       jwt: jwt,
       issuer: payload['iss'] as String,
       audience: payload['aud'] as String,
       subject: payload['sub'] as String,
-      status: ApiAccountStatus.values.byName((payload['status'] as String).toLowerCase()),
+      status: AccountStatus.values.byName((payload['status'] as String).toLowerCase()),
       issuedAt: (payload['iat'] as int).toEpoch(),
       expiresAt: (payload['exp'] as int).toEpoch(),
       notValidBefore: (payload['nbf'] as int).toEpoch(),

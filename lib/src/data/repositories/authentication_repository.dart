@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
-import 'package:rescado/src/data/models/api_authentication.dart';
-import 'package:rescado/src/data/models/api_token.dart';
+import 'package:rescado/src/data/models/authentication.dart';
+import 'package:rescado/src/data/models/token.dart';
 import 'package:rescado/src/services/providers/api_client.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
 import 'package:rescado/src/services/providers/device_storage.dart';
@@ -16,13 +16,13 @@ final authenticationRepositoryProvider = Provider<AuthenticationRepository>(
 
 // All API endpoints regarding authentication.
 abstract class AuthenticationRepository {
-  Future<ApiAuthentication> register();
+  Future<Authentication> register();
 
-  Future<ApiAuthentication> login({required String email, required String password});
+  Future<Authentication> login({required String email, required String password});
 
-  Future<ApiAuthentication> refresh();
+  Future<Authentication> refresh();
 
-  Future<ApiAuthentication> recover();
+  Future<Authentication> recover();
 }
 
 class ApiAuthenticationRepository implements AuthenticationRepository {
@@ -33,7 +33,7 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
   ApiAuthenticationRepository(this._read);
 
   @override
-  Future<ApiAuthentication> register() async {
+  Future<Authentication> register() async {
     _logger.d('register()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/register');
@@ -51,16 +51,16 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         'latitude': location?.latitude,
         'longitude': location?.longitude,
       }),
-    );
+    ) as Map<String, dynamic>;
 
-    _read(deviceStorageProvider).saveApiToken(
-      ApiToken.fromJwt(response['jwt'] as String),
+    _read(deviceStorageProvider).saveToken(
+      Token.fromJwt(response['jwt'] as String),
     );
-    return ApiAuthentication.fromJson(response);
+    return Authentication.fromJson(response);
   }
 
   @override
-  Future<ApiAuthentication> login({required String email, required String password}) async {
+  Future<Authentication> login({required String email, required String password}) async {
     _logger.d('login()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/login');
@@ -80,20 +80,20 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         'latitude': location?.latitude,
         'longitude': location?.longitude,
       }),
-    );
+    ) as Map<String, dynamic>;
 
-    _read(deviceStorageProvider).saveApiToken(
-      ApiToken.fromJwt(response['jwt'] as String),
+    _read(deviceStorageProvider).saveToken(
+      Token.fromJwt(response['jwt'] as String),
     );
-    return ApiAuthentication.fromJson(response);
+    return Authentication.fromJson(response);
   }
 
   @override
-  Future<ApiAuthentication> refresh() async {
+  Future<Authentication> refresh() async {
     _logger.d('refresh()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/refresh');
-    final token = await _read(deviceStorageProvider).getApiToken();
+    final token = await _read(deviceStorageProvider).getToken();
     final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
@@ -110,20 +110,20 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         'latitude': location?.latitude,
         'longitude': location?.longitude,
       }),
-    );
+    ) as Map<String, dynamic>;
 
-    _read(deviceStorageProvider).saveApiToken(
-      ApiToken.fromJwt(response['jwt'] as String),
+    _read(deviceStorageProvider).saveToken(
+      Token.fromJwt(response['jwt'] as String),
     );
-    return ApiAuthentication.fromJson(response);
+    return Authentication.fromJson(response);
   }
 
   @override
-  Future<ApiAuthentication> recover() async {
+  Future<Authentication> recover() async {
     _logger.d('recover()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/auth/recover');
-    final token = await _read(deviceStorageProvider).getApiToken();
+    final token = await _read(deviceStorageProvider).getToken();
     final deviceName = await _read(deviceDataProvider).getDeviceName();
     final userAgent = await _read(deviceDataProvider).getUserAgent();
     final location = await _read(deviceDataProvider).getLocation();
@@ -139,11 +139,11 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
         'latitude': location?.latitude,
         'longitude': location?.longitude,
       }),
-    );
+    ) as Map<String, dynamic>;
 
-    _read(deviceStorageProvider).saveApiToken(
-      ApiToken.fromJwt(response['jwt'] as String),
+    _read(deviceStorageProvider).saveToken(
+      Token.fromJwt(response['jwt'] as String),
     );
-    return ApiAuthentication.fromJson(response);
+    return Authentication.fromJson(response);
   }
 }

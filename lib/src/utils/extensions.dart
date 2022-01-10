@@ -1,15 +1,15 @@
-import 'package:rescado/src/data/models/api_account.dart';
+import 'package:rescado/src/data/models/account.dart';
 import 'package:rescado/src/data/models/user.dart';
 
-extension UserStatusExtension on ApiAccountStatus {
+extension UserStatusExtension on AccountStatus {
   UserStatus toUserStatus() {
     switch (this) {
-      case ApiAccountStatus.anonymous:
+      case AccountStatus.anonymous:
         return UserStatus.anonymous;
-      case ApiAccountStatus.enrolled:
-      case ApiAccountStatus.volunteer:
+      case AccountStatus.enrolled:
+      case AccountStatus.volunteer:
         return UserStatus.identified;
-      case ApiAccountStatus.blocked:
+      case AccountStatus.blocked:
         return UserStatus.blocked;
       default:
         throw Exception('Bad programming. Not all statuses were mapped.');
