@@ -19,10 +19,10 @@ class RescadoConstants {
   // Minimum horizontal offset for a swipeable card to be dragged before registering as a swipe
   static num get swipeableCardDragOffset => 150;
 
-  // Default light theme when the user had not defined a preference himself yet.
+  // Default light theme when the user has not defined a preference himself yet.
   static CustomThemeIdentifier get defaultLightTheme => CustomThemeIdentifier.light;
 
-  // Default dark theme when the user had not defined a preference himself yet.
+  // Default dark theme when the user has not defined a preference himself yet.
   static CustomThemeIdentifier get defaultDarkTheme => CustomThemeIdentifier.dark;
 
   // region Text styles
