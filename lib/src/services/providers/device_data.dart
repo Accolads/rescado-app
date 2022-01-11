@@ -59,8 +59,8 @@ class DeviceData {
       final systemName = iosInfo.systemName;
       final version = iosInfo.systemVersion;
       final name = iosInfo.name;
-      // var model = iosInfo.model; // Seems to always be "iPhone", but that's already included in $name.
-      return 'Apple $name ($systemName $version)'; // eg. Apple iPhone 12 Pro (iOS 15.1)
+      // var model = iosInfo.model;
+      return '$name ($systemName $version)'; // eg. Qrivi's iPhone (iOS 15.1)
     }
 
     return 'Unknown';

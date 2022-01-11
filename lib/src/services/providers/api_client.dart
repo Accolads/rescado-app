@@ -122,7 +122,7 @@ class ApiClient extends BaseClient {
       // Try to parse the JSON response and wrap it in an exception to shortcut the flow if applicable.
       var body = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode != HttpStatus.ok && body.containsKey('errors')) {
-        throw ApiException(body['errors'] as List<String>);
+        throw ApiException(List<String>.from(body['errors'] as List));
       }
       // If the response contains a JWT token in the Authorization header, add it to the response we're returning.
       var authorization = response.headers[HttpHeaders.authorizationHeader];

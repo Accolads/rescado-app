@@ -5,8 +5,8 @@ import 'package:rescado/src/data/repositories/account_repository.dart';
 import 'package:rescado/src/data/repositories/authentication_repository.dart';
 import 'package:rescado/src/exceptions/api_exception.dart';
 import 'package:rescado/src/services/providers/device_storage.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/utils/logger.dart';
-import 'package:rescado/src/utils/mapper.dart';
 
 final userControllerProvider = StateNotifierProvider<UserController, AsyncValue<User>>(
   (ref) => UserController(ref.read).._initialize(),
@@ -70,7 +70,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
       state = AsyncValue.data(await _fetchUserData());
     } catch (error, stackTrace) {
       // This is purely UX. Hitting the retry button must make it look like something is happening too, even if the result is instant.
-      await Future<dynamic>.delayed(const Duration(milliseconds: 4444));
+      await Future<dynamic>.delayed(const Duration(milliseconds: 3333));
 
       _logger.e('Session renewal failed.', error, stackTrace);
       state = AsyncValue.error(error);
@@ -82,7 +82,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
     final accountData = await _read(accountRepositoryProvider).getAccount();
 
     return User(
-      status: RescadoMapper.mapUserStatus(accountData.status),
+      status: accountData.status.toUserStatus(),
       account: accountData,
     );
   }

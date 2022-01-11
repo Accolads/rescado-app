@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rescado/src/constants/rescado_style.dart';
+import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 
 // Card that looks like a modal popup, but because it isn't, won't block other parts of the screen. Displays a title and a body, and optionally an SVG and/or action button.
@@ -64,11 +64,12 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
           padding: EdgeInsets.only(top: widget._padding, left: widget._padding, right: widget._padding),
           // SVG needs to hit the bottom of the card
           child: Column(
+            mainAxisSize: MainAxisSize.min, // Don't stretch the parent container vertically
             crossAxisAlignment: CrossAxisAlignment.center, // Centers title (everything below is expanded)
             children: [
               Text(
                 widget.title,
-                style: RescadoStyle.actionLabel(context),
+                style: RescadoConstants.actionLabel,
               ),
               _buildBody(context),
             ],
@@ -106,7 +107,7 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
         padding: EdgeInsets.symmetric(vertical: widget._padding),
         child: Text(
           widget.body,
-          style: RescadoStyle.actionBody(context),
+          style: RescadoConstants.actionLabel,
         ),
       );
     }
@@ -116,10 +117,7 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
       children: [
         Padding(
           padding: EdgeInsets.only(top: widget._padding, left: widget._padding, bottom: widget._padding),
-          child: Text(
-            widget.body,
-            style: RescadoStyle.actionBody(context),
-          ),
+          child: Text(widget.body),
         ),
         Align(
           alignment: Alignment.bottomRight,

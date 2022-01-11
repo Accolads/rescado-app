@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rescado/src/constants/rescado_style.dart';
 
 class PageTitle extends StatelessWidget {
   final String label;
@@ -15,7 +14,10 @@ class PageTitle extends StatelessWidget {
         child: Center(
           child: Text(
             label,
-            style: RescadoStyle.viewTitle(context),
+            style: const TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
       );
