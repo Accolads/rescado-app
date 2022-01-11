@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rescado/src/data/custom_theme.dart';
 
 class RescadoConstants {
