@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rescado/constants/rescado_constants.dart';
-import 'package:rescado/models/swipedata.dart';
-import 'package:rescado/utils/logger.dart';
+import 'package:rescado/src/constants/rescado_constants.dart';
+import 'package:rescado/src/data/models/swipedata.dart';
+import 'package:rescado/src/utils/logger.dart';
 
 final swipeControllerProvider = StateNotifierProvider<SwipeController, AsyncValue<SwipeData>>(
   (ref) => SwipeController(ref.read).._initialize(),
@@ -84,7 +84,7 @@ class SwipeController extends StateNotifier<AsyncValue<SwipeData>> {
       return;
     }
 
-// Didn't swipe far enough so we'll reset the card's position
+    // Didn't swipe far enough so we'll reset the card's position
     _logger.i('User performed a "neutral" swipe (horizontal offset: ${state.value!.offset.dx})');
 
     var swipeData = state.value!.copyWith(
