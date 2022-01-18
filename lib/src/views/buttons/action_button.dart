@@ -31,12 +31,12 @@ class _ActionButtonState extends ConsumerState<ActionButton> with SingleTickerPr
 
   @override
   void initState() {
+    super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-
-    super.initState();
   }
 
   @override

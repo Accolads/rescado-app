@@ -32,12 +32,12 @@ class _ActionCardState extends State<ActionCard> with SingleTickerProviderStateM
 
   @override
   void initState() {
+    super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animated ? 750 : 0),
     )..forward();
-
-    super.initState();
   }
 
   @override
