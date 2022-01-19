@@ -46,7 +46,7 @@ class ActionButton extends ConsumerWidget {
                       fit: BoxFit.contain,
                     ),
                   ),
-             const     SizedBox(
+                  const SizedBox(
                     width: 10.0,
                   ),
                   Text(

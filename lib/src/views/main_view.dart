@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/views/discover_view.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
+import 'package:rescado/src/views/misc/simple_tooltip.dart';
 import 'package:rescado/src/views/profile_view.dart';
 import 'package:rescado/src/views/swipe_view.dart';
 
@@ -86,10 +87,12 @@ class _MainViewTabData {
   Widget toView() => view;
 
   Tab toTab(BuildContext context, bool isActive) => Tab(
-        icon: SvgPicture.asset(
-          svgAsset,
-          color: isActive ? Theme.of(context).tabBarTheme.labelColor : Theme.of(context).tabBarTheme.unselectedLabelColor,
-          semanticsLabel: label(context) as String,
+        icon: SimpleTooltip(
+          message: label(context) as String,
+          child: SvgPicture.asset(
+            svgAsset,
+            color: isActive ? Theme.of(context).tabBarTheme.labelColor : Theme.of(context).tabBarTheme.unselectedLabelColor,
+          ),
         ),
       );
 }
