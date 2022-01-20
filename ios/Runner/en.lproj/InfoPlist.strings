@@ -1,1 +1,1 @@
-NSLocationWhenInUseUsageDescription = "We use your location to show you animals, shelters and other data relevant to where you are.";
+// Will use default values in Info.plist
