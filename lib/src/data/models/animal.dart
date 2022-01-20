@@ -1,13 +1,23 @@
 import 'package:rescado/src/data/models/image.dart';
 import 'package:rescado/src/data/models/shelter.dart';
 
+enum AnimalKind{
+  dog,
+  cat,
+}
+
+enum AnimalSex{
+  male,
+  female,
+}
+
 class Animal {
   final int id;
+  final AnimalKind kind;
+  final String breed;
   final String name;
   final String? description;
-  final String kind;
-  final String breed;
-  final String sex;
+  final AnimalSex sex;
   final DateTime? birthday;
   final int? weight;
   final bool? vaccinated;
@@ -18,10 +28,10 @@ class Animal {
 
   Animal._({
     required this.id,
-    required this.name,
-    this.description,
     required this.kind,
     required this.breed,
+    required this.name,
+    this.description,
     required this.sex,
     this.birthday,
     this.weight,
@@ -34,11 +44,11 @@ class Animal {
 
   factory Animal.fromJson(Map<String, dynamic> json) => Animal._(
         id: json['id'] as int,
+        kind: AnimalKind.values.byName((json['kind'] as String).toLowerCase()),
+        breed: json['breed'] as String,
         name: json['name'] as String,
         description: json['description'] as String?,
-        kind: json['kind'] as String,
-        breed: json['breed'] as String,
-        sex: json['sex'] as String,
+        sex: AnimalSex.values.byName((json['sex'] as String).toLowerCase()),
         birthday: json['birthday'] as DateTime?,
         weight: json['weight'] as int?,
         vaccinated: json['vaccinated'] as bool?,

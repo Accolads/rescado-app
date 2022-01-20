@@ -14,11 +14,11 @@ final likeRepositoryProvider = Provider<LikeRepository>(
 
 // All API endpoints regarding likes.
 abstract class LikeRepository {
-  Future<List<Like>> getAllLikes();
+  Future<List<Like>> getAll();
 
-  Future<LikeAction> addLikes({required List<Animal> animals});
+  Future<LikeAction> add({required List<Animal> animals});
 
-  Future<LikeAction> deleteLikes({required List<Animal> animals});
+  Future<LikeAction> delete({required List<Animal> animals});
 }
 
 class ApiLikeRepository implements LikeRepository {
@@ -29,8 +29,8 @@ class ApiLikeRepository implements LikeRepository {
   ApiLikeRepository(this._read);
 
   @override
-  Future<List<Like>> getAllLikes() async {
-    _logger.d('getAllLikes()');
+  Future<List<Like>> getAll() async {
+    _logger.d('getAll()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/likes?detailed=true');
 
@@ -42,8 +42,8 @@ class ApiLikeRepository implements LikeRepository {
   }
 
   @override
-  Future<LikeAction> addLikes({required List<Animal> animals}) async {
-    _logger.d('addLikes()');
+  Future<LikeAction> add({required List<Animal> animals}) async {
+    _logger.d('add()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/likes');
 
@@ -58,8 +58,8 @@ class ApiLikeRepository implements LikeRepository {
   }
 
   @override
-  Future<LikeAction> deleteLikes({required List<Animal> animals}) async {
-    _logger.d('deleteLikes()');
+  Future<LikeAction> delete({required List<Animal> animals}) async {
+    _logger.d('delete()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/likes');
 

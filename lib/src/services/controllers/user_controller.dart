@@ -79,7 +79,7 @@ class UserController extends StateNotifier<AsyncValue<User>> {
 
   Future<User> _fetchUserData() async {
     _logger.i('Fetching the current user\'s account data.');
-    final accountData = await _read(accountRepositoryProvider).getAccount();
+    final accountData = await _read(accountRepositoryProvider).get();
 
     return User(
       status: accountData.status.toUserStatus(),

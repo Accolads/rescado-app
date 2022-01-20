@@ -72,6 +72,8 @@ class CustomTheme {
         return CustomTheme.light();
       case CustomThemeIdentifier.dark:
         return CustomTheme.dark();
+      default:
+        throw Exception('Bad programming. Not all identifiers were mapped.');
     }
   }
 
