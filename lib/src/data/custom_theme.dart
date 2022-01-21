@@ -21,7 +21,7 @@ class CustomTheme {
   final Color primaryColor;
 
   // The opposite from the colors above. To display on containers that already flip the colors around.
-  final Color primaryInvertedColor;
+  final Color primaryInvertedColor; // TODO If it is March and this is still not used anywhere, remove this field
 
   // The primary color but slightly dimmed. Usually to indicate an option that is not selected.
   final Color primaryDimmedColor;
