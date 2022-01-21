@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
+import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/views/discover_view.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/misc/simple_tooltip.dart';
@@ -9,7 +11,7 @@ import 'package:rescado/src/views/profile_view.dart';
 import 'package:rescado/src/views/swipe_view.dart';
 
 // Main view of the application. What a logged in user sees and uses to navigate through the app..
-class MainView extends StatefulWidget {
+class MainView extends ConsumerStatefulWidget {
   static const viewId = 'MainView';
 
   const MainView({
@@ -17,10 +19,10 @@ class MainView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MainView> createState() => _MainViewState();
+  ConsumerState<MainView> createState() => _MainViewState();
 }
 
-class _MainViewState extends State<MainView> {
+class _MainViewState extends ConsumerState<MainView> {
   int _activeTab = 1;
 
   final _tabData = [
@@ -54,7 +56,15 @@ class _MainViewState extends State<MainView> {
           ),
         ),
         bottomNavigationBar: Container(
-          color: Theme.of(context).backgroundColor,
+          decoration: BoxDecoration(
+            color: Theme.of(context).backgroundColor,
+            border: Border(
+              top: BorderSide(
+                width: 1.0,
+                color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
+              ),
+            ),
+          ),
           child: SafeArea(
             child: TabBar(
               indicator: CircleTabIndicator(

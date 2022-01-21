@@ -35,6 +35,9 @@ class CustomTheme {
   // A variant on the background color for some subtle contrast. Should be less prominent than the actual background color.
   final Color backgroundVariantColor;
 
+  // A subtle color used for borders, mainly to show a clear separation between bigger containers.
+  final Color borderColor;
+
   // ThemeData for material widgets
   ThemeData get themeData => ThemeData(
         fontFamily: 'M+ Rounded 1c',
@@ -64,6 +67,7 @@ class CustomTheme {
     required this.backgroundColor,
     required this.backgroundInvertedColor,
     required this.backgroundVariantColor,
+    required this.borderColor,
   });
 
   factory CustomTheme.fromId(CustomThemeIdentifier identifier) {
@@ -86,6 +90,7 @@ class CustomTheme {
         backgroundColor: const Color(0xFFFAFAFA),
         backgroundInvertedColor: Colors.black,
         backgroundVariantColor: Colors.white,
+        borderColor: const Color(0xFFEEEEEE),
       );
 
   factory CustomTheme.dark() => CustomTheme._(
@@ -99,5 +104,6 @@ class CustomTheme {
         backgroundColor: Colors.black,
         backgroundInvertedColor: Colors.white,
         backgroundVariantColor: const Color(0xFF050505),
+        borderColor: const Color(0xFFEEEEEE),
       );
 }
