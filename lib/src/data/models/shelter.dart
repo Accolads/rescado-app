@@ -13,7 +13,7 @@ class Shelter {
   final String country;
   final Coordinates coordinates;
   final Image logo;
-  final Image banner;
+  final Image? banner;
 
   Shelter._({
     required this.id,
@@ -27,7 +27,7 @@ class Shelter {
     required this.country,
     required this.coordinates,
     required this.logo,
-    required this.banner,
+    this.banner,
   });
 
   factory Shelter.fromJson(Map<String, dynamic> json) => Shelter._(
@@ -42,6 +42,6 @@ class Shelter {
         country: json['country'] as String,
         coordinates: Coordinates.fromJson(json['coordinates'] as Map<String, dynamic>),
         logo: Image.fromJson(json['logo'] as Map<String, dynamic>),
-        banner: Image.fromJson(json['banner'] as Map<String, dynamic>),
+        banner: json['banner'] == null ? null : Image.fromJson(json['banner'] as Map<String, dynamic>),
       );
 }

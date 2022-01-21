@@ -49,12 +49,12 @@ class Animal {
         name: json['name'] as String,
         description: json['description'] as String?,
         sex: AnimalSex.values.byName((json['sex'] as String).toLowerCase()),
-        birthday: json['birthday'] as DateTime?,
+        birthday: DateTime.parse(json['birthday'] as String),
         weight: json['weight'] as int?,
         vaccinated: json['vaccinated'] as bool?,
         sterilized: json['sterilized'] as bool?,
         availability: json['availability'] as String,
-        photos: (json['photos'] as List<Map<String, dynamic>>).map((photo) => Image.fromJson(photo)).toList(),
+        photos: (List<Map<String, dynamic>>.from(json['photos'] as List)).map((photo) => Image.fromJson(photo)).toList(),
         shelter: Shelter.fromJson(json['shelter'] as Map<String, dynamic>),
       );
 }
