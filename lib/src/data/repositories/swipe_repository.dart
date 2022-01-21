@@ -12,7 +12,7 @@ final swipeRepositoryProvider = Provider<SwipeRepository>(
 
 // All API endpoints regarding swipes.
 abstract class SwipeRepository {
-  Future<Animal> generate({required int number, required List<AnimalKind> kinds, required List<AnimalSex> sexes, required int minimumAge, required int maximumAge, required int minimumWeight, required int maximumWeight, required bool vaccinated, required bool sterilized});
+  Future<List<Animal>> generate({required int number, required List<AnimalKind> kinds, required List<AnimalSex> sexes, required int minimumAge, required int maximumAge, required int minimumWeight, required int maximumWeight, required bool vaccinated, required bool sterilized});
 
   Future<void> reset();
 }
@@ -25,7 +25,7 @@ class ApiSwipeRepository implements SwipeRepository {
   ApiSwipeRepository(this._read);
 
   @override
-  Future<Animal> generate({required int number, required List<AnimalKind> kinds, required List<AnimalSex> sexes, required int minimumAge, required int maximumAge, required int minimumWeight, required int maximumWeight, required bool vaccinated, required bool sterilized}) async {
+  Future<List<Animal>> generate({required int number, required List<AnimalKind> kinds, required List<AnimalSex> sexes, required int minimumAge, required int maximumAge, required int minimumWeight, required int maximumWeight, required bool vaccinated, required bool sterilized}) async {
     _logger.d('generate()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/cards/generate');
@@ -43,9 +43,9 @@ class ApiSwipeRepository implements SwipeRepository {
         'vaccinated': vaccinated,
         'sterilized': sterilized,
       }),
-    ) as Map<String, dynamic>;
+    ) as List<Map<String, dynamic>>;
 
-    return Animal.fromJson(response);
+    return response.map((animal) => Animal.fromJson(animal)).toList();
   }
 
   @override
