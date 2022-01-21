@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
-import 'package:rescado/src/data/models/swipedata.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/controllers/swipe_controller.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
@@ -17,38 +16,24 @@ class SwipeableStack extends ConsumerWidget {
         child: _buildTopCard(context, ref),
       );
 
-  // Builds the front card, which is a regular card, but intractable.
+  // Builds the front card, which is a regular card, but draggable.
   Widget _buildTopCard(BuildContext context, WidgetRef ref) => GestureDetector(
         onPanStart: (_) => ref.read(swipeControllerProvider.notifier).startDragging(MediaQuery.of(context).size),
         onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(swipeControllerProvider.notifier).handleDragging(dragUpdateDetails),
         onPanEnd: (_) => ref.read(swipeControllerProvider.notifier).endDragging(),
-        child: Consumer(
-          builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            return ref.watch(swipeControllerProvider).when(
-              data: (SwipeData swipeData) {
-                return LayoutBuilder(
-                  // required to know the center of the widget for rotation
-                  builder: (_, constraints) {
-                    final center = constraints.smallest.center(Offset.zero);
-                    return AnimatedContainer(
-                        curve: Curves.elasticOut,
-                        duration: Duration(seconds: swipeData.isDragged ? 0 : 1),
-                        transform: Matrix4.identity()
-                          ..translate(center.dx, center.dy) // rotate around center
-                          ..rotateZ(swipeData.angle) // rotate around center
-                          ..translate(-center.dx, -center.dy) // rotate around center
-                          ..translate(swipeData.offset.dx, swipeData.offset.dy), // translate the dragged offset
-                        child: _buildCard(context, ref));
-                  },
-                );
-              },
-              error: (Object error, StackTrace? stackTrace) {
-                return const Text('error');
-              },
-              loading: () {
-                return const Text('loading');
-              },
-            );
+        child: LayoutBuilder(
+          builder: (_, constraints) {
+            // need LayoutBuilder to know the center of the widget for rotation/tilting the card
+            final center = constraints.smallest.center(Offset.zero);
+            return AnimatedContainer(
+                curve: Curves.elasticOut,
+                duration: Duration(seconds: ref.watch(swipeControllerProvider).isDragged ? 0 : 3),
+                transform: Matrix4.identity()
+                  ..translate(center.dx, center.dy) // rotate around center
+                  ..rotateZ(ref.watch(swipeControllerProvider).angle) // rotate around center
+                  ..translate(-center.dx, -center.dy) // rotate around center
+                  ..translate(ref.watch(swipeControllerProvider).offset.dx, ref.watch(swipeControllerProvider).offset.dy), // translate the dragged offset
+                child: _buildCard(context, ref));
           },
         ),
       );
@@ -71,6 +56,7 @@ class SwipeableStack extends ConsumerWidget {
           borderRadius: BorderRadius.circular(25.0),
           boxShadow: const [
             BoxShadow(
+              // TODO we perhaps want to extract this BoxDecoration if we want to reuse it for modal popups in the future
               offset: Offset(0, 5),
               blurRadius: 15.0,
               spreadRadius: 1.0,

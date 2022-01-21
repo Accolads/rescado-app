@@ -8,8 +8,8 @@ enum UserStatus {
 }
 
 class User {
-  UserStatus status;
-  Account? account;
+  final UserStatus status;
+  final Account? account;
 
   // TODO Add group related data once that's implemented on the backend
 
