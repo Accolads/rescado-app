@@ -1,12 +1,12 @@
 import 'package:rescado/src/data/models/image.dart';
 import 'package:rescado/src/data/models/shelter.dart';
 
-enum AnimalKind{
+enum AnimalKind {
   dog,
   cat,
 }
 
-enum AnimalSex{
+enum AnimalSex {
   male,
   female,
 }

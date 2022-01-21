@@ -22,7 +22,7 @@ class SwipeController extends StateNotifier<AsyncValue<SwipeData>> {
   void _initialize() async {
     _logger.d('initialize()');
 
-    // Temporary stuff. We'll need a card_repository implentation to get API data we can use here.
+    // Temporary stuff. We'll need a card_repository implementation to get API data we can use here.
     Future.delayed(const Duration(milliseconds: 4200), () {
       state = AsyncValue.data(SwipeData());
     });
