@@ -1,1 +1,6 @@
-NSLocationWhenInUseUsageDescription = "We gebruiken je locatie om je dieren, asielen en andere data gelinkt aan waar je je bevindt voor te stellen.";
+NSCameraUsageDescription = "Met toegang tot je camera kan je snel en spontaan een profielfoto instellen.";
+NSPhotoLibraryUsageDescription = "Met toegang tot je fotobibliotheek kan je een bestaande foto uploaden als profielfoto.";
+// NSLocationUsageDescription =
+// NSLocationAlwaysUsageDescription =
+NSLocationWhenInUseUsageDescription = "Je locatie wordt gebruikt om je dieren en asielen uit jouw buurt voor te stellen.";
+// NSLocationAlwaysAndWhenInUseUsageDescription =
