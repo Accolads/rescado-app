@@ -14,7 +14,7 @@ class CardData {
 
   CardData({
     this.cards = const [],
-    this.number = 5,
+    required this.number,
     this.kinds,
     this.sexes,
     this.minimumAge,
@@ -49,4 +49,16 @@ class CardData {
         vaccinated: vaccinated ?? this.vaccinated,
         sterilized: sterilized ?? this.sterilized,
       );
+
+  String toJson() => '''{
+  "number": $number,
+  "kinds": ${kinds?.map((kind) => kind.name)},
+  "sexes":  ${sexes?.map((sex) => sex.name)},
+  "minimumAge": $minimumAge,
+  "maximumAge": $maximumAge,
+  "minimumWeight": $minimumWeight,
+  "maximumWeight": $maximumWeight,
+  "vaccinated": ${vaccinated == true ? true : 'null'},
+  "sterilized": ${sterilized == true ? true : 'null'}
+  }''';
 }

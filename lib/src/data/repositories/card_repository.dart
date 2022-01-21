@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
@@ -31,10 +29,10 @@ class ApiCardRepository implements CardRepository {
 
     final endpoint = Uri.parse('${RescadoConstants.api}/cards/generate');
 
-    final response = await _read(apiClientProvider).postJson(
+    final response = List<Map<String, dynamic>>.from(await _read(apiClientProvider).postJson(
       endpoint,
-      body: jsonEncode(cardData),
-    ) as List<Map<String, dynamic>>;
+      body: cardData.toJson(),
+    ) as List);
 
     return response.map((animal) => Animal.fromJson(animal)).toList();
   }
