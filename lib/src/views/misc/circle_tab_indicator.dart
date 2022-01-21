@@ -14,7 +14,7 @@ class _CirclePainter extends BoxPainter {
   final Paint _paint;
 
   _CirclePainter(Color color)
-      : _radius = 8.0,
+      : _radius = 7.5, // should be .5 so the dot height is odd and it can sit in the middle of the 1px border
         _paint = Paint()
           ..color = color
           ..isAntiAlias = true;
