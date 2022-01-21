@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rescado/src/services/controllers/settings_controller.dart';
 
-class SimpleTooltip extends ConsumerWidget {
+class SimpleTooltip extends StatelessWidget {
   final String message;
   final Widget child;
 
@@ -13,7 +11,7 @@ class SimpleTooltip extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Tooltip(
+  Widget build(BuildContext context) => Tooltip(
         margin: const EdgeInsets.symmetric(
           vertical: 5.0,
           horizontal: 2.0,
@@ -22,10 +20,10 @@ class SimpleTooltip extends ConsumerWidget {
           vertical: 5.0,
           horizontal: 12.0,
         ),
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w500,
-          color: ref.watch(settingsControllerProvider).activeTheme.primaryInvertedColor,
+          color: Colors.white,
         ),
         enableFeedback: true,
         preferBelow: false,
