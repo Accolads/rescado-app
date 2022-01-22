@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
-import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/models/user.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
@@ -35,42 +34,54 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: Column(
-      children: [
-        PageTitle(
-          label: AppLocalizations.of(context)!.labelProfile,
-        ),
-        _buildUserStatus(),
-        Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
-                width: 1.0,
-              ),
-            ),
-          ),
-          child: DefaultTabController(
-            length: 2,
-            child: TabBar(
-              indicator: CircleTabIndicator(
-                color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
-              ),
-              tabs: const [
-                Tab(text: 'Likes'),
-                Tab(text: 'Matches'),
-              ],
-            ),
-          ),
-        ),
-        _buildLikes(),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final user = ref.watch(userControllerProvider).value!; //TODO should this happen in constructor?
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+              floating: false,
+              pinned: true,
+              expandedHeight: MediaQuery.of(context).size.height / 2.3, // temporary
+              collapsedHeight: user.status == UserStatus.identified ? MediaQuery.of(context).size.height / 3.3 : MediaQuery.of(context).size.height / 2.3,
+              flexibleSpace: Column(
+                children: [
+                  PageTitle(
+                    label: AppLocalizations.of(context)!.labelProfile,
+                  ),
+                  _buildUserStatus(user),
+                  Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    child: DefaultTabController(
+                      length: 2,
+                      child: TabBar(
+                        indicator: CircleTabIndicator(
+                          color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+                        ),
+                        tabs: const [
+                          Tab(text: 'Likes'),
+                          Tab(text: 'Matches'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+          _buildLikes()
+        ],
+      ),
+    );
+  }
 
-  Widget _buildUserStatus() {
-    final user = ref.watch(userControllerProvider).value!;
+  Widget _buildUserStatus(User user) {
     switch (user.status) {
       case UserStatus.identified:
         return const CircleAvatar(
@@ -95,26 +106,28 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
 
   Widget _buildLikes() {
     var likes = ref.watch(likeControllerProvider).value;
-    if (likes == null || likes.isEmpty) {
-      return _buildEmptyLikes();
+    if (likes == null || likes.isNotEmpty) {
+      return SliverFillRemaining(child: _buildEmptyLikes());
     } else {
-      return ListView.separated(
-        itemCount: likes.length,
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(12.0),
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 12.0,
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            var like = likes[index];
+            return Dismissible(
+              key: ObjectKey(like),
+              direction: DismissDirection.startToEnd,
+              onDismissed: (direction) => _deleteLike(index),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4.0,
+                  horizontal: 16.0,
+                ),
+                child: _buildTile(like.animal),
+              ),
+            );
+          },
+          childCount: likes.length,
         ),
-        itemBuilder: (_, index) {
-          Like like = likes[index];
-          return Dismissible(
-            key: ObjectKey(like),
-            direction: DismissDirection.startToEnd,
-            onDismissed: (direction) => _deleteLike(index),
-            child: Container(child: _buildTile(like.animal)),
-          );
-        },
       );
     }
   }
@@ -163,28 +176,26 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   Widget _buildEmptyLikes() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Text('Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!'),
-            const SizedBox(
-              height: 26.0,
-            ),
-            ActionButton(
-              label: 'Swipe time',
-              svgAsset: RescadoConstants.iconHeartOutline,
-              onPressed: () => Navigator.pushNamed(context, SwipeView.viewId),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: SvgPicture.asset(RescadoConstants.illustrationWomanHoldingPhoneWithHearts),
-            )
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const Text('Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!'),
+          const SizedBox(
+            height: 26.0,
+          ),
+          ActionButton(
+            label: 'Swipe time',
+            svgAsset: RescadoConstants.iconHeartOutline,
+            onPressed: () => Navigator.pushNamed(context, SwipeView.viewId),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: SvgPicture.asset(RescadoConstants.illustrationWomanHoldingPhoneWithHearts),
+          )
+        ],
       ),
     );
   }
