@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/swipedata.dart';
+import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final swipeControllerProvider = StateNotifierProvider<SwipeController, SwipeData>(
@@ -13,26 +14,21 @@ final swipeControllerProvider = StateNotifierProvider<SwipeController, SwipeData
 class SwipeController extends StateNotifier<SwipeData> {
   static final _logger = addLogger('SwipeController');
 
-  final Reader _read; // ignore: unused_field
-
-  late Size _viewport;
+  final Reader _read;
 
   SwipeController(this._read) : super(SwipeData());
 
   void _initialize() async {
     _logger.d('initialize()');
 
-    // Temporary stuff.
+    state = SwipeData();
   }
 
-  void startDragging(Size viewport) {
+  void startDragging() {
     _logger.d('startDragging()');
 
-    // Save the current screen's dimensions so we can calculate the angle when dragging.
-    _viewport = viewport;
-
     state = state.copyWith(
-      isDragged: true,
+      isDragging: true,
     );
   }
 
@@ -42,7 +38,7 @@ class SwipeController extends StateNotifier<SwipeData> {
     // Calculate new offset (old offset + distance dragged)
     final offset = state.offset + dragUpdateDetails.delta;
     // Calculate new angle ( current x / max width * maximum angle * π/180, for radians)
-    final angle = offset.dx / _viewport.width * RescadoConstants.swipeableCardRotationAngle * pi / 180;
+    final angle = offset.dx / 500 * RescadoConstants.swipeableCardRotationAngle * pi / 180;
 
     state = state.copyWith(
       offset: offset,
@@ -57,24 +53,14 @@ class SwipeController extends StateNotifier<SwipeData> {
     if (state.offset.dx >= RescadoConstants.swipeableCardDragOffset) {
       _logger.i('User swiped right (horizontal offset: ${state.offset.dx})');
 
-      state = state.copyWith(
-        offset: state.offset + Offset(_viewport.width * 3, 0),
-        angle: RescadoConstants.swipeableCardRotationAngle,
-        isDragged: false,
-      );
-      return;
+      return performLike();
     }
 
     // Swiped the card to the left
     if (state.offset.dx <= -RescadoConstants.swipeableCardDragOffset) {
       _logger.i('User swiped left (horizontal offset: ${state.offset.dx})');
 
-      state = state.copyWith(
-        offset: state.offset - Offset(_viewport.width * 3, 0),
-        angle: -RescadoConstants.swipeableCardRotationAngle,
-        isDragged: false,
-      );
-      return;
+      return performSkip();
     }
 
     // Didn't swipe far enough so we'll reset the card's position
@@ -83,7 +69,43 @@ class SwipeController extends StateNotifier<SwipeData> {
     state = state.copyWith(
       offset: Offset.zero,
       angle: 0,
-      isDragged: false,
+      isDragging: false,
+    );
+  }
+
+  void performSkip() {
+    _logger.d('performSkip()');
+
+    Future.delayed(
+      Duration(seconds: state.velocity),
+      () {
+        _initialize();
+        _read(cardControllerProvider.notifier).nextCard(didLike: false);
+      },
+    );
+
+    state = state.copyWith(
+      offset: state.offset - const Offset(5000, 0),
+      angle: -RescadoConstants.swipeableCardRotationAngle,
+   //   isDragging: false,
+    );
+  }
+
+  void performLike() {
+    _logger.d('performLike()');
+
+    Future.delayed(
+      Duration(seconds: state.velocity),
+      () {
+        _initialize();
+        _read(cardControllerProvider.notifier).nextCard(didLike: true);
+      },
+    );
+
+    state = state.copyWith(
+      offset: state.offset + const Offset(5000, 0),
+      angle: RescadoConstants.swipeableCardRotationAngle,
+    //  isDragging: false,
     );
   }
 }

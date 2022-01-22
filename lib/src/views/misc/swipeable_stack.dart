@@ -21,143 +21,148 @@ class SwipeableStack extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        final maxWidth = MediaQuery.of(context).size.width * .9;
-        final actualWidth = cardWidth > maxWidth ? maxWidth : cardWidth; // If card won't fit its parent, make it 90% of the parent's width
+  Widget build(BuildContext context) => Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+          final maxWidth = MediaQuery.of(context).size.width * .9;
+          final actualWidth = cardWidth > maxWidth ? maxWidth : cardWidth; // If card won't fit its parent, make it 90% of the parent's width
 
-        return ref.watch(cardControllerProvider).when(
-              data: (CardData cardData) => Stack(
-                clipBehavior: Clip.none,
-                children: <Widget>[
-                  if (cardData.cards.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[3], 3),
-                  if (cardData.cards.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[2], 2),
-                  if (cardData.cards.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[1], 1),
-                  _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[0], 0)),
-                ],
-              ),
-              error: (_, __) => const Text('error!!'),
-              loading: () => const CircularProgressIndicator(),
-            );
-      });
+          return ref.watch(cardControllerProvider).when(
+                data: (CardData cardData) {
+                  print('cards in data: ${cardData.cards.length} and first card is ${cardData.cards[0].name}');
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
+                      if (cardData.cards.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[3], 3),
+                      if (cardData.cards.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[2], 2),
+                      if (cardData.cards.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[1], 1),
+                      _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[0], 0)),
+                    ],
+                  );
+                },
+                error: (_, __) => const Text('error!!'),
+                loading: () => const CircularProgressIndicator(),
+              );
+        },
+      );
 
   Widget _buildCard(BuildContext context, WidgetRef ref, double width, double height, Animal animal, int index) => Center(
-      // The actual card
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.fastOutSlowIn,
-        width: width * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
-        height: height * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
-        margin: EdgeInsets.only(top: margins[ref.watch(swipeControllerProvider).isDragging ? index : index + 1]),
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
-          borderRadius: BorderRadius.circular(25.0),
-          boxShadow: const [
-            BoxShadow(
-              // TODO we perhaps want to extract this BoxDecoration if we want to reuse it for modal popups in the future
-              offset: Offset(0, 5),
-              blurRadius: 15.0,
-              spreadRadius: 1.0,
-              color: Color(0x1A000000),
-            )
-          ],
-        ),
-        // The contents of the card
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            // The photo at the top
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: GestureDetector(
-                  onTap: () => print('clicked the photo'), // ignore: avoid_print
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.network(
-                        animal.photos[0].reference,
-                        fit: BoxFit.cover,
-                      ),
-                      // Shadowbox at the bottom with name and breed
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Container(
-                          height: 150.0,
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                Color(0x00000000),
-                                Color(0x90000000),
-                                Color(0x90000000),
+        // The actual card
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn,
+          width: width * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
+          height: height * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
+          margin: EdgeInsets.only(top: margins[ref.watch(swipeControllerProvider).isDragging ? index : index + 1]),
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
+            borderRadius: BorderRadius.circular(25.0),
+            boxShadow: const [
+              BoxShadow(
+                // TODO we perhaps want to extract this BoxDecoration if we want to reuse it for modal popups in the future
+                offset: Offset(0, 5),
+                blurRadius: 15.0,
+                spreadRadius: 1.0,
+                color: Color(0x1A000000),
+              )
+            ],
+          ),
+          // The contents of the card
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              // The photo at the top
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: GestureDetector(
+                    onTap: () => print('clicked the photo'), // ignore: avoid_print
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.network(
+                          animal.photos[0].reference,
+                          fit: BoxFit.cover,
+                        ),
+                        // Shadowbox at the bottom with name and breed
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Container(
+                            height: 150.0,
+                            padding: const EdgeInsets.all(20.0),
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  Color(0x00000000),
+                                  Color(0x90000000),
+                                  Color(0x90000000),
+                                ],
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Text(
+                                  animal.name,
+                                  style: const TextStyle(
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  animal.breed,
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Text(
-                                animal.name,
-                                style: const TextStyle(
-                                  fontSize: 30.0,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                animal.breed,
-                                style: const TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Skip/like buttons at the bottom
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  FloatingButton(
-                    color: const Color(0xFFEE575F),
-                    size: FloatingButtonSize.big,
-                    svgAsset: RescadoConstants.iconCross,
-                    semanticsLabel: AppLocalizations.of(context)!.labelSkip,
-                    onPressed: () => print('skip'), // ignore: avoid_print
-                  ),
-                  FloatingButton(
-                    color: const Color(0xFFEE575F),
-                    size: FloatingButtonSize.big,
-                    svgAsset: RescadoConstants.iconHeartOutline,
-                    semanticsLabel: AppLocalizations.of(context)!.labelLike,
-                    onPressed: () => print('like'), // ignore: avoid_print
-                  ),
-                ],
+              // Skip/like buttons at the bottom
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    FloatingButton(
+                      color: const Color(0xFFEE575F),
+                      size: FloatingButtonSize.big,
+                      svgAsset: RescadoConstants.iconCross,
+                      semanticsLabel: AppLocalizations.of(context)!.labelSkip,
+                      onPressed: () => ref.read(swipeControllerProvider.notifier).performSkip(),
+                    ),
+                    FloatingButton(
+                      color: const Color(0xFFEE575F),
+                      size: FloatingButtonSize.big,
+                      svgAsset: RescadoConstants.iconHeartOutline,
+                      semanticsLabel: AppLocalizations.of(context)!.labelLike,
+                      onPressed: () => ref.read(swipeControllerProvider.notifier).performLike(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
   // Builds the front card, which is a regular card, but draggable.
   Widget _makeInteractable(BuildContext context, WidgetRef ref, Widget card) => GestureDetector(
-        onPanStart: (_) => ref.read(swipeControllerProvider.notifier).startDragging(MediaQuery.of(context).size),
+        onPanStart: (_) => ref.read(swipeControllerProvider.notifier).startDragging(),
         onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(swipeControllerProvider.notifier).handleDragging(dragUpdateDetails),
         onPanEnd: (_) => ref.read(swipeControllerProvider.notifier).endDragging(),
         child: LayoutBuilder(
@@ -166,7 +171,7 @@ class SwipeableStack extends StatelessWidget {
             final center = constraints.smallest.center(Offset.zero);
             return AnimatedContainer(
               curve: Curves.elasticOut,
-              duration: Duration(seconds: ref.watch(swipeControllerProvider).isDragging ? 0 : 2),
+              duration: Duration(seconds: ref.watch(swipeControllerProvider).isDragging ? 0 : ref.read(swipeControllerProvider).velocity),
               transform: Matrix4.identity()
                 ..translate(center.dx, center.dy) // rotate around center
                 ..rotateZ(ref.watch(swipeControllerProvider).angle) // rotate around center

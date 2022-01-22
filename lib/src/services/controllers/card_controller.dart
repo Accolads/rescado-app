@@ -19,46 +19,36 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     state = const AsyncValue.loading();
 
     // Autofetch some cards when this controller is loaded
-    fetchCards();
-  }
-
-  void fetchCards() async {
-    _logger.d('fetchCards()');
 
     final currentCardData = state.value ?? CardData(number: 5); // Initially only generate 5 cards, no filters
     final newCards = await _read(cardRepositoryProvider).generate(cardData: currentCardData);
 
     state = AsyncData(currentCardData.copyWith(
       cards: [...currentCardData.cards, ...newCards],
-      number: 10,
-    )); // Subsequent requests should generate 10 cards
+      number: 15,
+    )); // Subsequent requests should generate 15 cards
 
+    // TODO remove
     for (var element in state.value!.cards) {
       print(element.name);
     }
   }
 
-  void like() async {
-    _logger.d('like()');
+  void nextCard({bool didLike = false}) async {
+    _logger.d('nextCard()');
 
     final currentCardData = state.value!;
+    // TODO api call or buffer?
 
-    // TODO api call
-
-    state = AsyncData(currentCardData.copyWith(
-      cards: currentCardData.cards.sublist(1),
-    ));
-  }
-
-  void skip() async {
-    _logger.d('like()');
-
-    final currentCardData = state.value!;
-
-    // TODO api call
-
-    state = AsyncData(currentCardData.copyWith(
-      cards: currentCardData.cards.sublist(1),
-    ));
+    if (currentCardData.cards.length >= 5) {
+      state = AsyncData(currentCardData.copyWith(
+        cards: currentCardData.cards.sublist(1),
+      ));
+    } else {
+      final newCards = await _read(cardRepositoryProvider).generate(cardData: currentCardData);
+      state = AsyncData(currentCardData.copyWith(
+        cards: [...currentCardData.cards.sublist(1), ...newCards],
+      ));
+    }
   }
 }
