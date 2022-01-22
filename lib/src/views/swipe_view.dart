@@ -11,7 +11,7 @@ class SwipeView extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: Container(
           alignment: Alignment.center,
-          child: const SwipeableStack(),
+          child: SwipeableStack(),
         ),
       );
 }

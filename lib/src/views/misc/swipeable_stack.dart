@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
+import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/carddata.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
@@ -10,20 +11,28 @@ import 'package:rescado/src/views/buttons/floating_button.dart';
 
 // Stack of cards the user can swipe left or right
 class SwipeableStack extends StatelessWidget {
-  const SwipeableStack({
+  final cardWidth = 300.0; // Preferred width of a card
+  final cardHeight = 440.0; // Preferred height of a card
+  final multipliers = [1, 1, 0.93, 0.86, 0.86]; // Factor each card should be multiplied by to create illusion of depth.
+  final margins = [0.0, 0.0, 55.0, 100.0, 100.0]; // Distance each card should be from the top, top card to bottom card.
+
+  SwipeableStack({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        // WIP hardcoded, temporary stuff for now
+        final maxWidth = MediaQuery.of(context).size.width * .9;
+        final actualWidth = cardWidth > maxWidth ? maxWidth : cardWidth; // If card won't fit its parent, make it 90% of the parent's width
+
         return ref.watch(cardControllerProvider).when(
               data: (CardData cardData) => Stack(
                 clipBehavior: Clip.none,
                 children: <Widget>[
-                  if (cardData.cards.length >= 3) SwipeableCard(cardData: cardData, index: 2),
-                  if (cardData.cards.length >= 2) SwipeableCard(cardData: cardData, index: 1),
-                  _makeInteractable(context, ref, SwipeableCard(cardData: cardData, index: 0)),
+                  if (cardData.cards.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[3], 3),
+                  if (cardData.cards.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[2], 2),
+                  if (cardData.cards.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[1], 1),
+                  _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[0], 0)),
                 ],
               ),
               error: (_, __) => const Text('error!!'),
@@ -31,80 +40,14 @@ class SwipeableStack extends StatelessWidget {
             );
       });
 
-  // Builds the front card, which is a regular card, but draggable.
-  Widget _makeInteractable(BuildContext context, WidgetRef ref, Widget child) => GestureDetector(
-        onPanStart: (_) => ref.read(swipeControllerProvider.notifier).startDragging(MediaQuery.of(context).size),
-        onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(swipeControllerProvider.notifier).handleDragging(dragUpdateDetails),
-        onPanEnd: (_) => ref.read(swipeControllerProvider.notifier).endDragging(),
-        child: LayoutBuilder(
-          builder: (_, constraints) {
-            // need LayoutBuilder to know the center of the widget for rotation/tilting the card
-            final center = constraints.smallest.center(Offset.zero);
-            return AnimatedContainer(
-              curve: Curves.elasticOut,
-              duration: Duration(seconds: ref.watch(swipeControllerProvider).isDragged ? 0 : 2),
-              transform: Matrix4.identity()
-                ..translate(center.dx, center.dy) // rotate around center
-                ..rotateZ(ref.watch(swipeControllerProvider).angle) // rotate around center
-                ..translate(-center.dx, -center.dy) // rotate around center
-                ..translate(ref.watch(swipeControllerProvider).offset.dx, ref.watch(swipeControllerProvider).offset.dy), // translate the dragged offset
-              child: child,
-            );
-          },
-        ),
-      );
-}
-
-// A swipeable card to use in a swipeable stack. Render max 3 per stack or will throw range errors.
-class SwipeableCard extends ConsumerStatefulWidget {
-  final CardData cardData;
-  final int index;
-
-  const SwipeableCard({
-    Key? key,
-    required this.cardData,
-    required this.index,
-  }) : super(key: key);
-
-  @override
-  _SwipeableCardState createState() => _SwipeableCardState();
-}
-
-class _SwipeableCardState extends ConsumerState<SwipeableCard> {
-  final cardWidth = 300.0; // Preferred width of a card
-  final cardHeight = 440.0; // Preferred height of a card
-  final margins = [0.0, 55.0, 100.0, 100.0]; // Distance each card should be from the top, top card to bottom card.
-
-  bool hasAnimated = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(
-      const Duration(milliseconds: 100),
-      () => setState(() {
-        hasAnimated = true;
-      }),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // If card won't fit its parent, make it 90% of the parent's width
-    final maxWidth = MediaQuery.of(context).size.width * .9;
-    // Calculations so cards with a higher index, so lower in the stack, are ±6% smaller than the card above
-    final actualWidth = (cardWidth > maxWidth ? maxWidth : cardWidth) * (1 - widget.index / 16);
-    final actualHeight = cardHeight * (1 - widget.index / 16);
-
-    return Center(
+  Widget _buildCard(BuildContext context, WidgetRef ref, double width, double height, Animal animal, int index) => Center(
       // The actual card
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
-        width: hasAnimated ? actualWidth : actualWidth - 10.0,
-        height: hasAnimated ? actualHeight : actualHeight - 10.0,
-        margin: EdgeInsets.only(top: margins[hasAnimated ? widget.index : widget.index + 1]),
+        width: width * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
+        height: height * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
+        margin: EdgeInsets.only(top: margins[ref.watch(swipeControllerProvider).isDragging ? index : index + 1]),
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
@@ -134,7 +77,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard> {
                     fit: StackFit.expand,
                     children: [
                       Image.network(
-                        widget.cardData.cards[widget.index].photos[0].reference,
+                        animal.photos[0].reference,
                         fit: BoxFit.cover,
                       ),
                       // Shadowbox at the bottom with name and breed
@@ -159,7 +102,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Text(
-                                widget.cardData.cards[widget.index].name,
+                                animal.name,
                                 style: const TextStyle(
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.w900,
@@ -167,7 +110,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard> {
                                 ),
                               ),
                               Text(
-                                widget.cardData.cards[widget.index].breed,
+                                animal.breed,
                                 style: const TextStyle(
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.w400,
@@ -183,7 +126,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard> {
                 ),
               ),
             ),
-            // Dislike/like buttons at the bottom
+            // Skip/like buttons at the bottom
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
               child: Row(
@@ -211,5 +154,27 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard> {
         ),
       ),
     );
-  }
+
+  // Builds the front card, which is a regular card, but draggable.
+  Widget _makeInteractable(BuildContext context, WidgetRef ref, Widget card) => GestureDetector(
+        onPanStart: (_) => ref.read(swipeControllerProvider.notifier).startDragging(MediaQuery.of(context).size),
+        onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(swipeControllerProvider.notifier).handleDragging(dragUpdateDetails),
+        onPanEnd: (_) => ref.read(swipeControllerProvider.notifier).endDragging(),
+        child: LayoutBuilder(
+          builder: (_, constraints) {
+            // need LayoutBuilder to know the center of the widget for rotation/tilting the card
+            final center = constraints.smallest.center(Offset.zero);
+            return AnimatedContainer(
+              curve: Curves.elasticOut,
+              duration: Duration(seconds: ref.watch(swipeControllerProvider).isDragging ? 0 : 2),
+              transform: Matrix4.identity()
+                ..translate(center.dx, center.dy) // rotate around center
+                ..rotateZ(ref.watch(swipeControllerProvider).angle) // rotate around center
+                ..translate(-center.dx, -center.dy) // rotate around center
+                ..translate(ref.watch(swipeControllerProvider).offset.dx, ref.watch(swipeControllerProvider).offset.dy), // translate the dragged offset
+              child: card,
+            );
+          },
+        ),
+      );
 }

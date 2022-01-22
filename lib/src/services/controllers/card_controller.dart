@@ -27,6 +27,38 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
 
     final currentCardData = state.value ?? CardData(number: 5); // Initially only generate 5 cards, no filters
     final newCards = await _read(cardRepositoryProvider).generate(cardData: currentCardData);
-    state = AsyncData(currentCardData.copyWith(cards: newCards, number: 10)); // Subsequent requests should generate 10 cards
+
+    state = AsyncData(currentCardData.copyWith(
+      cards: [...currentCardData.cards, ...newCards],
+      number: 10,
+    )); // Subsequent requests should generate 10 cards
+
+    for (var element in state.value!.cards) {
+      print(element.name);
+    }
+  }
+
+  void like() async {
+    _logger.d('like()');
+
+    final currentCardData = state.value!;
+
+    // TODO api call
+
+    state = AsyncData(currentCardData.copyWith(
+      cards: currentCardData.cards.sublist(1),
+    ));
+  }
+
+  void skip() async {
+    _logger.d('like()');
+
+    final currentCardData = state.value!;
+
+    // TODO api call
+
+    state = AsyncData(currentCardData.copyWith(
+      cards: currentCardData.cards.sublist(1),
+    ));
   }
 }
