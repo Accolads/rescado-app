@@ -10,9 +10,9 @@ final accountRepositoryProvider = Provider<AccountRepository>(
 
 // All API endpoints regarding account.
 abstract class AccountRepository {
-  Future<Account> getAccount();
+  Future<Account> get();
 
-  Future<Account> patchAccount({required String name, required String email, required String password, required String avatar});
+  Future<Account> patch({required String name, required String email, required String password, required String avatar});
 }
 
 class ApiAccountRepository implements AccountRepository {
