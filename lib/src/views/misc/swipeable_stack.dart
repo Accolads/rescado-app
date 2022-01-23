@@ -3,10 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
-import 'package:rescado/src/data/models/carddata.dart';
+import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
-import 'package:rescado/src/services/controllers/swipe_controller.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
 
 // Stack of cards the user can swipe left or right
@@ -28,14 +27,14 @@ class SwipeableStack extends StatelessWidget {
 
           return ref.watch(cardControllerProvider).when(
                 data: (CardData cardData) {
-                  print('cards in data: ${cardData.cards.length} and first card is ${cardData.cards[0].name}');
+                  //  print('animals in data: ${cardData.animals.length} and first card is ${cardData.animals[0].name}');
                   return Stack(
                     clipBehavior: Clip.none,
                     children: <Widget>[
-                      if (cardData.cards.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[3], 3),
-                      if (cardData.cards.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[2], 2),
-                      if (cardData.cards.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[1], 1),
-                      _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.cards[0], 0)),
+                      if (cardData.animals.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[3], 3),
+                      if (cardData.animals.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[2], 2),
+                      if (cardData.animals.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[1], 1),
+                      _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[0], 0)),
                     ],
                   );
                 },
@@ -50,9 +49,9 @@ class SwipeableStack extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           curve: Curves.fastOutSlowIn,
-          width: width * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
-          height: height * multipliers[ref.watch(swipeControllerProvider).isDragging ? index : index + 1],
-          margin: EdgeInsets.only(top: margins[ref.watch(swipeControllerProvider).isDragging ? index : index + 1]),
+          width: width * multipliers[ref.watch(cardControllerProvider).value!.isDragging ? index : index + 1],
+          height: height * multipliers[ref.watch(cardControllerProvider).value!.isDragging ? index : index + 1],
+          margin: EdgeInsets.only(top: margins[ref.watch(cardControllerProvider).value!.isDragging ? index : index + 1]),
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
@@ -143,14 +142,14 @@ class SwipeableStack extends StatelessWidget {
                       size: FloatingButtonSize.big,
                       svgAsset: RescadoConstants.iconCross,
                       semanticsLabel: AppLocalizations.of(context)!.labelSkip,
-                      onPressed: () => ref.read(swipeControllerProvider.notifier).performSkip(),
+                      onPressed: () => ref.read(cardControllerProvider.notifier).swipeLeft(),
                     ),
                     FloatingButton(
                       color: const Color(0xFFEE575F),
                       size: FloatingButtonSize.big,
                       svgAsset: RescadoConstants.iconHeartOutline,
                       semanticsLabel: AppLocalizations.of(context)!.labelLike,
-                      onPressed: () => ref.read(swipeControllerProvider.notifier).performLike(),
+                      onPressed: () => ref.read(cardControllerProvider.notifier).swipeRight(),
                     ),
                   ],
                 ),
@@ -161,25 +160,28 @@ class SwipeableStack extends StatelessWidget {
       );
 
   // Builds the front card, which is a regular card, but draggable.
-  Widget _makeInteractable(BuildContext context, WidgetRef ref, Widget card) => GestureDetector(
-        onPanStart: (_) => ref.read(swipeControllerProvider.notifier).startDragging(),
-        onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(swipeControllerProvider.notifier).handleDragging(dragUpdateDetails),
-        onPanEnd: (_) => ref.read(swipeControllerProvider.notifier).endDragging(),
-        child: LayoutBuilder(
-          builder: (_, constraints) {
-            // need LayoutBuilder to know the center of the widget for rotation/tilting the card
-            final center = constraints.smallest.center(Offset.zero);
-            return AnimatedContainer(
+  Widget _makeInteractable(BuildContext context, WidgetRef ref, Widget card) => LayoutBuilder(
+        builder: (_, constraints) {
+          // need LayoutBuilder to know the center of the widget for rotation/tilting the card
+          final center = constraints.biggest.center(Offset.zero);
+          ref.read(cardControllerProvider.notifier).cacheBoxWidth(constraints.biggest.width);
+           print('center: ${constraints.biggest.center(Offset.zero)}');
+          // print('constraints: ${constraints.maxWidth}');
+          return GestureDetector(
+            onPanStart: (_) => ref.read(cardControllerProvider.notifier).startDragging(),
+            onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(cardControllerProvider.notifier).handleDragging(dragUpdateDetails),
+            onPanEnd: (_) => ref.read(cardControllerProvider.notifier).endDragging(),
+            child: AnimatedContainer(
               curve: Curves.elasticOut,
-              duration: Duration(seconds: ref.watch(swipeControllerProvider).isDragging ? 0 : ref.read(swipeControllerProvider).velocity),
+              duration: Duration(seconds: ref.watch(cardControllerProvider).value!.isDragging ? 0 : 2),
               transform: Matrix4.identity()
                 ..translate(center.dx, center.dy) // rotate around center
-                ..rotateZ(ref.watch(swipeControllerProvider).angle) // rotate around center
+                ..rotateZ(ref.watch(cardControllerProvider).value!.angle) // rotate around center
                 ..translate(-center.dx, -center.dy) // rotate around center
-                ..translate(ref.watch(swipeControllerProvider).offset.dx, ref.watch(swipeControllerProvider).offset.dy), // translate the dragged offset
+                ..translate(ref.watch(cardControllerProvider).value!.offset.dx, ref.watch(cardControllerProvider).value!.offset.dy), // translate the dragged offset
               child: card,
-            );
-          },
-        ),
+            ),
+          );
+        },
       );
 }

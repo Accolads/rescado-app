@@ -1,9 +1,8 @@
 import 'package:rescado/src/data/models/animal.dart';
 
-class CardData {
-  final List<Animal> cards; // cards loaded to display in the stack (cards[0] is the top card)
-  final int number; // number of cards to fetch per request -- default value set in constructor
-  final List<AnimalKind>? kinds; // filters...
+class CardFilter {
+  final int number;
+  final List<AnimalKind>? kinds;
   final List<AnimalSex>? sexes;
   final int? minimumAge;
   final int? maximumAge;
@@ -12,9 +11,8 @@ class CardData {
   final bool? vaccinated;
   final bool? sterilized;
 
-  CardData({
-    this.cards = const [],
-    required this.number,
+  CardFilter({
+    this.number = 10, // By default, fetch cards in batches of 10
     this.kinds,
     this.sexes,
     this.minimumAge,
@@ -25,7 +23,7 @@ class CardData {
     this.sterilized,
   });
 
-  CardData copyWith({
+  CardFilter copyWith({
     List<Animal>? cards,
     int? number,
     List<AnimalKind>? kinds,
@@ -37,8 +35,7 @@ class CardData {
     bool? vaccinated,
     bool? sterilized,
   }) =>
-      CardData(
-        cards: cards ?? this.cards,
+      CardFilter(
         number: number ?? this.number,
         kinds: kinds ?? this.kinds,
         sexes: sexes ?? this.sexes,

@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
-import 'package:rescado/src/data/models/carddata.dart';
+import 'package:rescado/src/data/models/card_filter.dart';
 import 'package:rescado/src/services/providers/api_client.dart';
 import 'package:rescado/src/utils/logger.dart';
 
@@ -11,7 +11,7 @@ final cardRepositoryProvider = Provider<CardRepository>(
 
 // All API endpoints regarding cards.
 abstract class CardRepository {
-  Future<List<Animal>> generate({required CardData cardData});
+  Future<List<Animal>> generate({required CardFilter cardFilter});
 
   Future<void> reset();
 }
@@ -24,14 +24,14 @@ class ApiCardRepository implements CardRepository {
   ApiCardRepository(this._read);
 
   @override
-  Future<List<Animal>> generate({required CardData cardData}) async {
+  Future<List<Animal>> generate({required CardFilter cardFilter}) async {
     _logger.d('generate()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/cards/generate');
 
     final response = List<Map<String, dynamic>>.from(await _read(apiClientProvider).postJson(
       endpoint,
-      body: cardData.toJson(),
+      body: cardFilter.toJson(),
     ) as List);
 
     return response.map((animal) => Animal.fromJson(animal)).toList();
