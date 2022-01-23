@@ -49,6 +49,11 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
   void startDragging() {
     _logger.d('startDragging()');
 
+    if (!state.value!.isDraggable) {
+      // Not allowed to interact with the card apparently
+      return;
+    }
+
     state = AsyncData(state.value!.copyWith(
       isTouched: true,
       isDragging: true,
@@ -57,6 +62,11 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
 
   void handleDragging(DragUpdateDetails dragUpdateDetails) {
     // _logger.d('handleDragging()');
+
+    if (!state.value!.isDraggable) {
+      // Not allowed to interact with the card apparently
+      return;
+    }
 
     // Calculate new offset (old offset + distance dragged)
     final offset = state.value!.offset + dragUpdateDetails.delta;
@@ -73,6 +83,11 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
 
   void endDragging() {
     _logger.d('endDragging()');
+
+    if (!state.value!.isDraggable) {
+      // Not allowed to interact with the card apparently
+      return;
+    }
 
     final verticalOffset = state.value!.offset.dx;
     _logger.i('Vertical offset was $verticalOffset');
@@ -95,10 +110,16 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
   void swipeLeft() {
     _logger.d('swipeLeft()');
 
+    if (!state.value!.isDraggable) {
+      // Not allowed to interact with the card apparently
+      return;
+    }
+
+    // TODO Persist via API
+
     state = AsyncData(state.value!.copyWith(
-      offset: state.value!.offset +  Offset(-_boxWidth,-_boxWidth),
+      offset: state.value!.offset + Offset(-_boxWidth, -_boxWidth / 2),
       angle: -RescadoConstants.swipeableCardRotationAngle * pi / 180,
-      opacity: 0,
       isTouched: true,
       isDraggable: false,
       isDragging: false,
@@ -111,10 +132,16 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
   void swipeRight() {
     _logger.d('swipeRight()');
 
+    if (!state.value!.isDraggable) {
+      // Not allowed to interact with the card apparently
+      return;
+    }
+
+    // TODO Persist via API
+
     state = AsyncData(state.value!.copyWith(
-      offset: state.value!.offset + Offset(_boxWidth,-_boxWidth),
+      offset: state.value!.offset + Offset(_boxWidth, -_boxWidth / 2),
       angle: RescadoConstants.swipeableCardRotationAngle * pi / 180,
-      opacity: 0,
       isTouched: true,
       isDraggable: false,
       isDragging: false,
@@ -131,7 +158,6 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       animals: [...state.value!.animals.sublist(1), ...(await _fetchCards())],
       offset: Offset.zero,
       angle: 0,
-      opacity: 1,
       isTouched: false,
       isDraggable: true,
       isDragged: false,

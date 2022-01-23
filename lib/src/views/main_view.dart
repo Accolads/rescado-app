@@ -57,7 +57,7 @@ class _MainViewState extends ConsumerState<MainView> {
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
+            color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
             border: Border(
               top: BorderSide(
                 width: 1.0,
@@ -68,7 +68,7 @@ class _MainViewState extends ConsumerState<MainView> {
           child: SafeArea(
             child: TabBar(
               indicator: CircleTabIndicator(
-                color: Theme.of(context).colorScheme.secondary,
+                color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
               ),
               padding: const EdgeInsets.symmetric(vertical: 7.0),
               onTap: (value) => setState(() {

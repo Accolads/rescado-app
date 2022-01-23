@@ -7,7 +7,6 @@ import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 // Stack of cards the user can swipe left or right
 class SwipeableStack extends StatelessWidget {
@@ -27,18 +26,16 @@ class SwipeableStack extends StatelessWidget {
           final actualWidth = cardWidth > maxWidth ? maxWidth : cardWidth; // If card won't fit its parent, make it 90% of the parent's width
 
           return ref.watch(cardControllerProvider).when(
-                data: (CardData cardData) {
-                  //  print('animals in data: ${cardData.animals.length} and first card is ${cardData.animals[0].name}');
-                  return Stack(
-                    clipBehavior: Clip.none,
-                    children: <Widget>[
-                      if (cardData.animals.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[3], 3),
-                      if (cardData.animals.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[2], 2),
-                      if (cardData.animals.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[1], 1),
-                      _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[0], 0)),
-                    ],
-                  );
-                },
+                data: (CardData cardData) => Stack(
+                  clipBehavior: Clip.none,
+                  children: <Widget>[
+                    if (cardData.animals.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[3], 3),
+                    if (cardData.animals.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[2], 2),
+                    if (cardData.animals.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[1], 1),
+                    _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[0], 0)),
+                  ],
+                ),
+                // TODO properly implement error (to be thrown if no cards left or no filter matches too) and loading
                 error: (_, __) => const Text('error!!'),
                 loading: () => const CircularProgressIndicator(),
               );
@@ -48,7 +45,8 @@ class SwipeableStack extends StatelessWidget {
   Widget _buildCard(BuildContext context, WidgetRef ref, double width, double height, Animal animal, int index) => Center(
         // The actual card
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 500) ,
+          // Duration.zero disables pop down animation but works because top card animation is fast enough to hide that there is no animation
+          duration: ref.watch(cardControllerProvider).value!.shouldPopUp ? const Duration(milliseconds: 500) : Duration.zero,
           curve: Curves.fastOutSlowIn,
           width: width * multipliers[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1],
           height: height * multipliers[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1],
@@ -171,9 +169,6 @@ class SwipeableStack extends StatelessWidget {
             onPanStart: (_) => ref.read(cardControllerProvider.notifier).startDragging(),
             onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(cardControllerProvider.notifier).handleDragging(dragUpdateDetails),
             onPanEnd: (_) => ref.read(cardControllerProvider.notifier).endDragging(),
-            // child: AnimatedOpacity(
-            //   duration: RescadoConstants.swipeableCardAnimationDuration,
-            //   opacity:ref.watch(cardControllerProvider).value!.opacity ,
             child: AnimatedContainer(
               duration: ref.watch(cardControllerProvider).value!.shouldAnimate ? RescadoConstants.swipeableCardAnimationDuration : Duration.zero,
               curve: ref.watch(cardControllerProvider).value!.isDraggable ? Curves.easeOutBack : Curves.linear,
@@ -183,7 +178,6 @@ class SwipeableStack extends StatelessWidget {
                 ..translate(-center.dx, -center.dy) // rotate around center
                 ..translate(ref.watch(cardControllerProvider).value!.offset.dx, ref.watch(cardControllerProvider).value!.offset.dy), // translate the dragged offset
               child: card,
-              //        ),
             ),
           );
         },

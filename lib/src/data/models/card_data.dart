@@ -5,7 +5,6 @@ class CardData {
   final List<Animal> animals;
   final Offset offset; // the offset from the center of the front card
   final double angle; // the angle by which the front card is rotated
-  final double opacity; // the opacity of the front card
   final bool isTouched; // indicates that the user is interacting with the card (and not an animation)
   final bool isDraggable; // indicates if the front card is draggable or not
   final bool isDragging; // indicates if the front card is being dragged with or not
@@ -19,7 +18,6 @@ class CardData {
     this.animals = const [],
     this.offset = Offset.zero,
     this.angle = 0.0,
-    this.opacity = 1.0,
     this.isTouched = false,
     this.isDraggable = false,
     this.isDragging = false,
@@ -30,7 +28,6 @@ class CardData {
     final List<Animal>? animals,
     Offset? offset,
     double? angle,
-    double? opacity,
     bool? isTouched,
     bool? isDraggable,
     bool? isDragging,
@@ -40,8 +37,7 @@ class CardData {
         animals: animals ?? this.animals,
         offset: offset ?? this.offset,
         angle: angle ?? this.angle,
-        opacity: opacity ?? this.opacity,
-        isTouched: isTouched?? this.isTouched,
+        isTouched: isTouched ?? this.isTouched,
         isDraggable: isDraggable ?? this.isDraggable,
         isDragging: isDragging ?? this.isDragging,
         isDragged: isDragged ?? this.isDragged,
