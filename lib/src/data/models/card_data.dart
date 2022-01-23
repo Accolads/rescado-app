@@ -5,9 +5,9 @@ class CardData {
   final List<Animal> animals;
   final Offset offset; // the offset from the center of the front card
   final double angle; // the angle by which the front card is rotated
-  final bool isTouched; // indicates that the user is interacting with the card (and not an animation)
-  final bool isDraggable; // indicates if the front card is draggable or not
-  final bool isDragging; // indicates if the front card is being dragged with or not
+  final bool isTouched; // indicates that the card is being manipulated by the user (and not by animation)
+  final bool isDraggable; // indicates whether the front card is draggable/interactable or not
+  final bool isDragging; // indicates whether the front card is being dragged or not
   final bool isDragged; // is true when the card was dragged to a side, but not yet removed from the stack
 
   bool get shouldPopUp => isDragging || isDragged;
