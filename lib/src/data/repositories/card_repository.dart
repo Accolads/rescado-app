@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
+import 'package:rescado/src/data/models/card_action.dart';
 import 'package:rescado/src/data/models/card_filter.dart';
+import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/services/providers/api_client.dart';
 import 'package:rescado/src/utils/logger.dart';
 
@@ -13,7 +17,15 @@ final cardRepositoryProvider = Provider<CardRepository>(
 abstract class CardRepository {
   Future<List<Animal>> generate({required CardFilter cardFilter});
 
-  Future<void> reset();
+  Future<List<Like>> getLiked();
+
+  Future<CardAction> addLiked({required List<Animal> animals});
+
+  Future<CardAction> deleteLiked({required List<Animal> animals});
+
+  Future<CardAction> addSkipped({required List<Animal> animals});
+
+  Future<void> deleteSkipped();
 }
 
 class ApiCardRepository implements CardRepository {
@@ -37,14 +49,82 @@ class ApiCardRepository implements CardRepository {
     return response.map((animal) => Animal.fromJson(animal)).toList();
   }
 
+  // region liked
+
   @override
-  Future<void> reset() async {
-    _logger.d('reset()');
+  Future<List<Like>> getLiked() async {
+    _logger.d('getLiked()');
 
-    final endpoint = Uri.parse('${RescadoConstants.api}/cards/reset');
+    final endpoint = Uri.parse('${RescadoConstants.api}/cards/liked?detailed=true');
 
-    await _read(apiClientProvider).postJson(
+    final response = await _read(apiClientProvider).getJson(
+      endpoint,
+    ) as List<Map<String, dynamic>>; // TODO Test/try because pretty sure this gives casting errors
+
+    return response.map((like) => Like.fromJson(like)).toList();
+  }
+
+  @override
+  Future<CardAction> addLiked({required List<Animal> animals}) async {
+    _logger.d('addLiked()');
+
+    final endpoint = Uri.parse('${RescadoConstants.api}/cards/liked');
+
+    final response = await _read(apiClientProvider).postJson(
+      endpoint,
+      body: jsonEncode({
+        'ids': animals.map((animal) => animal.id),
+      }),
+    ) as Map<String, dynamic>; // TODO Test/try because pretty sure this gives casting errors
+
+    return CardAction.fromJsonWithAnimalData(response, animals);
+  }
+
+  @override
+  Future<CardAction> deleteLiked({required List<Animal> animals}) async {
+    _logger.d('deleteLiked()');
+
+    final endpoint = Uri.parse('${RescadoConstants.api}/cards/liked');
+
+    final response = await _read(apiClientProvider).deleteJson(
+      endpoint,
+      body: jsonEncode({
+        'ids': animals.map((animal) => animal.id),
+      }),
+    ) as Map<String, dynamic>; // TODO Test/try because pretty sure this gives casting errors
+
+    return CardAction.fromJsonWithAnimalData(response, animals);
+  }
+
+  // endregion
+  // region skipped
+
+  @override
+  Future<CardAction> addSkipped({required List<Animal> animals}) async {
+    _logger.d('addSkipped()');
+
+    final endpoint = Uri.parse('${RescadoConstants.api}/cards/liked');
+
+    final response = await _read(apiClientProvider).postJson(
+      endpoint,
+      body: jsonEncode({
+        'ids': animals.map((animal) => animal.id),
+      }),
+    ) as Map<String, dynamic>; // TODO Test/try because pretty sure this gives casting errors
+
+    return CardAction.fromJsonWithAnimalData(response, animals);
+  }
+
+  @override
+  Future<void> deleteSkipped() async {
+    _logger.d('deleteSkipped()');
+
+    final endpoint = Uri.parse('${RescadoConstants.api}/cards/skipped');
+
+    await _read(apiClientProvider).deleteJson(
       endpoint,
     );
   }
+
+  // endregion
 }

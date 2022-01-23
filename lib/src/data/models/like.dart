@@ -14,6 +14,6 @@ class Like {
   factory Like.fromJson(Map<String, dynamic> json) => Like._(
         timestamp: json['timestamp'] as DateTime,
         reference: json['reference'] as String?,
-        animal: Animal.fromJson(json['reference'] as Map<String, dynamic>),
+        animal: Animal.fromJson(json['reference'] as Map<String, dynamic>), // TODO Test/try because pretty sure this gives casting errors
       );
 }

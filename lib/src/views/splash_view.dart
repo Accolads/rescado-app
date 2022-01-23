@@ -3,10 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
-import 'package:rescado/src/data/models/user.dart';
+import 'package:rescado/src/data/models/authentication.dart';
 import 'package:rescado/src/exceptions/offline_exception.dart';
+import 'package:rescado/src/services/controllers/authentication_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
-import 'package:rescado/src/services/controllers/user_controller.dart';
 import 'package:rescado/src/views/authentication_view.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/containers/action_card.dart';
@@ -72,13 +72,13 @@ class _SplashViewState extends ConsumerState<SplashView> with SingleTickerProvid
                 ),
               ),
               ref.watch(userControllerProvider).when(
-                  data: (User user) {
-                    var nextViewId = (user.status == UserStatus.anonymous || user.status == UserStatus.identified) ? MainView.viewId : AuthenticationView.viewId;
+                  data: (authentication) {
+                    var nextViewId = (authentication.status == AuthenticationStatus.anonymous || authentication.status == AuthenticationStatus.identified) ? MainView.viewId : AuthenticationView.viewId;
                     // Future.delayed(Duration.zero) is a bit too hacky to my liking but we need to return a widget and using Navigator otherwise shortcuts the flow, resulting in errors.
                     Future.delayed(Duration.zero, () => Navigator.pushReplacementNamed(context, nextViewId));
                     return _buildPlaceholder();
                   },
-                  error: (Object error, _) {
+                  error: (error, _) {
                     _animationController.reset();
                     final isOffline = error is OfflineException;
 
