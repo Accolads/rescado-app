@@ -7,6 +7,7 @@ import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:rescado/src/views/misc/animated_logo.dart';
 
 // Stack of cards the user can swipe left or right
 class SwipeableStack extends StatelessWidget {
@@ -41,7 +42,10 @@ class SwipeableStack extends StatelessWidget {
                 ),
                 // TODO properly implement error (to be thrown if no cards left or no filter matches too) and loading
                 error: (_, __) => const Text('error!!'),
-                loading: () => const CircularProgressIndicator(),
+                loading: () => const SizedBox(
+                  width: 50.0,
+                  child: AnimatedLogo(),
+                ),
               );
         },
       );
