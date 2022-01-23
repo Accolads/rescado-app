@@ -50,6 +50,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     _logger.d('startDragging()');
 
     state = AsyncData(state.value!.copyWith(
+      isTouched: true,
       isDragging: true,
     ));
   }
@@ -74,7 +75,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     _logger.d('endDragging()');
 
     final verticalOffset = state.value!.offset.dx;
-    _logger.d('Vertical offset was $verticalOffset');
+    _logger.i('Vertical offset was $verticalOffset');
 
     if (verticalOffset <= -RescadoConstants.swipeableCardDragOffset) {
       return swipeLeft();
@@ -94,28 +95,33 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
   void swipeLeft() {
     _logger.d('swipeLeft()');
 
-    // print('offset: ${state.value!.offset}');
-    // print('offset: ${Offset(_boxWidth * 2, 0)}');
-    // print('offset: ${state.value!.offset - Offset(_boxWidth, 0)}');
-
     state = AsyncData(state.value!.copyWith(
-      offset: state.value!.offset - Offset(_boxWidth, 0.0),
+      offset: state.value!.offset +  Offset(-_boxWidth,-_boxWidth),
       angle: -RescadoConstants.swipeableCardRotationAngle * pi / 180,
+      opacity: 0,
+      isTouched: true,
       isDraggable: false,
       isDragging: false,
+      isDragged: true,
     ));
+
+    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, removeTopCard);
   }
 
   void swipeRight() {
-    // Pass boxWidth if not triggered by endDragging()
     _logger.d('swipeRight()');
 
     state = AsyncData(state.value!.copyWith(
-      offset: state.value!.offset + Offset(_boxWidth, 0.0),
+      offset: state.value!.offset + Offset(_boxWidth,-_boxWidth),
       angle: RescadoConstants.swipeableCardRotationAngle * pi / 180,
+      opacity: 0,
+      isTouched: true,
       isDraggable: false,
       isDragging: false,
+      isDragged: true,
     ));
+
+    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, removeTopCard);
   }
 
   void removeTopCard() async {
@@ -125,12 +131,15 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       animals: [...state.value!.animals.sublist(1), ...(await _fetchCards())],
       offset: Offset.zero,
       angle: 0,
+      opacity: 1,
+      isTouched: false,
       isDraggable: true,
+      isDragged: false,
     ));
   }
 
   void cacheBoxWidth(double width) {
-    _logger.d('cacheBoxWidth()');
+    // _logger.d('cacheBoxWidth()');
 
     _boxWidth = width;
   }

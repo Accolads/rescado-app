@@ -7,6 +7,7 @@ import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 // Stack of cards the user can swipe left or right
 class SwipeableStack extends StatelessWidget {
@@ -47,11 +48,11 @@ class SwipeableStack extends StatelessWidget {
   Widget _buildCard(BuildContext context, WidgetRef ref, double width, double height, Animal animal, int index) => Center(
         // The actual card
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500) ,
           curve: Curves.fastOutSlowIn,
-          width: width * multipliers[ref.watch(cardControllerProvider).value!.isDragging ? index : index + 1],
-          height: height * multipliers[ref.watch(cardControllerProvider).value!.isDragging ? index : index + 1],
-          margin: EdgeInsets.only(top: margins[ref.watch(cardControllerProvider).value!.isDragging ? index : index + 1]),
+          width: width * multipliers[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1],
+          height: height * multipliers[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1],
+          margin: EdgeInsets.only(top: margins[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1]),
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
@@ -165,21 +166,24 @@ class SwipeableStack extends StatelessWidget {
           // need LayoutBuilder to know the center of the widget for rotation/tilting the card
           final center = constraints.biggest.center(Offset.zero);
           ref.read(cardControllerProvider.notifier).cacheBoxWidth(constraints.biggest.width);
-           print('center: ${constraints.biggest.center(Offset.zero)}');
-          // print('constraints: ${constraints.maxWidth}');
+
           return GestureDetector(
             onPanStart: (_) => ref.read(cardControllerProvider.notifier).startDragging(),
             onPanUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(cardControllerProvider.notifier).handleDragging(dragUpdateDetails),
             onPanEnd: (_) => ref.read(cardControllerProvider.notifier).endDragging(),
+            // child: AnimatedOpacity(
+            //   duration: RescadoConstants.swipeableCardAnimationDuration,
+            //   opacity:ref.watch(cardControllerProvider).value!.opacity ,
             child: AnimatedContainer(
-              curve: Curves.elasticOut,
-              duration: Duration(seconds: ref.watch(cardControllerProvider).value!.isDragging ? 0 : 2),
+              duration: ref.watch(cardControllerProvider).value!.shouldAnimate ? RescadoConstants.swipeableCardAnimationDuration : Duration.zero,
+              curve: ref.watch(cardControllerProvider).value!.isDraggable ? Curves.easeOutBack : Curves.linear,
               transform: Matrix4.identity()
                 ..translate(center.dx, center.dy) // rotate around center
                 ..rotateZ(ref.watch(cardControllerProvider).value!.angle) // rotate around center
                 ..translate(-center.dx, -center.dy) // rotate around center
                 ..translate(ref.watch(cardControllerProvider).value!.offset.dx, ref.watch(cardControllerProvider).value!.offset.dy), // translate the dragged offset
               child: card,
+              //        ),
             ),
           );
         },
