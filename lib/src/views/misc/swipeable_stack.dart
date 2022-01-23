@@ -12,12 +12,16 @@ import 'package:rescado/src/views/buttons/floating_button.dart';
 class SwipeableStack extends StatelessWidget {
   final cardWidth = 300.0; // Preferred width of a card
   final cardHeight = 440.0; // Preferred height of a card
-  final multipliers = [1, 1, 0.93, 0.86, 0.86]; // Factor each card should be multiplied by to create illusion of depth.
-  final margins = [0.0, 0.0, 55.0, 100.0, 100.0]; // Distance each card should be from the top, top card to bottom card.
+  final scales = [1.0, 1.0, 0.93, 0.86]; // Factor each card should be multiplied by to create illusion of depth
+  final margins = [0.0, 0.0, 28.0, 52.0]; // Distance each card should be from the top, top card to bottom card
 
   SwipeableStack({
     Key? key,
   }) : super(key: key);
+
+  double _scale([int index = 0]) => scales.length <= index ? scales.last : scales[index];
+
+  double _margin([int index = 0]) => margins.length <= index ? margins.last : margins[index];
 
   @override
   Widget build(BuildContext context) => Consumer(
@@ -48,10 +52,16 @@ class SwipeableStack extends StatelessWidget {
           // Duration.zero disables pop down animation but works because top card animation is fast enough to hide that there is no animation
           duration: ref.watch(cardControllerProvider).value!.shouldPopUp ? const Duration(milliseconds: 500) : Duration.zero,
           curve: Curves.fastOutSlowIn,
-          width: width * multipliers[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1],
-          height: height * multipliers[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1],
-          margin: EdgeInsets.only(top: margins[ref.watch(cardControllerProvider).value!.shouldPopUp ? index : index + 1]),
+          width: width,
+          height: height,
           padding: const EdgeInsets.all(10.0),
+          transform: ref.watch(cardControllerProvider).value!.shouldPopUp
+              ? (Matrix4.identity()
+                ..translate((width - width * _scale(index)) / 2, (height - height * _scale(index)) / 2 + _margin(index))
+                ..scale(_scale(index)))
+              : (Matrix4.identity()
+                ..translate((width - width * _scale(index + 1)) / 2, (height - height * _scale(index + 1)) / 2 + _margin(index + 1))
+                ..scale(_scale(index + 1))),
           decoration: BoxDecoration(
             color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
             borderRadius: BorderRadius.circular(25.0),
