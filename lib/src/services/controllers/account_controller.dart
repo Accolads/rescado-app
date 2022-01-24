@@ -12,11 +12,11 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
 
   final Reader _read;
 
-  AccountController(this._read) : super(const AsyncValue.loading());
+  AccountController(this._read) : super(const AsyncLoading());
 
   void _initialize() async {
     _logger.d('initialize()');
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
 
     // We can fetch our own details as soon as this controller is loaded
     getAccountDetails();
@@ -25,6 +25,6 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
   void getAccountDetails() async {
     _logger.d('getAccountDetails()');
 
-    state = AsyncValue.data(await _read(accountRepositoryProvider).get());
+    state = AsyncData(await _read(accountRepositoryProvider).get());
   }
 }

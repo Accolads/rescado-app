@@ -20,11 +20,11 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
 
   late double _boxWidth;
 
-  CardController(this._read) : super(const AsyncValue.loading());
+  CardController(this._read) : super(const AsyncLoading());
 
   void _initialize() async {
     _logger.d('initialize()');
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
 
     // Get some cards to start with, and make the stack interactable
     state = AsyncData(CardData(
@@ -70,7 +70,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
 
     // Calculate new offset (old offset + distance dragged)
     final offset = state.value!.offset + dragUpdateDetails.delta;
-    // Calculate new angle ( current x / max width * maximum angle * π/180, for radians)
+    // Calculate new angle (current x / max width * maximum angle * π/180, for radians)
     final angle = offset.dx / _boxWidth * RescadoConstants.swipeableCardRotationAngle * pi / 180;
 
     state = AsyncData(state.value!.copyWith(

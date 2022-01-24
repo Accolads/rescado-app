@@ -15,11 +15,11 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
 
   final Reader _read;
 
-  AuthenticationController(this._read) : super(const AsyncValue.loading());
+  AuthenticationController(this._read) : super(const AsyncLoading());
 
   void _initialize() async {
     _logger.d('initialize()');
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
 
     // Handle authentication as soon as this controller is loaded.
     renewSession();
@@ -28,7 +28,7 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
   // Will attempt to create if necessary, refresh if possible, or recover a dead session if the user was anonymous. Fetches account details if applicable.
   void renewSession() async {
     _logger.d('renewSession()');
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
 
     try {
       final token = await _read(deviceStorageProvider).getToken();
@@ -39,7 +39,7 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
         final authentication = await _read(authenticationRepositoryProvider).register();
 
         _logger.i('User registration was successful.');
-        state = AsyncValue.data(authentication);
+        state = AsyncData(authentication);
         return;
       }
 
@@ -48,7 +48,7 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
         final authentication = await _read(authenticationRepositoryProvider).refresh();
 
         _logger.i('Session renewal was successful.');
-        state = AsyncValue.data(authentication);
+        state = AsyncData(authentication);
       } on ApiException catch (exception) {
         if (exception.keys.first == 'TokenExpired') {
           _logger.w('The session is expired.');
@@ -58,7 +58,7 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
             await _read(authenticationRepositoryProvider).recover();
           } else {
             _logger.i('User was not anonymous. Will need to log in manually to continue.');
-            state = AsyncValue.data(Authentication.expired());
+            state = AsyncData(Authentication.expired());
             return;
           }
         } else {
@@ -71,7 +71,7 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
       await Future<dynamic>.delayed(const Duration(milliseconds: 3333));
 
       _logger.e('Session renewal failed.', error, stackTrace);
-      state = AsyncValue.error(error);
+      state = AsyncError(error);
     }
   }
 }
