@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
@@ -33,7 +34,7 @@ class ApiClient extends BaseClient {
     request.headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
 
     // If we're running the app during development, add some extra logs when we get a response. Hacky.
-    return const bool.fromEnvironment('dart.vm.product')
+    return !kDebugMode
         ? _client.send(request)
         : _client.send(request).then((response) async {
             final body = await response.stream.bytesToString();

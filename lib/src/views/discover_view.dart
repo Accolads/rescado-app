@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
@@ -26,10 +27,11 @@ class DiscoverView extends StatelessWidget {
               ),
               // For demo purposes
               FloatingButton(
-                semanticsLabel: 'hello',
-                svgAsset: RescadoConstants.iconEnvelope,
+                semanticsLabel: 'Do not press',
+                svgAsset: RescadoConstants.iconHeartBroken,
                 onPressed: () {
-                  print('thanks for pressing'); // ignore: avoid_print
+                  // 💣
+                  FirebaseCrashlytics.instance.crash();
                 },
               ),
             ],
