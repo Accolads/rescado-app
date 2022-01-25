@@ -6,16 +6,14 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:rescado/firebase_options.dart'; // ignore: uri_does_not_exist
 import 'package:rescado/src/application.dart';
+import 'package:rescado/src/constants/firebase_constants.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase setup
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // ignore: argument_type_not_assignable, undefined_identifier
-  );
+  await Firebase.initializeApp(options: FirebaseConstants.currentPlatform);
 
   // Crashlytics setup
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kDebugMode);
