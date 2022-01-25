@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
@@ -34,7 +34,7 @@ class ApiClient extends BaseClient {
     request.headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
 
     // If we're running the app during development, add some extra logs when we get a response. Hacky.
-    return !kDebugMode
+    return kReleaseMode
         ? _client.send(request)
         : _client.send(request).then((response) async {
             final body = await response.stream.bytesToString();
@@ -114,7 +114,7 @@ class ApiClient extends BaseClient {
   // Function to parse the JSON returned by the server as soon as the response gets in. Also handles errors thrown by the API and wraps other exceptions if thrown.
   Future<dynamic> _parseResponse(Function request) async {
     try {
-      final Response response = (await request()) as Response;
+      final response = (await request()) as Response;
 
       // If the response is an array, the request could only have been successful so we can return response straightaway.
       if (response.body.startsWith('[')) {
@@ -137,14 +137,14 @@ class ApiClient extends BaseClient {
     } on TimeoutException {
       // Wrap TimeoutException because the error shown in the UI should be similar to when offline.
       throw const OfflineException();
-    } on FormatException {
+    } on FormatException catch (error, stackTrace) {
       // FormatException is thrown by jsonDecode() if it cannot parse the string passed to it (indicating the server did not respond with JSON, which it always should).
-      _logger.w('The server did not respond with JSON data!');
-      throw const ServerException();
+      _logger.e('The server did not respond with JSON data!', error, stackTrace);
+      throw ServerException();
     } catch (error, stackTrace) {
       // When something is very wrong.
       _logger.e('Something went very wrong', error, stackTrace);
-      throw const ServerException();
+      throw ServerException();
     }
   }
 
