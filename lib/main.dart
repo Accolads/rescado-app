@@ -13,7 +13,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase setup
-  await Firebase.initializeApp(options: FirebaseConstants.currentPlatform);
+  await Firebase.initializeApp(
+    options: FirebaseConstants.currentPlatform,
+  );
 
   // Crashlytics setup
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kDebugMode);

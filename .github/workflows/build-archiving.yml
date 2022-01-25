@@ -30,7 +30,7 @@ jobs:
           echo "Build number:   $GITHUB_RUN_NUMBER"
           echo "artifactVersion=$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           # Make build
-          flutter build apk --release --build-number=$GITHUB_RUN_NUMBER
+          flutter build apk --release --build-number=$GITHUB_RUN_NUMBER --dart-define=androidFirebaseKey=$FIREBASE_KEY_ANDROID
           # Prepare artifact
           mkdir artifact
           mv build/app/outputs/flutter-apk/app-release.apk "artifact/rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.apk"
@@ -71,7 +71,7 @@ jobs:
           echo "Build number:   $GITHUB_RUN_NUMBER"
           echo "artifactVersion=$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           # Make build
-          flutter build ios --release --build-number=$GITHUB_RUN_NUMBER --no-codesign
+          flutter build ios --release --build-number=$GITHUB_RUN_NUMBER --dart-define=iosFirebaseKey=$FIREBASE_KEY_IOS --no-codesign
           # Prepare artifact
           mkdir -p artifact/Payload
           cp -r build/ios/iphoneos/Runner.app artifact/Payload
