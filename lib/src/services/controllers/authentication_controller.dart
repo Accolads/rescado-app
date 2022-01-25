@@ -6,7 +6,7 @@ import 'package:rescado/src/exceptions/api_exception.dart';
 import 'package:rescado/src/services/providers/device_storage.dart';
 import 'package:rescado/src/utils/logger.dart';
 
-final userControllerProvider = StateNotifierProvider<AuthenticationController, AsyncValue<Authentication>>(
+final authenticationControllerProvider = StateNotifierProvider<AuthenticationController, AsyncValue<Authentication>>(
   (ref) => AuthenticationController(ref.read).._initialize(),
 );
 
@@ -19,7 +19,6 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
 
   void _initialize() async {
     _logger.d('initialize()');
-    state = const AsyncLoading();
 
     // Handle authentication as soon as this controller is loaded.
     renewSession();

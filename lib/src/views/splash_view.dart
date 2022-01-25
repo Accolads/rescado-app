@@ -32,7 +32,7 @@ class SplashView extends ConsumerWidget {
                 width: 125.0,
                 child: AnimatedLogo(),
               ),
-              ref.watch(userControllerProvider).when(
+              ref.watch(authenticationControllerProvider).when(
                     data: (authentication) {
                       var nextViewId = (authentication.status == AuthenticationStatus.anonymous || authentication.status == AuthenticationStatus.identified) ? MainView.viewId : AuthenticationView.viewId;
                       // Future.delayed(Duration.zero) is a bit too hacky to my liking but we need to return a widget and using Navigator otherwise shortcuts the flow, resulting in errors.
@@ -47,7 +47,7 @@ class SplashView extends ConsumerWidget {
                       actionButton: ActionButton(
                         label: AppLocalizations.of(context)!.labelRetry,
                         svgAsset: RescadoConstants.iconRefresh,
-                        onPressed: () => ref.read(userControllerProvider.notifier).renewSession(),
+                        onPressed: () => ref.read(authenticationControllerProvider.notifier).renewSession(),
                       ),
                     ),
                     loading: () => const SizedBox.shrink(),

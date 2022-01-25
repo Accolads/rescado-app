@@ -16,7 +16,6 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
 
   void _initialize() async {
     _logger.d('initialize()');
-    state = const AsyncLoading();
 
     // We can fetch our own details as soon as this controller is loaded
     getAccountDetails();
