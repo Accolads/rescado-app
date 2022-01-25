@@ -12,7 +12,7 @@ extension UserStatusExtension on AccountStatus {
       case AccountStatus.blocked:
         return AuthenticationStatus.blocked;
       default:
-        throw Exception('Bad programming. Not all statuses were mapped.');
+        throw UnsupportedError('Bad programming. Not all statuses were mapped.');
     }
   }
 }

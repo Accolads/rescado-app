@@ -9,7 +9,7 @@ jobs:
   build-apk:
     name: Android build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
@@ -30,10 +30,12 @@ jobs:
           echo "Build number:   $GITHUB_RUN_NUMBER"
           echo "artifactVersion=$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           # Make build
-          flutter build apk --release --build-number=$GITHUB_RUN_NUMBER
+          flutter build apk --release --build-number=$GITHUB_RUN_NUMBER --dart-define=androidFirebaseKey=$FIREBASE_KEY_ANDROID
           # Prepare artifact
           mkdir artifact
           mv build/app/outputs/flutter-apk/app-release.apk "artifact/rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.apk"
+        env:
+          FIREBASE_KEY_ANDROID: ${{ secrets.FIREBASE_KEY_ANDROID }}
       - name: Archive Android application
         id: archive-android-app
         uses: actions/upload-artifact@v2.3.1
@@ -50,7 +52,7 @@ jobs:
   build-ipa:
     name: iOS build
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
@@ -71,12 +73,14 @@ jobs:
           echo "Build number:   $GITHUB_RUN_NUMBER"
           echo "artifactVersion=$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           # Make build
-          flutter build ios --release --build-number=$GITHUB_RUN_NUMBER --no-codesign
+          flutter build ios --release --build-number=$GITHUB_RUN_NUMBER --dart-define=iosFirebaseKey=$FIREBASE_KEY_IOS --no-codesign
           # Prepare artifact
           mkdir -p artifact/Payload
           cp -r build/ios/iphoneos/Runner.app artifact/Payload
           cd artifact
           zip -r -y "rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.ipa" Payload/Runner.app
+        env:
+          FIREBASE_KEY_IOS: ${{ secrets.FIREBASE_KEY_IOS }}
       - name: Archive iOS application
         id: archive-ios-app
         uses: actions/upload-artifact@v2.3.1

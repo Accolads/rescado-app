@@ -7,7 +7,14 @@ Adopt, don't shop.
 
 ## Firebase setup
 
-`firebase_options.dart` is not included because it contains secrets, so you'll need to generate this file yourself.
+The Firebase API keys are not versioned,  so you will need to provide these as additional arguments when running/building. Each platform requires its key to be set, e.g. the iOS app runs fine without an `androidFirebaseKey` but it will crash if no `iosFirebaseKey` is provided.
+```shell
+flutter run \
+  --dart-define=iosFirebaseKey=$FIREBASE_KEY_IOS \
+  --dart-define=androidFirebaseKey=$FIREBASE_KEY_ANDROID
+```
+
+You can get these keys by logging into the Firebase Web Console and downloading the `google-services.json` and `GoogleService-Info.plist` for Android and iOS respectively, and look for the API key in there. Or, you can use the FlutterFire CLI to generate a temporary `firebase_options.dart` which will hold these keys as well.
 
 ```shell
 # Install Firebase CLI
