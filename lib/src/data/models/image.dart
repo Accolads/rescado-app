@@ -24,7 +24,7 @@ class Image {
   });
 
   factory Image.fromJson(Map<String, dynamic> json) => Image._(
-        id: json['id'] as int,
+        id: json['id'] as int?,
         reference: json['reference'] as String,
         type: ImageType.values.byName((json['type'] as String).toLowerCase()),
         source: ImageSource.values.byName((json['source'] as String).toLowerCase()),
