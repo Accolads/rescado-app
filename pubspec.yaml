@@ -14,6 +14,7 @@ dependencies:
 
   animations: ^2.0.2
   device_info_plus: ^3.2.0
+  firebase_analytics: ^9.0.5 # Required for Crashlytics on Android, but seems to be a bug currently, seeing issues on GitHub
   firebase_core: ^1.11.0
   firebase_crashlytics: ^2.4.5
   flutter_hooks: ^0.18.1

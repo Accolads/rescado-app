@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId "org.rescado.android"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 19 // TODO Can be put back to flutter.minSdkVersion when Firebase Analytics is no longer needed
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
