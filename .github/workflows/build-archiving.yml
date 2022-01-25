@@ -2,14 +2,14 @@ name: Build archiving
 
 on:
   push:
-    branches: [ develop, hotfix/firebase-credentials-on-cicd ]
+    branches: [ develop ]
   workflow_dispatch:
 
 jobs:
   build-apk:
     name: Android build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
@@ -50,7 +50,7 @@ jobs:
   build-ipa:
     name: iOS build
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
