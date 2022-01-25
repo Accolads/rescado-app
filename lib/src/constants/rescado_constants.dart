@@ -8,16 +8,22 @@ class RescadoConstants {
   static String get api => 'https://rescado.qrivi.dev/api';
 
   // Timeout before giving up on a HTTP request
-  static Duration get timeout => const Duration(seconds: 10);
+  static Duration get timeout => const Duration(seconds: 20);
 
   // The custom header the server expects to reflect the device's name
   static String get deviceHeader => 'user-device';
 
   // Maximum angle (in degrees) for the swipeable cards to rotate with
-  static double get swipeableCardRotationAngle => 45.0;
+  static double get swipeableCardRotationAngle => 69.0;
 
   // Minimum horizontal offset for a swipeable card to be dragged before registering as a swipe
-  static num get swipeableCardDragOffset => 150;
+  static int get swipeableCardDragOffset => 100;
+
+  // How long the card swipe animation should take (will define when next card is draggable)
+  static Duration get swipeableCardAnimationDuration => const Duration(milliseconds: 250);
+
+  // Critical stack size after which new data needs to be fetched from the API
+  static int get swipeableStackCriticalSize => 10;
 
   // Default light theme when the user has not defined a preference himself yet.
   static CustomThemeIdentifier get defaultLightTheme => CustomThemeIdentifier.light;
