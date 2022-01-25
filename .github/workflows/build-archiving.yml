@@ -2,7 +2,7 @@ name: Build archiving
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, hotfix/firebase-credentials-on-cicd ]
   workflow_dispatch:
 
 jobs:
