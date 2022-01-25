@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:rescado/firebase_options.dart';
+import 'package:rescado/firebase_options.dart'; // ignore: uri_does_not_exist
 import 'package:rescado/src/application.dart';
 
 Future<void> main() async {
@@ -14,7 +14,7 @@ Future<void> main() async {
 
   // Firebase setup
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform, // ignore: argument_type_not_assignable, undefined_identifier
   );
 
   // Crashlytics setup
