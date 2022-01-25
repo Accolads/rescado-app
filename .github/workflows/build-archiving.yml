@@ -2,7 +2,7 @@ name: Build archiving
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, hotfix/firebase-credentials-on-cicd ]
   workflow_dispatch:
 
 jobs:
@@ -34,6 +34,8 @@ jobs:
           # Prepare artifact
           mkdir artifact
           mv build/app/outputs/flutter-apk/app-release.apk "artifact/rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.apk"
+        env:
+          FIREBASE_KEY_ANDROID: ${{ secrets.FIREBASE_KEY_ANDROID }}
       - name: Archive Android application
         id: archive-android-app
         uses: actions/upload-artifact@v2.3.1
@@ -77,6 +79,8 @@ jobs:
           cp -r build/ios/iphoneos/Runner.app artifact/Payload
           cd artifact
           zip -r -y "rescado_$APP_VERSION_NUMBER-$GITHUB_RUN_NUMBER.ipa" Payload/Runner.app
+        env:
+          FIREBASE_KEY_IOS: ${{ secrets.FIREBASE_KEY_IOS }}
       - name: Archive iOS application
         id: archive-ios-app
         uses: actions/upload-artifact@v2.3.1

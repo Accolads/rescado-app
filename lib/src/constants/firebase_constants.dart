@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:rescado/src/utils/logger.dart';
@@ -23,6 +25,7 @@ class FirebaseConstants {
 
     if (androidKey.isEmpty) {
       _logger.wtf('Missing Firebase API key for Android.');
+      exit(1);
     }
     return const FirebaseOptions(
       apiKey: androidKey,
@@ -38,6 +41,7 @@ class FirebaseConstants {
 
     if (iosKey.isEmpty) {
       _logger.wtf('Missing Firebase API key for iOS.');
+      exit(1);
     }
     return const FirebaseOptions(
       apiKey: iosKey,
