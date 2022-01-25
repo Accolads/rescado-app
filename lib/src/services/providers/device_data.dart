@@ -78,7 +78,7 @@ class DeviceData {
 
   // Gets the device's build "number"
   Future<String> getBuild() async {
-    _logger.d('getUserAgent()');
+    _logger.d('getBuild()');
 
     final info = await PackageInfo.fromPlatform();
     final build = info.buildNumber;

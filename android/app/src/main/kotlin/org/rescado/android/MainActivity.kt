@@ -1,4 +1,4 @@
-package org.rescado.mobileapp
+package org.rescado.android
 
 import io.flutter.embedding.android.FlutterActivity
 

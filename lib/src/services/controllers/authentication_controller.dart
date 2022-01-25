@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/account.dart';
 import 'package:rescado/src/data/models/authentication.dart';
@@ -48,6 +49,9 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
 
         _logger.i('Session renewal was successful.');
         state = AsyncData(authentication);
+
+        final token = await _read(deviceStorageProvider).getToken();
+        FirebaseCrashlytics.instance.setUserIdentifier(token!.subject);
       } on ApiException catch (exception) {
         if (exception.keys.first == 'TokenExpired') {
           _logger.w('The session is expired.');
