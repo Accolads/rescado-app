@@ -4,10 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
-import 'package:rescado/src/data/models/user.dart';
+import 'package:rescado/src/data/models/authentication.dart';
+import 'package:rescado/src/services/controllers/authentication_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
-import 'package:rescado/src/services/controllers/user_controller.dart';
 import 'package:rescado/src/views/authentication_view.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
@@ -35,21 +35,22 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userControllerProvider).value!; //TODO should this happen in constructor?
+    final authentication = ref.watch(authenticationControllerProvider).value!; //TODO should this happen in constructor?
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
               floating: false,
               pinned: true,
-              expandedHeight: MediaQuery.of(context).size.height / 2.3, // temporary
-              collapsedHeight: user.status == UserStatus.identified ? MediaQuery.of(context).size.height / 3.3 : MediaQuery.of(context).size.height / 2.3,
+              expandedHeight: MediaQuery.of(context).size.height / 2.3,
+              //TODO temporary
+              collapsedHeight: authentication.status == AuthenticationStatus.identified ? MediaQuery.of(context).size.height / 3.3 : MediaQuery.of(context).size.height / 2.3,
               flexibleSpace: Column(
                 children: [
                   PageTitle(
                     label: AppLocalizations.of(context)!.labelProfile,
                   ),
-                  _buildUserStatus(user),
+                  _buildUserStatus(authentication),
                   Spacer(),
                   Container(
                     decoration: BoxDecoration(
@@ -81,9 +82,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     );
   }
 
-  Widget _buildUserStatus(User user) {
-    switch (user.status) {
-      case UserStatus.identified:
+  Widget _buildUserStatus(Authentication authentication) {
+    switch (authentication.status) {
+      case AuthenticationStatus.identified:
         return const CircleAvatar(
           //TODO
           backgroundImage: NetworkImage('https://images.news18.com/ibnlive/uploads/2021/08/donald-trump-comments-on-the-taliban-16293574924x3.jpg'),

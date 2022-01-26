@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/like.dart';
-import 'package:rescado/src/data/repositories/like_repository.dart';
+import 'package:rescado/src/data/repositories/card_repository.dart';
+import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final likeControllerProvider = StateNotifierProvider<LikeController, AsyncValue<List<Like>>>(
@@ -18,12 +19,12 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     _logger.d('initialize()');
     state = const AsyncValue.loading();
 
-    fetchLikes();
+    _fetchLikes();
   }
 
-  void fetchLikes() async {
+  void _fetchLikes() async {
     _logger.i('Fetching the likes of the current user.');
-    final likes = await _read(likeRepositoryProvider).getAllLikes();
+    final likes = await _read(cardRepositoryProvider).getLiked();
 
     state = AsyncValue.data(likes);
   }

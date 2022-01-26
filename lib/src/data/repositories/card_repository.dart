@@ -59,9 +59,9 @@ class ApiCardRepository implements CardRepository {
 
     final response = await _read(apiClientProvider).getJson(
       endpoint,
-    ) as List<Map<String, dynamic>>; // TODO Test/try because pretty sure this gives casting errors
+    ) as List<dynamic>;
 
-    return response.map((like) => Like.fromJson(like)).toList();
+    return response.map((dynamic e) => Like.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
@@ -126,5 +126,5 @@ class ApiCardRepository implements CardRepository {
     );
   }
 
-  // endregion
+// endregion
 }
