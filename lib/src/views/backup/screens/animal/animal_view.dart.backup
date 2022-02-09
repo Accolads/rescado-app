@@ -41,7 +41,7 @@ class AnimalView extends ConsumerWidget {
               child: AppBarButton(
                 color: Theme.of(context).primaryColor,
                 svgAsset: RescadoStyle.iconChevronLeft,
-                altText: AppLocalizations.of(context)!.back,
+                altText: context.i10n.back,
                 onPressed: () => Navigator.pop(context),
               ),
             ),
@@ -54,7 +54,7 @@ class AnimalView extends ConsumerWidget {
                   child: AppBarButton(
                     color: Theme.of(context).primaryColor,
                     svgAsset: Platform.instance.isAndroid ? RescadoStyle.iconShareAndroid : RescadoStyle.iconShareiOS,
-                    altText: AppLocalizations.of(context)!.back,
+                    altText: context.i10n.back,
                     onPressed: () {},
                   ),
                 ),
@@ -120,7 +120,7 @@ class AnimalView extends ConsumerWidget {
                         BigButton(
                           color: const Color(0xFFEE575F),
                           svgAsset: ref.watch(animalProvider).likedCurrentAnimal ? RescadoStyle.iconHeartFilled : RescadoStyle.iconHeartOutline,
-                          altText: AppLocalizations.of(context)!.likeAnimal(animal.name),
+                          altText: context.i10n.likeAnimal(animal.name),
                           onPressed: () => ref.read(animalProvider).updateLikedCurrentAnimal(),
                         )
                     ],
@@ -130,16 +130,16 @@ class AnimalView extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AnimalFeatureCard(
-                        mainLabel: animal.sex == 'MALE' ? AppLocalizations.of(context)!.animalSexMale : AppLocalizations.of(context)!.animalSexFemale, //TODO
-                        subLabel: AppLocalizations.of(context)!.animalSexLabel,
+                        mainLabel: animal.sex == 'MALE' ? context.i10n.animalSexMale : context.i10n.animalSexFemale, //TODO
+                        subLabel: context.i10n.animalSexLabel,
                       ),
                       AnimalFeatureCard(
-                        mainLabel: '${animal.age == 0 ? '>1' : animal.age} ${AppLocalizations.of(context)!.animalYearLabel}',
-                        subLabel: AppLocalizations.of(context)!.animalAgeLabel,
+                        mainLabel: '${animal.age == 0 ? '>1' : animal.age} ${context.i10n.animalYearLabel}',
+                        subLabel: context.i10n.animalAgeLabel,
                       ),
                       AnimalFeatureCard(
-                        mainLabel: '${animal.weight} ${AppLocalizations.of(context)!.weightKgUnit}',
-                        subLabel: AppLocalizations.of(context)!.weightLabel,
+                        mainLabel: '${animal.weight} ${context.i10n.weightKgUnit}',
+                        subLabel: context.i10n.weightLabel,
                       ),
                     ],
                   ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/discover_view.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/misc/simple_tooltip.dart';
@@ -28,17 +28,17 @@ class _MainViewState extends ConsumerState<MainView> {
   final _tabData = [
     _MainViewTabData(
       svgAsset: RescadoConstants.iconCompass,
-      label: (BuildContext context) => AppLocalizations.of(context)!.labelDiscover,
+      label: (BuildContext context) => context.i10n.labelDiscover,
       view: const DiscoverView(),
     ),
     _MainViewTabData(
       svgAsset: RescadoConstants.iconLogo,
-      label: (BuildContext context) => AppLocalizations.of(context)!.labelSwipe,
+      label: (BuildContext context) => context.i10n.labelSwipe,
       view: const SwipeView(),
     ),
     _MainViewTabData(
       svgAsset: RescadoConstants.iconUser,
-      label: (BuildContext context) => AppLocalizations.of(context)!.labelProfile,
+      label: (BuildContext context) => context.i10n.labelProfile,
       view: const ProfileView(),
     ),
   ];

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/containers/full_page.dart';
 
 // Placeholder view.
@@ -12,7 +12,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FullPage(
-        title: AppLocalizations.of(context)!.labelProfile,
+        title: context.i10n.labelProfile,
         body: Center(
           child: Column(
             children: const <Widget>[
