@@ -1,7 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/repositories/card_repository.dart';
-import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final likeControllerProvider = StateNotifierProvider<LikeController, AsyncValue<List<Like>>>(
@@ -27,5 +26,15 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     final likes = await _read(cardRepositoryProvider).getLiked();
 
     state = AsyncValue.data(likes);
+  }
+
+  void deleteLike(Like like) async {
+    final cardAction = await _read(cardRepositoryProvider).deleteLiked(animals: [like.animal]);
+
+    if (cardAction.liked != null && cardAction.liked!.contains(like.animal)) {
+      state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
+
+      //TODO check here
+    }
   }
 }

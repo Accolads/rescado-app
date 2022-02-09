@@ -14,9 +14,9 @@ class CardAction {
   // TODO Test/try, because I am 1000% sure this will fail because of casting errors AND lack of null checks
   factory CardAction.fromJsonWithAnimalData(Map<String, dynamic> json, List<Animal> animals) {
     return CardAction._(
-      liked: (json['liked'] as List<int>).map((id) => animals.firstWhere((animal) => animal.id == id)).toList(),
-      skipped: (json['skipped'] as List<int>).map((id) => animals.firstWhere((animal) => animal.id == id)).toList(),
-      errors: json['errors'] as List<String>,
+      liked: json['liked'] != null ? (List<int>.from(json['liked'] as List<dynamic>)).map((id) => animals.firstWhere((animal) => animal.id == id)).toList() : null,
+      skipped: json['skipped'] != null ? List<int>.from(json['skipped'] as List<dynamic>).map((id) => animals.firstWhere((animal) => animal.id == id)).toList() : null,
+      errors: json['errors'] != null ? List<String>.from(json['errors'] as List<dynamic>) : null,
     );
   }
 }

@@ -85,6 +85,8 @@ class RescadoConstants {
 
   static String get illustrationCuteCatOutside => 'assets/illustrations/cute-cat-outside.svg'; // TODO cleanup if unused
 
+  static String get illustrationPeopleSittingOnCouch => 'assets/illustrations/people-sitting-on-couch.svg';
+
   static String get illustrationWomanHoldingAHeart => 'assets/illustrations/woman-holding-a-heart.svg'; // TODO cleanup if unused
 
   static String get illustrationWomanHoldingPhoneWithHearts => 'assets/illustrations/woman-holding-a-phone-with-hearts.svg';
@@ -92,6 +94,7 @@ class RescadoConstants {
   static String get illustrationWomanOnChairWithPhone => 'assets/illustrations/woman-on-chair-with-phone.svg'; // TODO cleanup if unused
 
   static String get illustrationWomanWithWrench => 'assets/illustrations/woman-with-wrench.svg';
+
 
   // endregion
 }

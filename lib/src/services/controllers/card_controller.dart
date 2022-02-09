@@ -126,7 +126,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       isDragged: true,
     ));
 
-    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, removeTopCard);
+    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, _removeTopCard);
   }
 
   void swipeRight() {
@@ -138,6 +138,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     }
 
     // TODO Persist via API
+    _read(cardRepositoryProvider).addLiked(animals: [state.value!.animals.first]);
 
     state = AsyncData(state.value!.copyWith(
       offset: state.value!.offset + Offset(_boxWidth, -_boxWidth / 2),
@@ -148,10 +149,10 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       isDragged: true,
     ));
 
-    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, removeTopCard);
+    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, _removeTopCard);
   }
 
-  void removeTopCard() async {
+  void _removeTopCard() async {
     _logger.d('removeTopCard()');
 
     state = AsyncData(state.value!.copyWith(

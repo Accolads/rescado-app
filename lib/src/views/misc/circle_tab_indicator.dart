@@ -22,5 +22,5 @@ class _CirclePainter extends BoxPainter {
           ..isAntiAlias = true;
 
   @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration config) => canvas.drawCircle(offset + Offset(config.size!.width / 2, _top ? -_radius : 47.5), _radius, _paint);
+  void paint(Canvas canvas, Offset offset, ImageConfiguration config) => canvas.drawCircle(offset + Offset(config.size!.width / 2, _top ? -_radius : 37.5), _radius, _paint);
 }
