@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/authentication.dart';
 import 'package:rescado/src/exceptions/offline_exception.dart';
 import 'package:rescado/src/services/controllers/authentication_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/authentication_view.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/containers/action_card.dart';
@@ -40,12 +40,12 @@ class SplashView extends ConsumerWidget {
                       return const SizedBox.shrink();
                     },
                     error: (error, _) => ActionCard(
-                      title: error is OfflineException ? AppLocalizations.of(context)!.errorTitleAuthOffline : AppLocalizations.of(context)!.errorTitleAuthGeneric,
-                      body: error is OfflineException ? AppLocalizations.of(context)!.errorBodyAuthOffline : AppLocalizations.of(context)!.errorBodyAuthGeneric,
+                      title: error is OfflineException ? context.i10n.errorTitleAuthOffline : context.i10n.errorTitleAuthGeneric,
+                      body: error is OfflineException ? context.i10n.errorBodyAuthOffline : context.i10n.errorBodyAuthGeneric,
                       animated: true,
                       svgAsset: RescadoConstants.illustrationWomanWithWrench,
                       actionButton: ActionButton(
-                        label: AppLocalizations.of(context)!.labelRetry,
+                        label: context.i10n.labelRetry,
                         svgAsset: RescadoConstants.iconRefresh,
                         onPressed: () => ref.read(authenticationControllerProvider.notifier).renewSession(),
                       ),

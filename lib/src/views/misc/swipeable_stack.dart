@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 
@@ -154,14 +154,14 @@ class SwipeableStack extends StatelessWidget {
                       color: const Color(0xFFEE575F),
                       size: FloatingButtonSize.big,
                       svgAsset: RescadoConstants.iconCross,
-                      semanticsLabel: AppLocalizations.of(context)!.labelSkip,
+                      semanticsLabel: context.i10n.labelSkip,
                       onPressed: () => ref.read(cardControllerProvider.notifier).swipeLeft(),
                     ),
                     FloatingButton(
                       color: const Color(0xFFEE575F),
                       size: FloatingButtonSize.big,
                       svgAsset: RescadoConstants.iconHeartOutline,
-                      semanticsLabel: AppLocalizations.of(context)!.labelLike,
+                      semanticsLabel: context.i10n.labelLike,
                       onPressed: () => ref.read(cardControllerProvider.notifier).swipeRight(),
                     ),
                   ],

@@ -44,7 +44,7 @@ class _DiscoverViewState extends State<DiscoverView> {
           child: Column(
             children: [
               PageTitle(
-                label: AppLocalizations.of(context)!.tabbarDiscover,
+                label: context.i10n.tabbarDiscover,
               ),
               PageSection(
                 label: 'Nieuws',
