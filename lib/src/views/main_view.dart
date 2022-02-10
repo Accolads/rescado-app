@@ -56,7 +56,7 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
     return Scaffold(
       body: SafeArea(
         child: TabBarView(
-          controller: ref.watch(tabControllerProvider),
+          controller: ref.watch(tabControllerProvider).value,
           physics: const NeverScrollableScrollPhysics(),
           children: _tabData.map((data) => data.toView()).toList(),
         ),
@@ -73,12 +73,13 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
         ),
         child: SafeArea(
           child: TabBar(
-            controller: ref.watch(tabControllerProvider),
+            controller: ref.watch(tabControllerProvider).value,
             indicator: CircleTabIndicator(
               color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
             ),
             padding: const EdgeInsets.symmetric(vertical: 7.0),
-            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == ref.watch(tabControllerProvider)!.index)).toList(),
+            onTap: (value) => ref.read(tabControllerProvider.notifier).setActiveTab(value),
+            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == ref.watch(tabControllerProvider).value?.index)).toList(),
           ),
         ),
       ),
