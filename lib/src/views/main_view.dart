@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
+import 'package:rescado/src/services/controllers/main_tab_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/discover_view.dart';
@@ -22,8 +23,15 @@ class MainView extends ConsumerStatefulWidget {
   ConsumerState<MainView> createState() => _MainViewState();
 }
 
-class _MainViewState extends ConsumerState<MainView> {
-  int _activeTab = 1;
+class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderStateMixin {
+
+  @override
+  void didChangeDependencies() {
+    ref.watch(tabControllerProvider.notifier).setTabController(
+          TabController(initialIndex: 1, length: _tabData.length, vsync: this),
+        );
+    super.didChangeDependencies();
+  }
 
   final _tabData = [
     _MainViewTabData(
@@ -45,37 +53,32 @@ class _MainViewState extends ConsumerState<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: _activeTab,
-      length: _tabData.length,
-      child: Scaffold(
-        body: SafeArea(
-          child: TabBarView(
-            physics: const NeverScrollableScrollPhysics(),
-            children: _tabData.map((data) => data.toView()).toList(),
+    return Scaffold(
+      body: SafeArea(
+        child: TabBarView(
+          controller: ref.watch(tabControllerProvider),
+          physics: const NeverScrollableScrollPhysics(),
+          children: _tabData.map((data) => data.toView()).toList(),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
+          border: Border(
+            top: BorderSide(
+              width: 1.0,
+              color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
+            ),
           ),
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: ref.watch(settingsControllerProvider).activeTheme.backgroundVariantColor,
-            border: Border(
-              top: BorderSide(
-                width: 1.0,
-                color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
-              ),
+        child: SafeArea(
+          child: TabBar(
+            controller: ref.watch(tabControllerProvider),
+            indicator: CircleTabIndicator(
+              color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
             ),
-          ),
-          child: SafeArea(
-            child: TabBar(
-              indicator: CircleTabIndicator(
-                color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 7.0),
-              onTap: (value) => setState(() {
-                _activeTab = value;
-              }),
-              tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == _activeTab)).toList(),
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 7.0),
+            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == ref.watch(tabControllerProvider)!.index)).toList(),
           ),
         ),
       ),
