@@ -5,10 +5,12 @@ import 'package:rescado/src/services/controllers/main_tab_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/containers/full_page.dart';
+import 'package:rescado/src/views/swipe_view.dart';
 
 // Placeholder view.
 class ProfileView extends StatelessWidget {
   static const viewId = 'ProfileView';
+  static const tabIndex = 2;
 
   const ProfileView({
     Key? key,
@@ -20,18 +22,18 @@ class ProfileView extends StatelessWidget {
         body: Center(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 500.0),
+              const SizedBox(height: 500.0),
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
                   return ActionButton(
-                    label: "Swipe time!",
+                    label: 'Swipe time!',
                     svgAsset: RescadoConstants.iconRefresh,
-                    onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(1),
+                    onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
                   );
                 },
               ),
-              Text('Placeholder ProfileView'),
-              SizedBox(height: 500.0),
+              const Text('Placeholder ProfileView'),
+              const SizedBox(height: 500.0),
             ],
           ),
         ),

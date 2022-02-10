@@ -1,23 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/utils/logger.dart';
 
-final tabControllerProvider = StateNotifierProvider<MainTabController, AsyncValue<TabController>>(
+final tabControllerProvider = StateNotifierProvider<MainTabController, int>(
   (_) => MainTabController(),
 );
 
-class MainTabController extends StateNotifier<AsyncValue<TabController>> {
+class MainTabController extends StateNotifier<int> {
   static final _logger = addLogger('MainTabController');
 
-  MainTabController() : super(const AsyncLoading());
-
-  void setTabController(TabController tabController) {
-    state = AsyncData(tabController);
-  }
+  MainTabController() : super(RescadoConstants.mainViewInitialTabIndex);
 
   void setActiveTab(int tabIndex) {
     _logger.d('setActiveTab()');
-    state.value?.animateTo(tabIndex);
-    state = AsyncData(state.value!);
+    state = tabIndex >= 0 && tabIndex < 3 ? tabIndex : 0; //RescadoConstants.mainViewInitialTabIndex;
   }
 }

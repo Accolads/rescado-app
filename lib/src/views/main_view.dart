@@ -24,13 +24,13 @@ class MainView extends ConsumerStatefulWidget {
 }
 
 class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int _activeTab = RescadoConstants.mainViewInitialTabIndex;
 
   @override
-  void didChangeDependencies() {
-    ref.watch(tabControllerProvider.notifier).setTabController(
-          TabController(initialIndex: 1, length: _tabData.length, vsync: this),
-        );
-    super.didChangeDependencies();
+  void initState() {
+    _tabController = TabController(initialIndex: RescadoConstants.mainViewInitialTabIndex, length: _tabData.length, vsync: this);
+    super.initState();
   }
 
   final _tabData = [
@@ -53,10 +53,15 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<int>(tabControllerProvider, (_, nextTab) {
+      _tabController.animateTo(nextTab);
+      setState(() => _activeTab = nextTab);
+    });
+
     return Scaffold(
       body: SafeArea(
         child: TabBarView(
-          controller: ref.watch(tabControllerProvider).value,
+          controller: _tabController,
           physics: const NeverScrollableScrollPhysics(),
           children: _tabData.map((data) => data.toView()).toList(),
         ),
@@ -73,13 +78,13 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
         ),
         child: SafeArea(
           child: TabBar(
-            controller: ref.watch(tabControllerProvider).value,
+            controller: _tabController,
             indicator: CircleTabIndicator(
               color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
             ),
             padding: const EdgeInsets.symmetric(vertical: 7.0),
-            onTap: (value) => ref.read(tabControllerProvider.notifier).setActiveTab(value),
-            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == ref.watch(tabControllerProvider).value?.index)).toList(),
+            onTap: (value) => ref.watch(tabControllerProvider.notifier).setActiveTab(value),
+            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == _activeTab)).toList(),
           ),
         ),
       ),
