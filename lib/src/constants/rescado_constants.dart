@@ -32,7 +32,7 @@ class RescadoConstants {
   static CustomThemeIdentifier get defaultDarkTheme => CustomThemeIdentifier.dark;
 
   // Initial tab index on the main view
-  static int get mainViewInitialTabIndex => 1;
+  static int get mainViewInitialTab => 1;
 
   // region Text styles
 

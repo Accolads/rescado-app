@@ -9,10 +9,10 @@ final tabControllerProvider = StateNotifierProvider<MainTabController, int>(
 class MainTabController extends StateNotifier<int> {
   static final _logger = addLogger('MainTabController');
 
-  MainTabController() : super(RescadoConstants.mainViewInitialTabIndex);
+  MainTabController() : super(RescadoConstants.mainViewInitialTab);
 
-  void setActiveTab(int tabIndex) {
+  void setActiveTab(int tab) {
     _logger.d('setActiveTab()');
-    state = tabIndex >= 0 && tabIndex < 3 ? tabIndex : 0; //RescadoConstants.mainViewInitialTabIndex;
+    state = tab;
   }
 }

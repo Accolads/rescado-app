@@ -25,12 +25,15 @@ class MainView extends ConsumerStatefulWidget {
 
 class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _activeTab = RescadoConstants.mainViewInitialTabIndex;
 
   @override
   void initState() {
-    _tabController = TabController(initialIndex: RescadoConstants.mainViewInitialTabIndex, length: _tabData.length, vsync: this);
     super.initState();
+    _tabController = TabController(
+      initialIndex: RescadoConstants.mainViewInitialTab,
+      length: _tabData.length,
+      vsync: this,
+    );
   }
 
   final _tabData = [
@@ -55,7 +58,6 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     ref.listen<int>(tabControllerProvider, (_, nextTab) {
       _tabController.animateTo(nextTab);
-      setState(() => _activeTab = nextTab);
     });
 
     return Scaffold(
@@ -84,7 +86,7 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
             ),
             padding: const EdgeInsets.symmetric(vertical: 7.0),
             onTap: (value) => ref.watch(tabControllerProvider.notifier).setActiveTab(value),
-            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == _activeTab)).toList(),
+            tabs: _tabData.asMap().entries.map((data) => data.value.toTab(context, data.key == ref.watch(tabControllerProvider))).toList(),
           ),
         ),
       ),
