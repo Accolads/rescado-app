@@ -31,6 +31,9 @@ class RescadoConstants {
   // Default dark theme when the user has not defined a preference himself yet.
   static CustomThemeIdentifier get defaultDarkTheme => CustomThemeIdentifier.dark;
 
+  // Initial tab index on the main view
+  static int get mainViewInitialTab => 1;
+
   // region Text styles
 
   //  Small titles used in cards, buttons or popups that prompt for action

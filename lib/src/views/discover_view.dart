@@ -8,6 +8,7 @@ import 'package:rescado/src/views/containers/full_page.dart';
 // Placeholder view.
 class DiscoverView extends StatelessWidget {
   static const viewId = 'DiscoverView';
+  static const tabIndex = 0;
 
   const DiscoverView({
     Key? key,
