@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/services/controllers/main_tab_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/discover_view.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/misc/simple_tooltip.dart';
@@ -83,6 +83,7 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
             controller: _tabController,
             indicator: CircleTabIndicator(
               color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+              top: true,
             ),
             padding: const EdgeInsets.symmetric(vertical: 7.0),
             onTap: (value) => ref.watch(tabControllerProvider.notifier).setActiveTab(value),

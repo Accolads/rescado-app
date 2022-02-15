@@ -1,25 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
-import 'package:rescado/src/data/models/authentication.dart';
 import 'package:rescado/src/data/models/like.dart';
-import 'package:rescado/src/services/controllers/authentication_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
+import 'package:rescado/src/services/controllers/main_tab_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
-import 'package:rescado/src/views/authentication_view.dart';
+import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/choice_toggle.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/swipe_view.dart';
 
-import 'containers/action_card.dart';
-
 class ProfileView extends ConsumerStatefulWidget {
   static const viewId = 'ProfileView';
+  static const tabIndex = 2;
 
   const ProfileView({
     Key? key,
@@ -31,16 +29,12 @@ class ProfileView extends ConsumerStatefulWidget {
 
 class _ProfileViewState extends ConsumerState<ProfileView> {
   bool renderGrid = false;
+  bool canCollapse = false;
 
   void onLayoutToggleChange(bool active) => setState(() => renderGrid = active);
 
-  void _deleteLike(Like like) {
-    print('delete');
-  }
-
   @override
   Widget build(BuildContext context) {
-    final authentication = ref.watch(authenticationControllerProvider).value!; //TODO should this happen in constructor?
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -51,35 +45,30 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: SliverAppBar(
-                floating: true,
                 pinned: true,
-                // This is to enable scrolling when expandedHeight is the same as collapsedHeight
-                expandedHeight: height / 2.3 + 0.0000001,
-                collapsedHeight: authentication.status == AuthenticationStatus.anonymous ? height / 3.3 : height / 2.3,
+                expandedHeight: height / 2.4,
+                collapsedHeight: canCollapse ? height / 4 : height / 2.8, //TODO
                 flexibleSpace: Column(
                   children: [
                     PageTitle(
-                      label: context.loc.labelProfile,
+                      label: context.i10n.labelProfile,
                     ),
-                    _buildUserStatus(authentication),
-                    const Spacer(),
-                    TabBar(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      indicator: CircleTabIndicator(
-                        color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
-                      ),
-                      tabs: const [
-                        Text('Like'),
-                        Text('Matches'),
-                      ],
-                    ),
+                    _buildUserStatus(),
+                  ],
+                ),
+                bottom: TabBar(
+                  indicator: CircleTabIndicator(
+                    color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+                  ),
+                  tabs: const [
+                    Tab(child: Text('Like')),
+                    Tab(child: Text('Matches')),
                   ],
                 ),
               ),
             ),
           ],
           body: TabBarView(
-            physics: const NeverScrollableScrollPhysics(),
             children: [
               _buildLikeTab(),
               _buildMatchTab(),
@@ -93,74 +82,80 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   Widget _buildLikeTab() {
     return ref.watch(likeControllerProvider).when(
           data: (List<Like> likes) {
+            setState(() => canCollapse = false);
             if (likes.isEmpty) {
               return _buildPlaceholder(
                 'Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!',
                 ActionButton(
                   label: 'Swipe time',
                   svgAsset: RescadoConstants.iconHeartOutline,
-                  onPressed: () => Navigator.pushNamed(context, SwipeView.viewId),
+                  onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
                 ),
                 RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
               );
             } else {
-              return Builder(
-                builder: (context) {
-                  return CustomScrollView(
-                    key: const PageStorageKey<String>('Like'),
-                    slivers: [
-                      SliverOverlapInjector(
-                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            ChoiceToggle(
-                              leftChoice: 'List',
-                              rightChoice: 'Grid',
-                              rightActive: renderGrid,
-                              onChanged: onLayoutToggleChange,
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (!renderGrid)
-                        SliverList(
-                          delegate: SliverChildListDelegate(
-                            likes
-                                .map((like) => Dismissible(
-                                      key: ObjectKey(like),
-                                      direction: DismissDirection.startToEnd,
-                                      onDismissed: (_) => ref.read(likeControllerProvider.notifier).deleteLike(like),
-                                      child: _buildTile(like.animal),
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                      if (renderGrid)
-                        SliverGrid(
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 150.0,
-                            mainAxisSpacing: 1.0,
-                            crossAxisSpacing: 1.0,
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (_, int index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(likes[index].animal.photos.first.reference),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              );
-                            },
-                            childCount: likes.length,
-                          ),
-                        ),
-                    ],
-                  );
+              setState(() => canCollapse = true);
+              return RefreshIndicator(
+                color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+                displacement: MediaQuery.of(context).size.height / 2.3,
+                onRefresh: () async {
+                  await ref.read(likeControllerProvider.notifier).fetchLikes();
                 },
+                child: Builder(
+                  builder: (context) {
+                    return CustomScrollView(
+                      key: const PageStorageKey<String>('Like'),
+                      slivers: [
+                        SliverOverlapInjector(
+                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                        ),
+                        SliverToBoxAdapter(
+                          child: ChoiceToggle(
+                            leftChoice: 'List',
+                            rightChoice: 'Grid',
+                            rightActive: renderGrid,
+                            onChanged: onLayoutToggleChange,
+                          ),
+                        ),
+                        if (!renderGrid)
+                          SliverList(
+                            delegate: SliverChildListDelegate(
+                              likes
+                                  .map((like) => Dismissible(
+                                        key: ObjectKey(like),
+                                        direction: DismissDirection.startToEnd,
+                                        onDismissed: (_) => ref.read(likeControllerProvider.notifier).deleteLike(like),
+                                        child: _buildTile(like.animal),
+                                      ))
+                                  .toList(),
+                            ),
+                          ),
+                        if (renderGrid)
+                          SliverGrid(
+                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 150.0,
+                              mainAxisSpacing: 1.0,
+                              crossAxisSpacing: 1.0,
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              (_, int index) {
+                                //TODO buildSquare
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(likes[index].animal.photos.first.reference),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                              childCount: likes.length,
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
               );
             }
           },
@@ -171,37 +166,25 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   //TODO
-  Widget _buildMatchTab() => _buildPlaceholder(
+  Widget _buildMatchTab() {
+    setState(() => canCollapse = false);
+    return _buildPlaceholder(
         'Jullie hebben nog geen gemeenschappelijke likes binnen jullie groep. Stel jullie filters wat op elkaar af en swipe nog meer om jullie kans op matches te verhogen!',
         ActionButton(
           label: 'Swipe time',
           svgAsset: RescadoConstants.iconHeartOutline,
-          onPressed: () => Navigator.pushNamed(context, SwipeView.viewId),
+          onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
         ),
         RescadoConstants.illustrationPeopleSittingOnCouch,
       );
+  }
 
-  Widget _buildUserStatus(Authentication authentication) {
-    switch (authentication.status) {
-      case AuthenticationStatus.anonymous:
-        return const CircleAvatar(
-          //TODO
-          backgroundImage: NetworkImage('https://images.news18.com/ibnlive/uploads/2021/08/donald-trump-comments-on-the-taliban-16293574924x3.jpg'),
-          radius: 50.0,
-        );
-      default:
-        return ActionCard(
-          title: "Je bent niet aangemeld!",
-          body: "Je kan Rescado anoniem gebruiken, maar een account laat je toe je likes te synchroniseren tussen al je toestellen, in groep te swipen en meer!",
-          animated: true,
-          svgAsset: RescadoConstants.illustrationWomanOnChairWithPhone,
-          actionButton: ActionButton(
-            label: 'Aanmelden',
-            svgAsset: RescadoConstants.iconKey,
-            onPressed: () => Navigator.pushNamed(context, AuthenticationView.viewId),
-          ),
-        );
-    }
+  Widget _buildUserStatus() {
+    return const CircleAvatar(
+      //TODO
+      backgroundImage: NetworkImage('https://images.news18.com/ibnlive/uploads/2021/08/donald-trump-comments-on-the-taliban-16293574924x3.jpg'),
+      radius: 50.0,
+    );
   }
 
   Widget _buildTile(Animal animal) {

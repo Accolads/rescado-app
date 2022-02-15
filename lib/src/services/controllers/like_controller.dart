@@ -18,10 +18,10 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     _logger.d('initialize()');
     state = const AsyncValue.loading();
 
-    _fetchLikes();
+    fetchLikes();
   }
 
-  void _fetchLikes() async {
+  Future<void> fetchLikes() async {
     _logger.i('Fetching the likes of the current user.');
     final likes = await _read(cardRepositoryProvider).getLiked();
 
@@ -33,8 +33,7 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
 
     if (cardAction.liked != null && cardAction.liked!.contains(like.animal)) {
       state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
-
-      //TODO check here
+      state = AsyncValue.data(state.value!.toList());
     }
   }
 }
