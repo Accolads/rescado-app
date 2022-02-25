@@ -34,6 +34,12 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   void onLayoutToggleChange(bool active) => setState(() => renderGrid = active);
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.watch(likeControllerProvider.notifier).fetchLikes();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery
         .of(context)

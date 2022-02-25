@@ -29,3 +29,11 @@ extension DateTimeExtension on int {
         isUtc: true,
       );
 }
+
+extension AgeExtension on DateTime {
+  dynamic toAgeString() {
+    final diff = DateTime.now().difference(this);
+    final ageInYear = diff.inDays ~/ 365;
+    return ageInYear >= 1 ?  '${ageInYear}y' : '${(diff.inDays % 365) ~/ 30}m';
+  }
+}

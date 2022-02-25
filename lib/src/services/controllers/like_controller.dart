@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/repositories/card_repository.dart';
 import 'package:rescado/src/utils/logger.dart';
@@ -19,6 +20,14 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     state = const AsyncValue.loading();
 
     fetchLikes();
+  }
+
+  void like(Animal animal) {
+    _read(cardRepositoryProvider).addLiked(animals: [animal]);
+  }
+
+  void skip() {
+    // opslaan in tijdelijke lijst en
   }
 
   Future<void> fetchLikes() async {

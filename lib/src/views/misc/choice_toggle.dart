@@ -3,15 +3,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 
 class ChoiceToggle extends StatelessWidget {
-  final String leftChoice;
-  final String rightChoice;
+  final String leftOption;
+  final String rightOption;
   final bool rightActive;
   final Function onChanged;
 
   const ChoiceToggle({
     Key? key,
-    required this.leftChoice,
-    required this.rightChoice,
+    required this.leftOption,
+    required this.rightOption,
     required this.rightActive,
     required this.onChanged,
   }) : super(key: key);
@@ -25,7 +25,7 @@ class ChoiceToggle extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              leftChoice,
+              leftOption,
               style: rightActive ? null : const TextStyle(fontWeight: FontWeight.w800),
             ),
             Switch(
@@ -36,7 +36,7 @@ class ChoiceToggle extends StatelessWidget {
               onChanged: (rightActive) => onChanged(rightActive),
             ),
             Text(
-              rightChoice,
+              rightOption,
               style: rightActive ? const TextStyle(fontWeight: FontWeight.w800) : null,
             ),
           ],

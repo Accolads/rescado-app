@@ -22,41 +22,38 @@ class ActionButton extends ConsumerWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => SizedBox(
-        width: 160.0, // Button max width
-        child: Material(
-          color: ref.watch(settingsControllerProvider).activeTheme.accentDimmedColor,
-          borderRadius: BorderRadius.circular(_borderRadius),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(_borderRadius),
-            splashColor: Platform.isAndroid ? ref.watch(settingsControllerProvider).activeTheme.accentColor.withOpacity(.2) : Colors.transparent,
-            highlightColor: Platform.isAndroid ? Colors.transparent : ref.watch(settingsControllerProvider).activeTheme.accentColor.withOpacity(.2),
-            onTap: () => onPressed(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 20.0,
-                    height: 20.0,
-                    child: SvgPicture.asset(
-                      // TODO Make this SVG wiggle when the button is being held down? :-)
-                      svgAsset,
-                      color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  Text(
-                    label,
-                    style: RescadoConstants.actionLabel,
-                  ),
-                ],
+  Widget build(BuildContext context, WidgetRef ref) => Material(
+    color: ref.watch(settingsControllerProvider).activeTheme.accentDimmedColor,
+    borderRadius: BorderRadius.circular(_borderRadius),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(_borderRadius),
+      splashColor: Platform.isAndroid ? ref.watch(settingsControllerProvider).activeTheme.accentColor.withOpacity(.2) : Colors.transparent,
+      highlightColor: Platform.isAndroid ? Colors.transparent : ref.watch(settingsControllerProvider).activeTheme.accentColor.withOpacity(.2),
+      onTap: () => onPressed(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 20.0,
+              height: 20.0,
+              child: SvgPicture.asset(
+                // TODO Make this SVG wiggle when the button is being held down? :-)
+                svgAsset,
+                color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+                fit: BoxFit.contain,
               ),
             ),
-          ),
+            const SizedBox(
+              width: 10.0,
+            ),
+            Text(
+              label,
+              style: RescadoConstants.actionLabel,
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
