@@ -26,7 +26,7 @@ extension UserStatusExtension on AccountStatus {
 
 extension AnimalSexSymbol on AnimalSex {
   String toSymbol() {
-    switch(this){
+    switch (this) {
       case AnimalSex.male:
         return '♂';
       case AnimalSex.female:

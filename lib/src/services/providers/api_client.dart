@@ -103,7 +103,6 @@ class ApiClient extends BaseClient {
     if (!url.path.contains('/auth/')) {
       final token = await _read(deviceStorageProvider).getToken();
       if (token != null) {
-
         _logger.i('token ${token.headerValue}');
 
         headers ??= {};

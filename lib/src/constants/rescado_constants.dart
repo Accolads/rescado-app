@@ -95,6 +95,5 @@ class RescadoConstants {
 
   static String get illustrationWomanWithWrench => 'assets/illustrations/woman-with-wrench.svg';
 
-
   // endregion
 }
