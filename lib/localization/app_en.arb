@@ -13,7 +13,6 @@
   "labelFemaleCat": "Female",
   "labelFemaleDog": "Female",
   "labelLike": "Like",
-  "labelUnlike": "Unlike",
   "labelMaleCat": "Male",
   "labelMaleDog": "Male",
   "labelProfile": "Profile",
@@ -22,6 +21,7 @@
   "labelShare": "Share",
   "labelSkip": "Skip",
   "labelSwipe": "Swipe",
+  "labelUnlike": "Unlike",
   "labelWeight": "Weight",
 
   "unitKilogram": "{value} kg",
