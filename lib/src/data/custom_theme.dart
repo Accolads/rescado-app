@@ -47,8 +47,8 @@ class CustomTheme {
         backgroundColor: backgroundVariantColor,
         scaffoldBackgroundColor: backgroundColor,
         appBarTheme: AppBarTheme(
-          elevation: 0,
           backgroundColor: backgroundColor,
+          elevation: 0,
         ),
         tabBarTheme: TabBarTheme(
           labelColor: primaryColor,

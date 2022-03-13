@@ -11,7 +11,6 @@ class CardData {
   final bool isDragged; // is true when the card was dragged to a side, but not yet removed from the stack
 
   bool get shouldPopUp => isDragging || isDragged;
-
   bool get shouldAnimate => !isDragging && isTouched;
 
   CardData({
