@@ -34,12 +34,6 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   void onLayoutToggleChange(bool active) => setState(() => renderGrid = active);
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ref.watch(likeControllerProvider.notifier).fetchLikes();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery
         .of(context)
@@ -69,6 +63,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                         padding: const EdgeInsets.all(16.0),
                         child: Center(
                           child: ActionButton(
+                            stretched: true,
                             label: "Vorm een groep met Ella, Jan en Hans!",
                             svgAsset: RescadoConstants.iconUsers,
                             onPressed: () => print('ool'),
@@ -168,7 +163,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                               Dismissible(
                                 key: ObjectKey(like),
                                 direction: DismissDirection.startToEnd,
-                                onDismissed: (_) => ref.read(likeControllerProvider.notifier).deleteLike(like),
+                                onDismissed: (_) => ref.read(likeControllerProvider.notifier).unlike(like),
                                 child: _buildTile(like.animal),
                               ))
                               .toList(),
@@ -188,7 +183,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                 key: ObjectKey(like),
                                 image: like.animal.photos.first.reference,
                                 floatingButton: FloatingButton(
-                                  onPressed: () => ref.read(likeControllerProvider.notifier).deleteLike(like),
+                                  onPressed: () => ref.read(likeControllerProvider.notifier).unlike(like),
                                   svgAsset: RescadoConstants.iconHeartBroken,
                                   semanticsLabel: context.i10n.labelUnlike,
                                 ),
