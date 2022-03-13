@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rescado/src/data/models/account.dart';
+import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/authentication.dart';
 
 extension LocalizedBuildContext on BuildContext {
@@ -23,6 +24,19 @@ extension UserStatusExtension on AccountStatus {
   }
 }
 
+extension AnimalSexSymbol on AnimalSex {
+  String toSymbol() {
+    switch(this){
+      case AnimalSex.male:
+        return '♂';
+      case AnimalSex.female:
+        return '♀';
+      default:
+        throw UnsupportedError('Bad programming. Not all sexes were mapped.');
+    }
+  }
+}
+
 extension DateTimeExtension on int {
   DateTime toEpoch() => DateTime.fromMillisecondsSinceEpoch(
         this * 1000,
@@ -30,10 +44,7 @@ extension DateTimeExtension on int {
       );
 }
 
-extension AgeExtension on DateTime {
-  dynamic toAgeString() {
-    final diff = DateTime.now().difference(this);
-    final ageInYear = diff.inDays ~/ 365;
-    return ageInYear >= 1 ?  '${ageInYear}y' : '${(diff.inDays % 365) ~/ 30}m';
-  }
+extension FormattedExtension on double {
+  // TODO Check if this uses correct localized decimal separator (comma in NL and FR, dot in EN).
+  String toStringWithDigits(int fractionDigits) => toStringAsFixed(truncateToDouble() == this ? 0 : fractionDigits);
 }
