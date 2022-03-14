@@ -8,6 +8,7 @@ import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
+import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/choice_toggle.dart';
@@ -21,6 +22,7 @@ class ProfileView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Like> likes = ref.watch(likesControllerProvider).value ?? [];
+    // TODO Should use Consumer inside StatelessWidget so we can build something temporarily while data is being fetched.
 
     return Scaffold(
       body: Scrollbar(
@@ -33,26 +35,46 @@ class ProfileView extends ConsumerWidget {
               ),
             ),
             SliverAppBar(
-              expandedHeight: 260.0,
-              floating: true,
+              expandedHeight: MediaQuery.of(context).size.height / 3,
               flexibleSpace: LayoutBuilder(
                 builder: (context, constraints) => FlexibleSpaceBar(
                   background: Column(
                     children: <Widget>[
-                      CircleAvatar(
-                        radius: 55.0,
-                        backgroundColor: ref.read(settingsControllerProvider).activeTheme.backgroundVariantColor,
-                        child: const CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage('https://media-exp1.licdn.com/dms/image/C4E03AQGIZeIh_ENlHQ/profile-displayphoto-shrink_800_800/0/1584409597470?e=1650499200&v=beta&t=22BuCMtn8D0m61U9aFsZoRlJAi00x7aeJFcj9OuRZys'),
-                        ),
+                      Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: <Widget>[
+                          _buildAvatar(
+                            ref: ref,
+                            index: 0,
+                            avatarUrl: 'https://i.pravatar.cc/500',
+                          ),
+                          _buildAvatar(
+                            ref: ref,
+                            index: 1,
+                            avatarUrl: 'https://i.pravatar.cc/501',
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 70.0 + 60.0 * 1), // last int is avatar array size - 1
+                            child: FloatingButton(
+                              semanticsLabel: 'yow',
+                              svgAsset: RescadoConstants.iconUserPlus,
+                              onPressed: () {
+                                print("hello");
+                              },
+                            ),
+                          )
+                        ],
                       ),
-                      ActionButton(
-                        label: 'scoopti doop poop poop',
-                        svgAsset: RescadoConstants.iconUsers,
-                        onPressed: () {
-                          print("hello");
-                        },
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ActionButton(
+                          stretched: true,
+                          label: 'scoopti doop poop poop',
+                          svgAsset: RescadoConstants.iconUsers,
+                          onPressed: () {
+                            print("hello");
+                          },
+                        ),
                       )
                     ],
                   ),
@@ -72,24 +94,43 @@ class ProfileView extends ConsumerWidget {
             SliverList(
               delegate: SliverChildListDelegate(
                 likes
-                    .map((like) => Dismissible(
-                          key: ObjectKey(like),
-                          direction: DismissDirection.startToEnd,
-                          onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
-                          child: ListItem(
-                            label: like.animal.name,
-                            subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
-                            subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
-                            imageUrl: like.animal.photos.first.reference,
-                            onPressed: () {
-                              print("hello");
-                            },
-                          ),
-                        ))
+                    .map(
+                      (like) => Dismissible(
+                        key: ObjectKey(like),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
+                        child: ListItem(
+                          label: like.animal.name,
+                          subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
+                          subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
+                          imageUrl: like.animal.photos.first.reference,
+                          onPressed: () {
+                            print("hello");
+                          },
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar({required WidgetRef ref, required int index, required String avatarUrl}) {
+    double size = index == 0 ? 45.0 : 34.0;
+    double padding = index == 0 ? 15.0 : 30.0 + index * size * 1.6;
+
+    return Padding(
+      padding: EdgeInsets.only(left: padding),
+      child: CircleAvatar(
+        radius: size + 5.0,
+        backgroundColor: ref.read(settingsControllerProvider).activeTheme.backgroundVariantColor,
+        child: CircleAvatar(
+          radius: size,
+          backgroundImage: NetworkImage(avatarUrl),
         ),
       ),
     );
