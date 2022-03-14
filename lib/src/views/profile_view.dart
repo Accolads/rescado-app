@@ -125,10 +125,10 @@ class ProfileView extends ConsumerWidget {
                   ),
                   tabs: [
                     Tab(
-                      child: Text(context.i10n.labelLikes),
+                      text: context.i10n.labelLikes,
                     ),
                     Tab(
-                      child: Text(context.i10n.labelMatches),
+                      text: context.i10n.labelMatches,
                     ),
                   ],
                 ),
