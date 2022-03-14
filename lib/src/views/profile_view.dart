@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
-import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
@@ -11,7 +10,9 @@ import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
+import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/choice_toggle.dart';
+import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 
 class ProfileView extends ConsumerWidget {
   static const viewId = 'ProfileView';
@@ -21,99 +22,125 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Like> likes = ref.watch(likesControllerProvider).value ?? [];
     // TODO Should use Consumer inside StatelessWidget so we can build something temporarily while data is being fetched.
+    // Data to be fetched here = profile and group data
 
     return Scaffold(
-      body: Scrollbar(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              floating: true,
-              flexibleSpace: PageTitle(
-                label: context.i10n.labelProfile,
+      body: DefaultTabController(
+        length: 2,
+        child: Scrollbar(
+          child: NestedScrollView(
+            headerSliverBuilder: (_, __) => <Widget>[
+              SliverAppBar(
+                floating: true,
+                snap: true,
+                flexibleSpace: PageTitle(
+                  label: context.i10n.labelProfile,
+                ),
               ),
-            ),
-            SliverAppBar(
-              expandedHeight: MediaQuery.of(context).size.height / 3,
-              flexibleSpace: LayoutBuilder(
-                builder: (context, constraints) => FlexibleSpaceBar(
-                  background: Column(
+              SliverAppBar(
+                pinned: true,
+                toolbarHeight: 7.5,
+                // Indicator radius
+                expandedHeight: MediaQuery.of(context).size.height / 3,
+                flexibleSpace: LayoutBuilder(
+                  // TODO Use this builder to add effects on scroll
+                  builder: (context, constraints) => Stack(
+                    alignment: Alignment.bottomCenter,
                     children: <Widget>[
-                      Stack(
-                        alignment: Alignment.bottomLeft,
-                        children: <Widget>[
-                          _buildAvatar(
-                            ref: ref,
-                            index: 0,
-                            avatarUrl: 'https://i.pravatar.cc/500',
+                      FlexibleSpaceBar(
+                        collapseMode: CollapseMode.parallax,
+                        background: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Stack(
+                                alignment: Alignment.bottomLeft,
+                                children: <Widget>[
+                                  _buildAvatar(
+                                    ref: ref,
+                                    index: 0,
+                                    avatarUrl: 'https://i.pravatar.cc/500',
+                                  ),
+                                  _buildAvatar(
+                                    ref: ref,
+                                    index: 1,
+                                    avatarUrl: 'https://i.pravatar.cc/501',
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 70.0 + 60.0 * 1), // last int is avatar array size - 1
+                                    child: FloatingButton(
+                                      semanticsLabel: 'yow',
+                                      svgAsset: RescadoConstants.iconUserPlus,
+                                      onPressed: () {
+                                        print("yeeee");
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const Text(
+                                'Grietje en Hans',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              // TODO preceed with if: only show if an invite is pending
+                              ActionButton(
+                                stretched: true,
+                                label: 'scoopti doop poop poop',
+                                svgAsset: RescadoConstants.iconUsers,
+                                onPressed: () {
+                                  print("hello");
+                                },
+                              ),
+                              const SizedBox(
+                                height: 25.0,
+                              ),
+                            ],
                           ),
-                          _buildAvatar(
-                            ref: ref,
-                            index: 1,
-                            avatarUrl: 'https://i.pravatar.cc/501',
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 70.0 + 60.0 * 1), // last int is avatar array size - 1
-                            child: FloatingButton(
-                              semanticsLabel: 'yow',
-                              svgAsset: RescadoConstants.iconUserPlus,
-                              onPressed: () {
-                                print("hello");
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ActionButton(
-                          stretched: true,
-                          label: 'scoopti doop poop poop',
-                          svgAsset: RescadoConstants.iconUsers,
-                          onPressed: () {
-                            print("hello");
-                          },
                         ),
-                      )
+                      ),
+                      Container(
+                        // Tab bar background
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          color: ref.watch(settingsControllerProvider).activeTheme.backgroundColor,
+                          border: Border(
+                            bottom: BorderSide(
+                              color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
+                bottom: TabBar(
+                  indicator: CircleTabIndicator(
+                    color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+                  ),
+                  tabs: [
+                    Tab(
+                      child: Text(context.i10n.labelLikes),
+                    ),
+                    Tab(
+                      child: Text(context.i10n.labelMatches),
+                    ),
+                  ],
+                ),
               ),
+            ],
+            body: TabBarView(
+              children: [
+                _buildLikesPane(),
+                _buildMatchesPane(),
+              ],
             ),
-            SliverToBoxAdapter(
-              child: ChoiceToggle(
-                leftOption: 'List',
-                rightOption: 'Grid',
-                rightActive: true,
-                onChanged: (bool active) {
-                  print("hey");
-                },
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                likes
-                    .map(
-                      (like) => Dismissible(
-                        key: ObjectKey(like),
-                        direction: DismissDirection.startToEnd,
-                        onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
-                        child: ListItem(
-                          label: like.animal.name,
-                          subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
-                          subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
-                          imageUrl: like.animal.photos.first.reference,
-                          onPressed: () {
-                            print("hello");
-                          },
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -135,4 +162,66 @@ class ProfileView extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _buildLikesPane() => Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+          return ref.watch(likesControllerProvider).when(
+                data: (likes) => CustomScrollView(
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: ChoiceToggle(
+                        leftOption: 'List',
+                        rightOption: 'Grid',
+                        rightActive: true,
+                        onChanged: (bool active) {
+                          print("hey");
+                        },
+                      ),
+                    ),
+                    // Generate the list of likes
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        likes
+                            .map(
+                              (like) => Dismissible(
+                                key: ObjectKey(like),
+                                direction: DismissDirection.startToEnd,
+                                onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
+                                child: ListItem(
+                                  label: like.animal.name,
+                                  subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
+                                  subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
+                                  imageUrl: like.animal.photos.first.reference,
+                                  onPressed: () {
+                                    print("hello");
+                                  },
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    // Some clean spacing at the bottom of the list
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 25.0,
+                      ),
+                    ),
+                  ],
+                ),
+                error: (_, __) => const Text('error!!'),
+                loading: () => const Center(
+                  child: SizedBox(
+                    width: 50.0,
+                    child: AnimatedLogo(),
+                  ),
+                ),
+              );
+        },
+      );
+
+  Widget _buildMatchesPane() => Container(
+        color: Colors.blue,
+        child: const Text('Hello matches'),
+      );
 }
