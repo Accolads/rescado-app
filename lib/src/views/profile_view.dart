@@ -168,15 +168,8 @@ class ProfileView extends ConsumerWidget {
           return ref.watch(likesControllerProvider).when(
                 data: (likes) => CustomScrollView(
                   slivers: <Widget>[
-                    SliverToBoxAdapter(
-                      child: ChoiceToggle(
-                        leftOption: 'List',
-                        rightOption: 'Grid',
-                        rightActive: true,
-                        onChanged: (bool active) {
-                          print("hey");
-                        },
-                      ),
+                  const  SliverToBoxAdapter(
+                      child: ChoiceToggle(),
                     ),
                     // Generate the list of likes
                     SliverList(
