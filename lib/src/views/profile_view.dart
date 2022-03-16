@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
@@ -15,7 +13,6 @@ import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/choice_toggle.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
-import 'package:rescado/src/views/misc/simple_tooltip.dart';
 
 class ProfileView extends ConsumerWidget {
   static const viewId = 'ProfileView';
@@ -85,7 +82,7 @@ class ProfileView extends ConsumerWidget {
                                       semanticsLabel: 'yow',
                                       svgAsset: RescadoConstants.iconUserPlus,
                                       onPressed: () {
-                                        print("yeeee");
+                                        print('yeeee'); // ignore: avoid_print
                                       },
                                     ),
                                   )
@@ -105,7 +102,7 @@ class ProfileView extends ConsumerWidget {
                                 label: 'scoopti doop poop poop',
                                 svgAsset: RescadoConstants.iconUsers,
                                 onPressed: () {
-                                  print("hello");
+                                  print('hello'); // ignore: avoid_print
                                 },
                               ),
                               const SizedBox(
@@ -197,7 +194,7 @@ class ProfileView extends ConsumerWidget {
                                   subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
                                   imageUrl: like.animal.photos.first.reference,
                                   onPressed: () {
-                                    print("hello");
+                                    print('hello'); // ignore: avoid_print
                                   },
                                 ),
                               ),

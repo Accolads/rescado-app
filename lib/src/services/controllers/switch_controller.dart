@@ -12,12 +12,12 @@ enum LikesLayout {
 }
 
 class SwitchController extends StateNotifier<SwitchData> {
-  static final _logger = addLogger('MainTabController');
+  static final _logger = addLogger('SwitchController');
 
   SwitchController() : super(SwitchData());
 
-  // void setLayout(LikesLayout layout) {
-  //   _logger.d('setLayout()');
-  //   state = layout;
-  // }
+// void setLayout(LikesLayout layout) {
+//   _logger.d('setLayout()');
+//   state = layout;
+// }
 }

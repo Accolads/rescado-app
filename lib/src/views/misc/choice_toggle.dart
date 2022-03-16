@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
-import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 
 class ChoiceToggle extends ConsumerStatefulWidget {
-
   const ChoiceToggle({
-    Key? key,}) : super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<ChoiceToggle> createState() => _ChoiceToggleState();
@@ -45,7 +44,7 @@ class _ChoiceToggleState extends ConsumerState<ChoiceToggle> with SingleTickerPr
               padding: EdgeInsets.only(right: _width * 3),
               child: Text(
                 context.i10n.labelList,
-               // style: widget.rightActive ? null : const TextStyle(fontWeight: FontWeight.w800),
+                // style: widget.rightActive ? null : const TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
             AnimatedBuilder(
@@ -83,11 +82,11 @@ class _ChoiceToggleState extends ConsumerState<ChoiceToggle> with SingleTickerPr
       );
 
   Widget _buildToggle() => Container(
-    width: 15.0,
-    height: 15.0,
-    decoration: BoxDecoration(
-      color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
-      borderRadius: BorderRadius.circular(25.0),
-    ),
-  );
+        width: 15.0,
+        height: 15.0,
+        decoration: BoxDecoration(
+          color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+          shape: BoxShape.circle,
+        ),
+      );
 }
