@@ -53,6 +53,8 @@ class RescadoConstants {
 
   static String get iconCross => 'assets/icons/cross.svg';
 
+  static String get iconEdit => 'assets/icons/edit.svg';
+
   static String get iconEnvelope => 'assets/icons/envelope.svg';
 
   static String get iconHeartBroken => 'assets/icons/heart-broken.svg';
@@ -68,6 +70,8 @@ class RescadoConstants {
   static String get iconLogo => 'assets/icons/logo.svg';
 
   static String get iconRefresh => 'assets/icons/refresh.svg';
+
+  static String get iconSettings => 'assets/icons/settings.svg';
 
   static String get iconShareAndroid => 'assets/icons/share-android.svg';
 

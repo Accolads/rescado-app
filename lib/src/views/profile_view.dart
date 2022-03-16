@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
@@ -7,12 +8,14 @@ import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
+import 'package:rescado/src/views/buttons/appbar_button.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/choice_toggle.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
+import 'package:rescado/src/views/misc/simple_tooltip.dart';
 
 class ProfileView extends ConsumerWidget {
   static const viewId = 'ProfileView';
@@ -34,6 +37,14 @@ class ProfileView extends ConsumerWidget {
               SliverAppBar(
                 floating: true,
                 snap: true,
+                actions: <Widget>[
+                  AppBarButton(
+                    semanticsLabel: 'hello',
+                    svgAsset: RescadoConstants.iconEdit,
+                    // opaque: true,
+                    onPressed: () => {print('edit')}, // ignore: avoid_print
+                  ),
+                ],
                 flexibleSpace: PageTitle(
                   label: context.i10n.labelProfile,
                 ),
@@ -168,7 +179,7 @@ class ProfileView extends ConsumerWidget {
           return ref.watch(likesControllerProvider).when(
                 data: (likes) => CustomScrollView(
                   slivers: <Widget>[
-                  const  SliverToBoxAdapter(
+                    const SliverToBoxAdapter(
                       child: ChoiceToggle(),
                     ),
                     // Generate the list of likes
