@@ -18,12 +18,17 @@ class ProfileView extends ConsumerWidget {
   static const viewId = 'ProfileView';
   static const tabIndex = 2;
 
+  final _headerHeight = 260.0; // Minimum height required for the header to show all its contents
+
   const ProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO Should use Consumer inside StatelessWidget so we can build something temporarily while data is being fetched.
     // Data to be fetched here = profile and group data
+
+    final preferredHeight = MediaQuery.of(context).size.height / 3;
+    final actualHeight = preferredHeight < _headerHeight ? _headerHeight : preferredHeight;
 
     return Scaffold(
       body: DefaultTabController(
@@ -50,9 +55,9 @@ class ProfileView extends ConsumerWidget {
                 pinned: true,
                 toolbarHeight: 7.5,
                 // Indicator radius
-                expandedHeight: MediaQuery.of(context).size.height / 3,
+                expandedHeight: actualHeight,
                 flexibleSpace: LayoutBuilder(
-                  // TODO Use this builder to add effects on scroll
+                  // TODO Use this builder to add effects on scroll (eg scale profile images)
                   builder: (context, constraints) => Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[

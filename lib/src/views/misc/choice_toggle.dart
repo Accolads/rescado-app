@@ -3,38 +3,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
 
-class ChoiceToggle extends ConsumerStatefulWidget {
+class ChoiceToggle extends ConsumerWidget {
+  final _width = 33.0;
+
   const ChoiceToggle({
     Key? key,
   }) : super(key: key);
 
   @override
-  ConsumerState<ChoiceToggle> createState() => _ChoiceToggleState();
-}
-
-class _ChoiceToggleState extends ConsumerState<ChoiceToggle> with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-
-  final _width = 33.0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(BuildContext context, WidgetRef ref) =>
+      SizedBox(
         width: double.infinity,
         height: 50.0,
         child: Stack(
@@ -47,28 +25,34 @@ class _ChoiceToggleState extends ConsumerState<ChoiceToggle> with SingleTickerPr
                 // style: widget.rightActive ? null : const TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (BuildContext context, Widget? child) {
-                return Stack(
+            AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
                     Container(
                       width: _width,
                       height: 5.0,
                       decoration: BoxDecoration(
-                        color: ref.watch(settingsControllerProvider).activeTheme.borderColor,
+                        color: ref.watch(settingsControllerProvider)
+                            .activeTheme
+                            .borderColor,
                         borderRadius: BorderRadius.circular(25.0),
                       ),
                     ),
-                    Draggable(
-                      feedback: _buildToggle(),
-                      child: _buildToggle(),
-                      axis: Axis.horizontal,
+                    Container(
+                      width: 15.0,
+                      height: 15.0,
+                      decoration: BoxDecoration(
+                        color: ref
+                            .watch(settingsControllerProvider)
+                            .activeTheme
+                            .accentColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ],
-                );
-              },
+                )
             ),
             Padding(
               padding: EdgeInsets.only(left: _width * 3),
@@ -81,12 +65,4 @@ class _ChoiceToggleState extends ConsumerState<ChoiceToggle> with SingleTickerPr
         ),
       );
 
-  Widget _buildToggle() => Container(
-        width: 15.0,
-        height: 15.0,
-        decoration: BoxDecoration(
-          color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
-          shape: BoxShape.circle,
-        ),
-      );
 }

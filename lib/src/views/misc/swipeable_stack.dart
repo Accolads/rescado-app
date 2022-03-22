@@ -11,33 +11,33 @@ import 'package:rescado/src/views/misc/animated_logo.dart';
 
 // Stack of cards the user can swipe left or right
 class SwipeableStack extends StatelessWidget {
-  final cardWidth = 300.0; // Preferred width of a card
-  final cardHeight = 440.0; // Preferred height of a card
-  final scales = [1.0, 1.0, 0.93, 0.86]; // Factor each card should be multiplied by to create illusion of depth
-  final margins = [0.0, 0.0, 28.0, 52.0]; // Distance each card should be from the top, top card to bottom card
+  final _cardWidth = 300.0; // Preferred width of a card
+  final _cardHeight = 440.0; // Preferred height of a card
+  final _scales = [1.0, 1.0, 0.93, 0.86]; // Factor each card should be multiplied by to create illusion of depth
+  final _margins = [0.0, 0.0, 28.0, 52.0]; // Distance each card should be from the top, top card to bottom card
 
   SwipeableStack({
     Key? key,
   }) : super(key: key);
 
-  double _scale([int index = 0]) => scales.length <= index ? scales.last : scales[index];
+  double _scale([int index = 0]) => _scales.length <= index ? _scales.last : _scales[index];
 
-  double _margin([int index = 0]) => margins.length <= index ? margins.last : margins[index];
+  double _margin([int index = 0]) => _margins.length <= index ? _margins.last : _margins[index];
 
   @override
   Widget build(BuildContext context) => Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
           final maxWidth = MediaQuery.of(context).size.width * .9;
-          final actualWidth = cardWidth > maxWidth ? maxWidth : cardWidth; // If card won't fit its parent, make it 90% of the parent's width
+          final actualWidth = _cardWidth > maxWidth ? maxWidth : _cardWidth; // If card won't fit its parent, make it 90% of the parent's width
 
           return ref.watch(cardControllerProvider).when(
                 data: (CardData cardData) => Stack(
                   clipBehavior: Clip.none,
                   children: <Widget>[
-                    if (cardData.animals.length >= 4) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[3], 3),
-                    if (cardData.animals.length >= 3) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[2], 2),
-                    if (cardData.animals.length >= 2) _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[1], 1),
-                    _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, cardHeight, cardData.animals[0], 0)),
+                    if (cardData.animals.length >= 4) _buildCard(context, ref, actualWidth, _cardHeight, cardData.animals[3], 3),
+                    if (cardData.animals.length >= 3) _buildCard(context, ref, actualWidth, _cardHeight, cardData.animals[2], 2),
+                    if (cardData.animals.length >= 2) _buildCard(context, ref, actualWidth, _cardHeight, cardData.animals[1], 1),
+                    _makeInteractable(context, ref, _buildCard(context, ref, actualWidth, _cardHeight, cardData.animals[0], 0)),
                   ],
                 ),
                 // TODO properly implement error (to be thrown if no cards left or no filter matches too) and loading

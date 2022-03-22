@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rescado/src/data/custom_theme.dart';
+import 'package:rescado/src/data/models/switch_data.dart';
 
 class RescadoConstants {
   RescadoConstants._();
@@ -33,6 +34,9 @@ class RescadoConstants {
 
   // Initial tab index on the main view
   static int get mainViewInitialTab => 1;
+
+  // Initial switch position
+  static SwitchPosition get initialSwitchPosition =>  SwitchPosition.list;
 
   // region Text styles
 
