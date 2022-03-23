@@ -1,14 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:rescado/src/constants/rescado_constants.dart';
-
 enum SwitchPosition {
-  unknown,
   left,
   right,
 }
 
 class SwitchData {
-  final Offset offset;
+  final double horizontalOffset;
   final bool isDragging;
 
   final _trackWidth = 33.0;
@@ -18,27 +14,23 @@ class SwitchData {
 
   double get knobWidth => _knobWidth;
 
-  SwitchPosition get position {
-    if (offset.dx == 0.0) {
-      return SwitchPosition.left;
-    }
-    if (offset.dx == _trackWidth - _knobWidth) {
-      return SwitchPosition.right;
-    }
-    return SwitchPosition.unknown;
-  }
+  double get maxLeftHorizontalOffset => -maxRightHorizontalOffset;
+
+  double get maxRightHorizontalOffset => _trackWidth / 2 - _knobWidth / 2;
+
+  SwitchPosition get position => horizontalOffset <= 0 ? SwitchPosition.left : SwitchPosition.right;
 
   SwitchData({
-    this.offset = Offset.zero,
+    this.horizontalOffset = 0.0,
     this.isDragging = false,
   });
 
   SwitchData copyWith({
-    final Offset? offset,
+    final double? horizontalOffset,
     final bool? isDragging,
   }) =>
       SwitchData(
-        offset: offset ?? this.offset,
+        horizontalOffset: horizontalOffset ?? this.horizontalOffset,
         isDragging: isDragging ?? this.isDragging,
-      )
+      );
 }

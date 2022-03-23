@@ -148,6 +148,7 @@ class ProfileView extends ConsumerWidget {
               ),
             ],
             body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildLikesPane(),
                 _buildMatchesPane(),

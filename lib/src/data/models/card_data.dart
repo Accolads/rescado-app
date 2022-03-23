@@ -27,10 +27,10 @@ class CardData {
     final List<Animal>? animals,
     final Offset? offset,
     final double? angle,
-   final  bool? isTouched,
-  final  bool? isDraggable,
- final   bool? isDragging,
-   final bool? isDragged,
+    final bool? isTouched,
+    final bool? isDraggable,
+    final bool? isDragging,
+    final bool? isDragged,
   }) =>
       CardData(
         animals: animals ?? this.animals,
