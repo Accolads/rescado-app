@@ -7,7 +7,7 @@ class SwitchData {
   final double horizontalOffset;
   final bool isDragging;
 
-  final _trackWidth = 33.0;
+  final _trackWidth = 35.0;
   final _knobWidth = 15.0;
 
   double get trackWidth => _trackWidth;

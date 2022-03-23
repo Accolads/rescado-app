@@ -11,7 +11,7 @@ import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
-import 'package:rescado/src/views/misc/choice_toggle.dart';
+import 'package:rescado/src/views/misc/layout_switch.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 
 class ProfileView extends ConsumerWidget {
@@ -183,7 +183,7 @@ class ProfileView extends ConsumerWidget {
                 data: (likes) => CustomScrollView(
                   slivers: <Widget>[
                     const SliverToBoxAdapter(
-                      child: ChoiceToggle(),
+                      child: LayoutSwitch(),
                     ),
                     // Generate the list of likes
                     SliverList(

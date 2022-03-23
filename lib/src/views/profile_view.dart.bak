@@ -12,7 +12,7 @@ import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
-import 'package:rescado/src/views/misc/choice_toggle.dart';
+import 'package:rescado/src/views/misc/layout_switch.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/misc/interactive_grid_tile.dart';
 import 'package:rescado/src/views/swipe_view.dart';

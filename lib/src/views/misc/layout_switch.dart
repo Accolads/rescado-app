@@ -5,8 +5,8 @@ import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
 
-class ChoiceToggle extends ConsumerWidget {
-  const ChoiceToggle({
+class LayoutSwitch extends ConsumerWidget {
+  const LayoutSwitch({
     Key? key,
   }) : super(key: key);
 
