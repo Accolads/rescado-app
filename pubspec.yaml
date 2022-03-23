@@ -17,6 +17,7 @@ dependencies:
   firebase_analytics: ^9.0.5 # Required for Crashlytics on Android, but seems to be a bug currently, seeing issues on GitHub
   firebase_core: ^1.11.0
   firebase_crashlytics: ^2.4.5
+  firebase_storage: ^10.2.9
   flutter_hooks: ^0.18.1
   flutter_svg: ^1.0.0
   geolocator: ^8.0.1
@@ -44,11 +45,10 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/dummies/
     - assets/icons/
     - assets/illustrations/
     - assets/logo/
-   # - assets/images/
-   # - assets/photos/
 
   fonts:
    - family: M+ Rounded 1c

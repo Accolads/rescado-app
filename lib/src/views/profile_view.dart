@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
+import 'package:rescado/src/data/models/switch_data.dart';
+import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
+import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
@@ -11,8 +14,8 @@ import 'package:rescado/src/views/buttons/floating_button.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
-import 'package:rescado/src/views/misc/layout_switch.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
+import 'package:rescado/src/views/misc/layout_switch.dart';
 
 class ProfileView extends ConsumerWidget {
   static const viewId = 'ProfileView';
@@ -26,6 +29,8 @@ class ProfileView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO Should use Consumer inside StatelessWidget so we can build something temporarily while data is being fetched.
     // Data to be fetched here = profile and group data
+
+    final temp = ref.read(accountControllerProvider);
 
     final preferredHeight = MediaQuery.of(context).size.height / 3;
     final actualHeight = preferredHeight < _headerHeight ? _headerHeight : preferredHeight;
@@ -148,7 +153,6 @@ class ProfileView extends ConsumerWidget {
               ),
             ],
             body: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildLikesPane(),
                 _buildMatchesPane(),
@@ -185,29 +189,29 @@ class ProfileView extends ConsumerWidget {
                     const SliverToBoxAdapter(
                       child: LayoutSwitch(),
                     ),
-                    // Generate the list of likes
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        likes
-                            .map(
-                              (like) => Dismissible(
-                                key: ObjectKey(like),
-                                direction: DismissDirection.startToEnd,
-                                onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
-                                child: ListItem(
-                                  label: like.animal.name,
-                                  subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
-                                  subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
-                                  imageUrl: like.animal.photos.first.reference,
-                                  onPressed: () {
-                                    print('hello'); // ignore: avoid_print
-                                  },
+                    if (ref.watch(switchControllerProvider).position == SwitchPosition.left)
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          likes
+                              .map(
+                                (like) => Dismissible(
+                                  key: ObjectKey(like),
+                                  direction: DismissDirection.startToEnd,
+                                  onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
+                                  child: ListItem(
+                                    label: like.animal.name,
+                                    subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
+                                    subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
+                                    imageUrl: like.animal.photos.first.reference,
+                                    onPressed: () {
+                                      print('hello'); // ignore: avoid_print
+                                    },
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                              .toList(),
+                        ),
                       ),
-                    ),
                     // Some clean spacing at the bottom of the list
                     const SliverToBoxAdapter(
                       child: SizedBox(
