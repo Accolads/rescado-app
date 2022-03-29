@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/account.dart';
+import 'package:rescado/src/data/models/image.dart';
 import 'package:rescado/src/data/repositories/account_repository.dart';
 import 'package:rescado/src/services/providers/remote_storage.dart';
 import 'package:rescado/src/utils/logger.dart';
@@ -18,14 +19,19 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
   void _initialize() async {
     _logger.d('initialize()');
 
-    final profile = await _read(accountRepositoryProvider).get();
-    if (profile.avatar == null) {
-      _logger.i('Uploading a dummy profile picture');
+    var account = await _read(accountRepositoryProvider).get();
 
-      _read(remoteStorageProvider).uploadAvatar();
-      // TODO update account
+    if (account.avatar == null) {
+      final avatar = Image.fromFirebase(
+        type: ImageType.avatar,
+        url: await _read(remoteStorageProvider).uploadAvatar(),
+      );
+
+      account = await _read(accountRepositoryProvider).patch(
+        account.copyWith(avatar: avatar),
+      );
     }
-    state = AsyncData(profile);
+    state = AsyncData(account);
   }
 
   void upload() async {
