@@ -35,7 +35,7 @@ class RemoteStorage {
       final bytes = await rootBundle.load('assets/dummies/${Random().nextInt(8)}.jpg');
       final data = bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
 
-      await reference.putData(data);
+      await reference.putData(data, SettableMetadata(contentType: 'image/jpeg'));
       return await reference.getDownloadURL();
     }
 
