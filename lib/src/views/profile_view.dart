@@ -184,15 +184,12 @@ class ProfileView extends ConsumerWidget {
       child: CircleAvatar(
         radius: size + 5.0,
         backgroundColor: ref.read(settingsControllerProvider).activeTheme.backgroundVariantColor,
-        child: avatarUrl != null
-            ? CircleAvatar(
-                radius: size,
-                backgroundImage: NetworkImage(avatarUrl),
-              )
-            : CircleAvatar(
-                radius: size,
-                backgroundImage: AssetImage(RescadoConstants.imageDefaultProfilePicture),
-              ),
+        child: CircleAvatar(
+          radius: size,
+          foregroundColor: ref.watch(settingsControllerProvider).activeTheme.primaryDimmedColor,
+          foregroundImage: avatarUrl == null ? null : NetworkImage(avatarUrl),
+          backgroundImage: AssetImage(RescadoConstants.imageDefaultProfilePicture),
+        ),
       ),
     );
   }
