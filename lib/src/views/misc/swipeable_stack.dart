@@ -89,7 +89,7 @@ class SwipeableStack extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: GestureDetector(
-                    onTap: () => print('clicked the photo'), // ignore: avoid_print
+                    onTap: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -120,6 +120,8 @@ class SwipeableStack extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   animal.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 30.0,
                                     fontWeight: FontWeight.w900,
