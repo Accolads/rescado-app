@@ -53,6 +53,8 @@ class RescadoConstants {
 
   static String get iconCross => 'assets/icons/cross.svg';
 
+  static String get iconEdit => 'assets/icons/edit.svg';
+
   static String get iconEnvelope => 'assets/icons/envelope.svg';
 
   static String get iconHeartBroken => 'assets/icons/heart-broken.svg';
@@ -69,6 +71,8 @@ class RescadoConstants {
 
   static String get iconRefresh => 'assets/icons/refresh.svg';
 
+  static String get iconSettings => 'assets/icons/settings.svg';
+
   static String get iconShareAndroid => 'assets/icons/share-android.svg';
 
   static String get iconShareiOS => 'assets/icons/share-ios.svg';
@@ -78,6 +82,12 @@ class RescadoConstants {
   static String get iconUserPlus => 'assets/icons/user-plus.svg';
 
   static String get iconUsers => 'assets/icons/users.svg';
+
+  // endregion
+
+  // region Image assets
+
+  static String get imageDefaultProfilePicture => 'assets/dummies/0.jpg';
 
   // endregion
 
@@ -94,7 +104,6 @@ class RescadoConstants {
   static String get illustrationWomanOnChairWithPhone => 'assets/illustrations/woman-on-chair-with-phone.svg'; // TODO cleanup if unused
 
   static String get illustrationWomanWithWrench => 'assets/illustrations/woman-with-wrench.svg';
-
 
   // endregion
 }

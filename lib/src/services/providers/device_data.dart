@@ -4,6 +4,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:rescado/src/utils/extensions.dart';
+import 'package:rescado/src/data/models/coordinates.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final deviceDataProvider = Provider<DeviceData>(
@@ -14,12 +16,20 @@ class DeviceData {
   static final _logger = addLogger('DeviceData');
 
   bool _askedForLocationPermission = false;
+  Position? _cachedPositionData;
+  DateTime? _cachedPositionDate;
 
   DeviceData._();
 
   // Gets the device's current location coordinates.
   Future<Position?> getLocation() async {
     _logger.d('getLocation()');
+
+    // If we recently got the device's position, reuse that.
+    if (_cachedPositionDate != null && _cachedPositionDate!.isAfter(_cachedPositionDate!.subtract(const Duration(minutes: 30)))) {
+      _logger.i('Returning location from cache.');
+      return _cachedPositionData;
+    }
 
     // If location services are disabled, we can return null straightaway.
     if (!(await Geolocator.isLocationServiceEnabled())) {
@@ -39,7 +49,30 @@ class DeviceData {
       }
     }
 
-    return await Geolocator.getCurrentPosition();
+    _cachedPositionData = await Geolocator.getCurrentPosition();
+    _cachedPositionDate = DateTime.now();
+
+    _logger.i('Returning location from device.');
+    return _cachedPositionData;
+  }
+
+  // Gets the distance between given coordinates and the device's location.
+  String getDistance(Coordinates coordinates) {
+    _logger.d('getDistance()');
+
+    // TODO Figure out a way to do this with the most recent position using getLocation()
+    if (_cachedPositionData == null) {
+      return '';
+    }
+    final distanceInMeters = Geolocator.distanceBetween(
+      _cachedPositionData!.latitude,
+      _cachedPositionData!.longitude,
+      coordinates.latitude,
+      coordinates.longitude,
+    );
+
+    // TODO Localize (use miles in countries that use miles -- or get the device's preference, or add a user preference to the app)
+    return '(${(distanceInMeters / 1000).toStringWithDigits(1)} km)';
   }
 
   // Gets the device's friendly name

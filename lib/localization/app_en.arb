@@ -7,22 +7,39 @@
   "errorTitleAuthOffline": "Looks like you're offline",
   "errorBodyAuthOffline": "Looks like we can't reach our servers! Can you check your internet connection and try again?",
 
+  "labelAddFriend": "Add someone",
+  "labelAnd": "and",
+  "labelAnonymous": "Anonymous",
   "labelAge": "Age",
   "labelBack": "Back",
   "labelDiscover": "Discover",
+  "labelEdit": "Edit",
   "labelFemaleCat": "Female",
   "labelFemaleDog": "Female",
+  "labelGrid": "Grid",
   "labelLike": "Like",
-  "labelUnlike": "Unlike",
+  "labelLikes": "Likes",
+  "labelList": "List",
   "labelMaleCat": "Male",
   "labelMaleDog": "Male",
+  "labelMatches": "Matches",
   "labelProfile": "Profile",
   "labelRetry": "Try again",
   "labelSex": "Sex",
   "labelShare": "Share",
   "labelSkip": "Skip",
   "labelSwipe": "Swipe",
+  "labelUnlike": "Unlike",
   "labelWeight": "Weight",
+
+  "labelJoin": "Join {value}!",
+  "@labelJoin": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
 
   "unitKilogram": "{value} kg",
   "@unitKilogram": {

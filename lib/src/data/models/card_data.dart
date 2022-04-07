@@ -11,7 +11,6 @@ class CardData {
   final bool isDragged; // is true when the card was dragged to a side, but not yet removed from the stack
 
   bool get shouldPopUp => isDragging || isDragged;
-
   bool get shouldAnimate => !isDragging && isTouched;
 
   CardData({
@@ -26,12 +25,12 @@ class CardData {
 
   CardData copyWith({
     final List<Animal>? animals,
-    Offset? offset,
-    double? angle,
-    bool? isTouched,
-    bool? isDraggable,
-    bool? isDragging,
-    bool? isDragged,
+    final Offset? offset,
+    final double? angle,
+    final bool? isTouched,
+    final bool? isDraggable,
+    final bool? isDragging,
+    final bool? isDragged,
   }) =>
       CardData(
         animals: animals ?? this.animals,

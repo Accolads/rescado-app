@@ -7,21 +7,39 @@
   "errorTitleAuthOffline": "Je bent precies offline",
   "errorBodyAuthOffline": "Het lukt niet om de servers te pingen. Kan je je verbinding controleren en nog eens proberen?",
 
+  "labelAddFriend": "Voeg iemand toe",
+  "labelAnd": "en",
+  "labelAnonymous": "Anoniempje",
   "labelAge": "Leeftijd",
   "labelBack": "Terug",
   "labelDiscover": "Ontdekken",
+  "labelEdit": "Wijzigen",
   "labelFemaleCat": "Kattin",
   "labelFemaleDog": "Teefje",
+  "labelGrid": "Raster",
   "labelLike": "Leuk",
+  "labelLikes": "Leukerds",
+  "labelList": "Lijst",
   "labelMaleCat": "Kater",
   "labelMaleDog": "Reu",
+  "labelMatches": "Matches",
   "labelProfile": "Profiel",
   "labelRetry": "Herproberen",
   "labelSex": "Geslacht",
   "labelShare": "Delen",
   "labelSkip": "Volgende",
   "labelSwipe": "Swipen",
+  "labelUnlike": "Verwijderen",
   "labelWeight": "Gewicht",
+
+  "labelJoin": "Swipe met {value}!",
+  "@labelJoin": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
 
   "unitKilogram": "{value} kg",
   "@unitKilogram": {

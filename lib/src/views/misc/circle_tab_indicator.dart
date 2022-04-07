@@ -16,11 +16,11 @@ class _CirclePainter extends BoxPainter {
   final bool _top;
 
   _CirclePainter(Color color, this._top)
-      : _radius = 7.5, // should be .5 so the dot height is odd and it can sit in the middle of the 1px border
+      : _radius = 7.5, // should be X.5 so the dot height is odd and it can sit in the middle of the 1px border
         _paint = Paint()
           ..color = color
           ..isAntiAlias = true;
 
   @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration config) => canvas.drawCircle(offset + Offset(config.size!.width / 2, _top ? -_radius : 47.5), _radius, _paint);
+  void paint(Canvas canvas, Offset offset, ImageConfiguration config) => canvas.drawCircle(offset + Offset(config.size!.width / 2, _top ? -_radius : config.size!.height), _radius, _paint);
 }

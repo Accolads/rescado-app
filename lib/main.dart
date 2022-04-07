@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -18,11 +18,11 @@ void main() async {
   );
 
   // Crashlytics setup
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kDebugMode);
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kReleaseMode);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   // Logger setup
-  Logger.level = kDebugMode ? Level.debug : Level.warning;
+  Logger.level = kReleaseMode ? Level.warning : Level.debug;
 
   runZonedGuarded(() {
     runApp(

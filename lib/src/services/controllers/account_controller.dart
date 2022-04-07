@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/account.dart';
+import 'package:rescado/src/data/models/image.dart';
 import 'package:rescado/src/data/repositories/account_repository.dart';
+import 'package:rescado/src/services/providers/remote_storage.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final accountControllerProvider = StateNotifierProvider<AccountController, AsyncValue<Account>>(
@@ -17,13 +19,19 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
   void _initialize() async {
     _logger.d('initialize()');
 
-    // We can fetch our own details as soon as this controller is loaded
-    getAccountDetails();
-  }
+    var account = await _read(accountRepositoryProvider).get();
 
-  void getAccountDetails() async {
-    _logger.d('getAccountDetails()');
+    if (account.avatar == null) {
+      // TODO move this to the backend?
+      final avatar = Image.fromFirebase(
+        type: ImageType.avatar,
+        url: await _read(remoteStorageProvider).uploadAvatar(),
+      );
 
-    state = AsyncData(await _read(accountRepositoryProvider).get());
+      account = await _read(accountRepositoryProvider).patch(
+        account.copyWith(avatar: avatar),
+      );
+    }
+    state = AsyncData(account);
   }
 }

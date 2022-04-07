@@ -46,12 +46,18 @@ class CustomTheme {
         primaryColor: primaryColor,
         backgroundColor: backgroundVariantColor,
         scaffoldBackgroundColor: backgroundColor,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         appBarTheme: AppBarTheme(
-          elevation: 0,
           backgroundColor: backgroundColor,
+          elevation: 0,
         ),
         tabBarTheme: TabBarTheme(
           labelColor: primaryColor,
+          labelStyle: const TextStyle(
+            fontFamily: 'M+ Rounded 1c',
+            fontWeight: FontWeight.w800,
+          ),
           unselectedLabelColor: primaryDimmedColor,
         ),
       );
