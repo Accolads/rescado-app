@@ -75,7 +75,7 @@ class ProfileView extends ConsumerWidget {
                                 data: (Account account) {
                                   final invitedGroups = account.groups.where((group) => group.status == MembershipStatus.invited);
                                   final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
-                                  final Iterable<Membership> confirmedGroupMembers = confirmedGroup == null ? [] : confirmedGroup.confirmedMembers.where((member) => member.uuid != account.uuid); // Filter redundant if https://github.com/Rescado/rescado-server/pull/16 is merged
+                                  final confirmedGroupConfirmedMembers = confirmedGroup?.confirmedMembers ?? [];
 
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,10 +90,10 @@ class ProfileView extends ConsumerWidget {
                                           ),
                                           ..._buildGroupAvatars(
                                             ref: ref,
-                                            members: confirmedGroupMembers,
+                                            members: confirmedGroupConfirmedMembers,
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupMembers.length), // last value is "number of avatars - 1"
+                                            padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupConfirmedMembers.length), // last value is "number of avatars - 1"
                                             child: FloatingButton(
                                               semanticsLabel: context.i10n.labelAddFriend,
                                               svgAsset: RescadoConstants.iconUserPlus,
@@ -105,7 +105,7 @@ class ProfileView extends ConsumerWidget {
                                         ],
                                       ),
                                       Text(
-                                        context.localizeList([account.name ?? context.i10n.labelAnonymous, ...confirmedGroupMembers.map((member) => member.name)]),
+                                        context.localizeList([account.name ?? context.i10n.labelAnonymous, ...confirmedGroupConfirmedMembers.map((member) => member.name)]),
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontSize: 20.0,
