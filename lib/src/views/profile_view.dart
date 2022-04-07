@@ -1,6 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
+import 'package:rescado/src/data/models/account.dart';
+import 'package:rescado/src/data/models/like.dart';
+import 'package:rescado/src/data/models/membership.dart';
 import 'package:rescado/src/data/models/switch_data.dart';
 import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
@@ -17,6 +21,8 @@ import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
 import 'package:rescado/src/views/misc/layout_switch.dart';
 
+import '../data/models/group.dart';
+
 class ProfileView extends ConsumerWidget {
   static const viewId = 'ProfileView';
   static const tabIndex = 2;
@@ -27,11 +33,6 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO Should use Consumer inside StatelessWidget so we can build something temporarily while data is being fetched.
-    // Data to be fetched here = profile and group data
-
-    final temp = ref.read(accountControllerProvider);
-
     final preferredHeight = MediaQuery.of(context).size.height / 3;
     final actualHeight = preferredHeight < _headerHeight ? _headerHeight : preferredHeight;
 
@@ -46,10 +47,10 @@ class ProfileView extends ConsumerWidget {
                 snap: true,
                 actions: <Widget>[
                   AppBarButton(
-                    semanticsLabel: 'hello',
+                    semanticsLabel: context.i10n.labelEdit,
                     svgAsset: RescadoConstants.iconEdit,
                     // opaque: true,
-                    onPressed: () => {print('edit')}, // ignore: avoid_print
+                    onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                   ),
                 ],
                 flexibleSpace: PageTitle(
@@ -63,63 +64,73 @@ class ProfileView extends ConsumerWidget {
                 expandedHeight: actualHeight,
                 flexibleSpace: LayoutBuilder(
                   // TODO Use this builder to add effects on scroll (eg scale profile images)
-                  builder: (context, constraints) => Stack(
+                  builder: (_, __) => Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
                       FlexibleSpaceBar(
                         collapseMode: CollapseMode.parallax,
                         background: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Stack(
-                                alignment: Alignment.bottomLeft,
-                                children: <Widget>[
-                                  _buildAvatar(
-                                    ref: ref,
-                                    index: 0,
-                                    avatarUrl: 'https://i.pravatar.cc/500',
+                          child: ref.watch(accountControllerProvider).when(
+                                data: (Account account) {
+                                  final invitedGroups = account.groups.where((group) => group.status == MembershipStatus.invited);
+                                  final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
+                                  final Iterable<Membership> confirmedGroupMembers = confirmedGroup == null ? [] : confirmedGroup.confirmedMembers.where((member) => member.uuid != account.uuid); // Filter redundant if https://github.com/Rescado/rescado-server/pull/16 is merged
+
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Stack(
+                                        alignment: Alignment.bottomLeft,
+                                        children: <Widget>[
+                                          _buildAvatar(
+                                            ref: ref,
+                                            index: 0,
+                                            avatarUrl: account.avatar!.reference,
+                                          ),
+                                          ..._buildGroupAvatars(
+                                            ref: ref,
+                                            members: confirmedGroupMembers,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupMembers.length), // last value is "number of avatars - 1"
+                                            child: FloatingButton(
+                                              semanticsLabel: context.i10n.labelAddFriend,
+                                              svgAsset: RescadoConstants.iconUserPlus,
+                                              onPressed: () {
+                                                print('NOT IMPLEMENTED'); // ignore: avoid_print
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Text(
+                                        context.localizeList([account.name ?? context.i10n.labelAnonymous, ...confirmedGroupMembers.map((member) => member.name)]),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      ..._buildInviteButtons(
+                                        context: context,
+                                        ref: ref,
+                                        groups: invitedGroups,
+                                      ),
+                                      const SizedBox(
+                                        height: 25.0,
+                                      ),
+                                    ],
+                                  );
+                                },
+                                error: (_, __) => const Text('error!!'), // TODO Properly handle error scenarios
+                                loading: () => const Center(
+                                  child: SizedBox(
+                                    width: 50.0,
+                                    child: AnimatedLogo(),
                                   ),
-                                  _buildAvatar(
-                                    ref: ref,
-                                    index: 1,
-                                    avatarUrl: 'https://i.pravatar.cc/501',
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 70.0 + 60.0 * 1), // last int is avatar array size - 1
-                                    child: FloatingButton(
-                                      semanticsLabel: 'yow',
-                                      svgAsset: RescadoConstants.iconUserPlus,
-                                      onPressed: () {
-                                        print('yeeee'); // ignore: avoid_print
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const Text(
-                                'Grietje en Hans',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w800,
                                 ),
                               ),
-                              // TODO preceed with if: only show if an invite is pending
-                              ActionButton(
-                                stretched: true,
-                                label: 'scoopti doop poop poop',
-                                svgAsset: RescadoConstants.iconUsers,
-                                onPressed: () {
-                                  print('hello'); // ignore: avoid_print
-                                },
-                              ),
-                              const SizedBox(
-                                height: 25.0,
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                       Container(
@@ -181,10 +192,41 @@ class ProfileView extends ConsumerWidget {
     );
   }
 
+  List<Widget> _buildGroupAvatars({required WidgetRef ref, required Iterable<Membership> members}) {
+    if (members.isEmpty) {
+      return [];
+    }
+
+    return members
+        .mapIndexed((index, member) => _buildAvatar(
+              ref: ref,
+              index: index + 1,
+              avatarUrl: member.avatar!.reference,
+            ))
+        .toList();
+  }
+
+  List<Widget> _buildInviteButtons({required BuildContext context, required WidgetRef ref, required Iterable<Group> groups}) {
+    if (groups.isEmpty) {
+      return [];
+    }
+
+    return groups
+        .map((group) => ActionButton(
+              stretched: true,
+              label: context.i10n.labelJoin(context.localizeList(group.confirmedMembers.map((member) => member.name).toList())),
+              svgAsset: RescadoConstants.iconUsers,
+              onPressed: () {
+                print('NOT IMPLEMENTED'); // ignore: avoid_print
+              },
+            ))
+        .toList();
+  }
+
   Widget _buildLikesPane() => Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        builder: (BuildContext context, WidgetRef ref, _) {
           return ref.watch(likesControllerProvider).when(
-                data: (likes) => CustomScrollView(
+                data: (List<Like> likes) => CustomScrollView(
                   slivers: <Widget>[
                     const SliverToBoxAdapter(
                       child: LayoutSwitch(),
@@ -194,7 +236,7 @@ class ProfileView extends ConsumerWidget {
                         delegate: SliverChildListDelegate(
                           likes
                               .map(
-                                (like) => Dismissible(
+                                (Like like) => Dismissible(
                                   key: ObjectKey(like),
                                   direction: DismissDirection.startToEnd,
                                   onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
@@ -204,7 +246,7 @@ class ProfileView extends ConsumerWidget {
                                     subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
                                     imageUrl: like.animal.photos.first.reference,
                                     onPressed: () {
-                                      print('hello'); // ignore: avoid_print
+                                      print('NOT IMPLEMENTED'); // ignore: avoid_print
                                     },
                                   ),
                                 ),
@@ -220,7 +262,7 @@ class ProfileView extends ConsumerWidget {
                     ),
                   ],
                 ),
-                error: (_, __) => const Text('error!!'),
+                error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
                 loading: () => const Center(
                   child: SizedBox(
                     width: 50.0,
@@ -231,6 +273,7 @@ class ProfileView extends ConsumerWidget {
         },
       );
 
+  // TODO write the code for this pane
   Widget _buildMatchesPane() => Container(
         color: Colors.blue,
         child: const Text('Hello matches'),

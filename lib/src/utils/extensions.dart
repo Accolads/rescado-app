@@ -6,6 +6,19 @@ import 'package:rescado/src/data/models/authentication.dart';
 
 extension LocalizedBuildContext on BuildContext {
   AppLocalizations get i10n => AppLocalizations.of(this);
+
+  String localizeList(List<String> values) {
+    if (values.isEmpty) {
+      return '';
+    }
+
+    if (values.length == 1) {
+      return values.first;
+    }
+
+    final last = values.removeLast();
+    return '${values.join(', ')} ${i10n.labelAnd} $last';
+  }
 }
 
 extension UserStatusExtension on AccountStatus {
