@@ -29,7 +29,9 @@ class ProfileView extends ConsumerWidget {
 
   final _headerHeight = 260.0; // Minimum height required for the header to show all its contents
 
-  const ProfileView({Key? key}) : super(key: key);
+  const ProfileView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +43,7 @@ class ProfileView extends ConsumerWidget {
         length: 2,
         child: Scrollbar(
           child: NestedScrollView(
+            floatHeaderSlivers: true,
             headerSliverBuilder: (_, __) => <Widget>[
               SliverAppBar(
                 floating: true,
@@ -49,7 +52,6 @@ class ProfileView extends ConsumerWidget {
                   AppBarButton(
                     semanticsLabel: context.i10n.labelEdit,
                     svgAsset: RescadoConstants.iconEdit,
-                    // opaque: true,
                     onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                   ),
                 ],
@@ -59,12 +61,10 @@ class ProfileView extends ConsumerWidget {
               ),
               SliverAppBar(
                 pinned: true,
-                toolbarHeight: 7.5,
-                // Indicator radius
+                toolbarHeight: 7.5 /* Indicator radius */,
                 expandedHeight: actualHeight,
                 flexibleSpace: LayoutBuilder(
-                  // TODO Use this builder to add effects on scroll (eg scale profile images)
-                  builder: (_, __) => Stack(
+                  builder: (_, BoxConstraints constraints) => Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
                       FlexibleSpaceBar(
@@ -80,29 +80,35 @@ class ProfileView extends ConsumerWidget {
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      Stack(
-                                        alignment: Alignment.bottomLeft,
-                                        children: <Widget>[
-                                          _buildAvatar(
-                                            ref: ref,
-                                            index: 0,
-                                            avatarUrl: account.avatar?.reference,
+                                      Opacity(
+                                        opacity: constraints.maxHeight / actualHeight,
+                                        child: Transform.scale(
+                                          scale: constraints.maxHeight / actualHeight,
+                                          child: Stack(
+                                            alignment: Alignment.bottomLeft,
+                                            children: <Widget>[
+                                              _buildAvatar(
+                                                ref: ref,
+                                                index: 0,
+                                                avatarUrl: account.avatar?.reference,
+                                              ),
+                                              ..._buildGroupAvatars(
+                                                ref: ref,
+                                                members: confirmedGroupConfirmedMembers,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupConfirmedMembers.length), // last value is "number of avatars - 1"
+                                                child: FloatingButton(
+                                                  semanticsLabel: context.i10n.labelAddFriend,
+                                                  svgAsset: RescadoConstants.iconUserPlus,
+                                                  onPressed: () {
+                                                    print('NOT IMPLEMENTED'); // ignore: avoid_print
+                                                  },
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          ..._buildGroupAvatars(
-                                            ref: ref,
-                                            members: confirmedGroupConfirmedMembers,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupConfirmedMembers.length), // last value is "number of avatars - 1"
-                                            child: FloatingButton(
-                                              semanticsLabel: context.i10n.labelAddFriend,
-                                              svgAsset: RescadoConstants.iconUserPlus,
-                                              onPressed: () {
-                                                print('NOT IMPLEMENTED'); // ignore: avoid_print
-                                              },
-                                            ),
-                                          )
-                                        ],
+                                        ),
                                       ),
                                       Text(
                                         context.localizeList([account.name ?? context.i10n.labelAnonymous, ...confirmedGroupConfirmedMembers.map((member) => member.name)]),
@@ -230,8 +236,11 @@ class ProfileView extends ConsumerWidget {
           return ref.watch(likesControllerProvider).when(
                 data: (List<Like> likes) => CustomScrollView(
                   slivers: <Widget>[
-                    const SliverToBoxAdapter(
-                      child: LayoutSwitch(),
+                    const SliverAppBar(
+                      pinned: true,
+                      floating: true,
+                      snap: true,
+                      flexibleSpace: LayoutSwitch(),
                     ),
                     if (ref.watch(switchControllerProvider).position == SwitchPosition.left)
                       SliverList(
