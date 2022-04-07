@@ -22,6 +22,7 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
     var account = await _read(accountRepositoryProvider).get();
 
     if (account.avatar == null) {
+      // TODO move this to the backend?
       final avatar = Image.fromFirebase(
         type: ImageType.avatar,
         url: await _read(remoteStorageProvider).uploadAvatar(),
@@ -32,11 +33,5 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
       );
     }
     state = AsyncData(account);
-  }
-
-  void upload() async {
-    _logger.d('getAccountDetails()');
-
-    state = AsyncData(await _read(accountRepositoryProvider).get());
   }
 }
