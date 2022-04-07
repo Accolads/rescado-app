@@ -86,7 +86,7 @@ class ProfileView extends ConsumerWidget {
                                           _buildAvatar(
                                             ref: ref,
                                             index: 0,
-                                            avatarUrl: account.avatar!.reference,
+                                            avatarUrl: account.avatar?.reference,
                                           ),
                                           ..._buildGroupAvatars(
                                             ref: ref,
@@ -175,7 +175,7 @@ class ProfileView extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvatar({required WidgetRef ref, required int index, required String avatarUrl}) {
+  Widget _buildAvatar({required WidgetRef ref, required int index, required String? avatarUrl}) {
     double size = index == 0 ? 45.0 : 34.0;
     double padding = index == 0 ? 15.0 : 30.0 + index * size * 1.6;
 
@@ -184,10 +184,15 @@ class ProfileView extends ConsumerWidget {
       child: CircleAvatar(
         radius: size + 5.0,
         backgroundColor: ref.read(settingsControllerProvider).activeTheme.backgroundVariantColor,
-        child: CircleAvatar(
-          radius: size,
-          backgroundImage: NetworkImage(avatarUrl),
-        ),
+        child: avatarUrl != null
+            ? CircleAvatar(
+                radius: size,
+                backgroundImage: NetworkImage(avatarUrl),
+              )
+            : CircleAvatar(
+                radius: size,
+                backgroundImage: AssetImage(RescadoConstants.imageDefaultProfilePicture),
+              ),
       ),
     );
   }
@@ -201,7 +206,7 @@ class ProfileView extends ConsumerWidget {
         .mapIndexed((index, member) => _buildAvatar(
               ref: ref,
               index: index + 1,
-              avatarUrl: member.avatar!.reference,
+              avatarUrl: member.avatar?.reference,
             ))
         .toList();
   }

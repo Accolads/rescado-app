@@ -85,6 +85,12 @@ class RescadoConstants {
 
   // endregion
 
+  // region Image assets
+
+  static String get imageDefaultProfilePicture => 'assets/dummies/0.jpg';
+
+  // endregion
+
   // region Illustration assets
 
   static String get illustrationCuteCatOutside => 'assets/illustrations/cute-cat-outside.svg'; // TODO cleanup if unused
