@@ -29,8 +29,12 @@
   "labelShare": "Share",
   "labelSkip": "Skip",
   "labelSwipe": "Swipe",
+  "labelSwipeTime": "Swipe time",
   "labelUnlike": "Unlike",
   "labelWeight": "Weight",
+
+  //TODO @Qrivi please use Duolingo skills
+  "messageEmptyLikes": "Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!",
 
   "labelJoin": "Join {value}!",
   "@labelJoin": {

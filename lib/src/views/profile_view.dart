@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/account.dart';
@@ -8,6 +10,7 @@ import 'package:rescado/src/data/models/membership.dart';
 import 'package:rescado/src/data/models/switch_data.dart';
 import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
+import 'package:rescado/src/services/controllers/main_tab_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
@@ -19,7 +22,9 @@ import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
+import 'package:rescado/src/views/misc/interactive_grid_tile.dart';
 import 'package:rescado/src/views/misc/layout_switch.dart';
+import 'package:rescado/src/views/swipe_view.dart';
 
 import '../data/models/group.dart';
 
@@ -234,45 +239,96 @@ class ProfileView extends ConsumerWidget {
   Widget _buildLikesPane() => Consumer(
         builder: (BuildContext context, WidgetRef ref, _) {
           return ref.watch(likesControllerProvider).when(
-                data: (List<Like> likes) => CustomScrollView(
-                  slivers: <Widget>[
-                    const SliverAppBar(
-                      pinned: true,
-                      floating: true,
-                      snap: true,
-                      flexibleSpace: LayoutSwitch(),
-                    ),
-                    if (ref.watch(switchControllerProvider).position == SwitchPosition.left)
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          likes
-                              .map(
-                                (Like like) => Dismissible(
-                                  key: ObjectKey(like),
-                                  direction: DismissDirection.startToEnd,
-                                  onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
-                                  child: ListItem(
-                                    label: like.animal.name,
-                                    subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
-                                    subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
-                                    imageUrl: like.animal.photos.first.reference,
-                                    onPressed: () {
-                                      print('NOT IMPLEMENTED'); // ignore: avoid_print
-                                    },
-                                  ),
+                data: (List<Like> likes) {
+                  if (likes.isEmpty) {
+                    return _buildPlaceholder(
+                      label: context.i10n.messageEmptyLikes,
+                      actionButton: ActionButton(
+                        label: context.i10n.labelSwipeTime,
+                        onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                        svgAsset: RescadoConstants.iconHeartOutline,
+                      ),
+                      asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
+                    );
+                  } else {
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        CupertinoSliverRefreshControl(
+                          onRefresh: () async {
+                            await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
+                            await ref.read(likesControllerProvider.notifier).fetchLikes();
+                          },
+                          builder: (_, RefreshIndicatorMode refreshIndicatorMode, ___, ____, _____) {
+                            return Center(
+                              child: SizedBox(
+                                width: 50.0,
+                                child: AnimatedLogo(
+                                  play: refreshIndicatorMode == RefreshIndicatorMode.refresh,
                                 ),
-                              )
-                              .toList(),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    // Some clean spacing at the bottom of the list
-                    const SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 25.0,
-                      ),
-                    ),
-                  ],
-                ),
+                        const SliverAppBar(
+                          pinned: true,
+                          floating: true,
+                          snap: true,
+                          flexibleSpace: LayoutSwitch(),
+                        ),
+                        if (ref.watch(switchControllerProvider).position == SwitchPosition.left)
+                          SliverList(
+                            delegate: SliverChildListDelegate(
+                              likes
+                                  .map(
+                                    (Like like) => Dismissible(
+                                      key: ObjectKey(like),
+                                      direction: DismissDirection.startToEnd,
+                                      onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
+                                      child: ListItem(
+                                        label: like.animal.name,
+                                        subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
+                                        subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
+                                        imageUrl: like.animal.photos.first.reference,
+                                        onPressed: () {
+                                          print('NOT IMPLEMENTED'); // ignore: avoid_print
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        if (ref.watch(switchControllerProvider).position == SwitchPosition.right)
+                          SliverGrid(
+                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 150,
+                              mainAxisSpacing: 1.0,
+                              crossAxisSpacing: 1.0,
+                            ),
+                            delegate: SliverChildListDelegate(
+                              likes
+                                  .map((Like like) => InteractiveGridTile(
+                                        key: ObjectKey(like),
+                                        image: like.animal.photos.first.reference,
+                                        floatingButton: FloatingButton(
+                                          onPressed: () => ref.read(likesControllerProvider.notifier).unlike(like),
+                                          svgAsset: RescadoConstants.iconHeartBroken,
+                                          semanticsLabel: context.i10n.labelUnlike,
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
+                          ),
+                        // Some clean spacing at the bottom of the list
+                        const SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 25.0,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
                 error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
                 loading: () => const Center(
                   child: SizedBox(
@@ -289,4 +345,27 @@ class ProfileView extends ConsumerWidget {
         color: Colors.blue,
         child: const Text('Hello matches'),
       );
+
+  Widget _buildPlaceholder({required String label, required ActionButton actionButton, required String asset}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Text(label),
+          const SizedBox(
+            height: 26.0,
+          ),
+          actionButton,
+          Align(
+            alignment: Alignment.bottomRight,
+            child: SvgPicture.asset(asset),
+          )
+        ],
+      ),
+    );
+  }
 }

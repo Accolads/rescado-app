@@ -29,8 +29,11 @@
   "labelShare": "Delen",
   "labelSkip": "Volgende",
   "labelSwipe": "Swipen",
+  "labelSwipeTime": "Swipen maar",
   "labelUnlike": "Verwijderen",
   "labelWeight": "Gewicht",
+
+  "messageEmptyLikes": "Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!",
 
   "labelJoin": "Swipe met {value}!",
   "@labelJoin": {
