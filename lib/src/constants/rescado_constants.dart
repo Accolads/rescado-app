@@ -95,6 +95,8 @@ class RescadoConstants {
 
   static String get illustrationCuteCatOutside => 'assets/illustrations/cute-cat-outside.svg'; // TODO cleanup if unused
 
+  static String get illustrationTinyPeopleBigPhones => 'assets/illustrations/tiny-people-big-phones.svg';
+
   static String get illustrationPeopleSittingOnCouch => 'assets/illustrations/people-sitting-on-couch.svg';
 
   static String get illustrationWomanHoldingAHeart => 'assets/illustrations/woman-holding-a-heart.svg'; // TODO cleanup if unused
