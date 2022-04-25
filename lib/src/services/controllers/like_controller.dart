@@ -2,6 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/repositories/card_repository.dart';
+import 'package:rescado/src/services/controllers/match_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final likesControllerProvider = StateNotifierProvider<LikesController, AsyncValue<List<Like>>>(
@@ -54,6 +55,8 @@ class LikesController extends StateNotifier<AsyncValue<List<Like>>> {
 
     if (cardAction.liked != null && cardAction.liked!.contains(like.animal)) {
       state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
+      _read(matchesControllerProvider.notifier).deleteMatch(like);
+
       state = AsyncValue.data(state.value!.toList());
     }
   }

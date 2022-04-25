@@ -17,17 +17,26 @@ class _GridTileState extends State<InteractiveGridTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () => setState(() => showAction = !showAction),
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(widget.image),
-            colorFilter: showAction ? ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop) : null,
-          ),
-        ),
-        child: showAction ? Center(child: widget.floatingButton) : null,
-      ),
-    );
+        onLongPress: () => setState(() => showAction = !showAction),
+        child: Stack(
+          children: [
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 500),
+              opacity: showAction ? 0.5 : 1.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(widget.image),
+                  ),
+                ),
+              ),
+            ),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              child: showAction ? Center(child: widget.floatingButton) : const SizedBox(),
+            ),
+          ],
+        ));
   }
 }

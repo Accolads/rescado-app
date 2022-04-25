@@ -11,6 +11,7 @@ import 'package:rescado/src/data/models/switch_data.dart';
 import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/services/controllers/main_tab_controller.dart';
+import 'package:rescado/src/services/controllers/match_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
@@ -251,81 +252,10 @@ class ProfileView extends ConsumerWidget {
                       asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
                     );
                   } else {
-                    return CustomScrollView(
-                      slivers: <Widget>[
-                        CupertinoSliverRefreshControl(
-                          onRefresh: () async {
-                            await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                            await ref.read(likesControllerProvider.notifier).fetchLikes();
-                          },
-                          builder: (_, RefreshIndicatorMode refreshIndicatorMode, ___, ____, _____) {
-                            return Center(
-                              child: SizedBox(
-                                width: 50.0,
-                                child: AnimatedLogo(
-                                  play: refreshIndicatorMode == RefreshIndicatorMode.refresh,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SliverAppBar(
-                          pinned: true,
-                          floating: true,
-                          snap: true,
-                          flexibleSpace: LayoutSwitch(),
-                        ),
-                        if (ref.watch(switchControllerProvider).position == SwitchPosition.left)
-                          SliverList(
-                            delegate: SliverChildListDelegate(
-                              likes
-                                  .map(
-                                    (Like like) => Dismissible(
-                                      key: ObjectKey(like),
-                                      direction: DismissDirection.startToEnd,
-                                      onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
-                                      child: ListItem(
-                                        label: like.animal.name,
-                                        subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
-                                        subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
-                                        imageUrl: like.animal.photos.first.reference,
-                                        onPressed: () {
-                                          print('NOT IMPLEMENTED'); // ignore: avoid_print
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                        if (ref.watch(switchControllerProvider).position == SwitchPosition.right)
-                          SliverGrid(
-                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 150,
-                              mainAxisSpacing: 1.0,
-                              crossAxisSpacing: 1.0,
-                            ),
-                            delegate: SliverChildListDelegate(
-                              likes
-                                  .map((Like like) => InteractiveGridTile(
-                                        key: ObjectKey(like),
-                                        image: like.animal.photos.first.reference,
-                                        floatingButton: FloatingButton(
-                                          onPressed: () => ref.read(likesControllerProvider.notifier).unlike(like),
-                                          svgAsset: RescadoConstants.iconHeartBroken,
-                                          semanticsLabel: context.i10n.labelUnlike,
-                                        ),
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
-                        // Some clean spacing at the bottom of the list
-                        const SliverToBoxAdapter(
-                          child: SizedBox(
-                            height: 25.0,
-                          ),
-                        ),
-                      ],
+                    return _buildLikesList(
+                      context: context,
+                      ref: ref,
+                      likes: likes,
                     );
                   }
                 },
@@ -340,10 +270,141 @@ class ProfileView extends ConsumerWidget {
         },
       );
 
-  // TODO write the code for this pane
-  Widget _buildMatchesPane() => Container(
-        color: Colors.blue,
-        child: const Text('Hello matches'),
+  Widget _buildMatchesPane() => Consumer(
+        builder: (BuildContext context, WidgetRef ref, _) {
+          return ref.read(accountControllerProvider).when(
+                data: (Account account) {
+                  final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
+                  if (confirmedGroup == null) {
+                    return _buildPlaceholder(
+                      label: context.i10n.messageNoGroup,
+                      actionButton: ActionButton(
+                        label: context.i10n.labelCreateGroup,
+                        onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                        svgAsset: RescadoConstants.iconUsers,
+                      ),
+                      asset: RescadoConstants.illustrationTinyPeopleBigPhones,
+                    );
+                  } else {
+                    return ref.watch(matchesControllerProvider).when(
+                          data: (List<Like> likes) {
+                            if (likes.isEmpty) {
+                              return _buildPlaceholder(
+                                label: context.i10n.messageNoMatches,
+                                actionButton: ActionButton(
+                                  label: context.i10n.labelSwipeTime,
+                                  onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                                  svgAsset: RescadoConstants.iconHeartOutline,
+                                ),
+                                asset: RescadoConstants.illustrationPeopleSittingOnCouch,
+                              );
+                            } else {
+                              return _buildLikesList(
+                                context: context,
+                                ref: ref,
+                                likes: likes,
+                              );
+                            }
+                          },
+                          error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
+                          loading: () => const Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              child: AnimatedLogo(
+                                play: true,
+                              ),
+                            ),
+                          ),
+                        );
+                  }
+                },
+                error: (_, __) => const Text('error!!'), // TODO Properly handle error scenarios
+                loading: () => const Center(
+                  child: SizedBox(
+                    width: 50.0,
+                    child: AnimatedLogo(),
+                  ),
+                ),
+              );
+        },
+      );
+
+  Widget _buildLikesList({required BuildContext context, required WidgetRef ref, required List<Like> likes}) => CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
+              await ref.read(likesControllerProvider.notifier).fetchLikes();
+            },
+            builder: (_, RefreshIndicatorMode refreshIndicatorMode, ___, ____, _____) {
+              return Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  width: 40.0,
+                  child: AnimatedLogo(
+                    play: refreshIndicatorMode == RefreshIndicatorMode.refresh,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SliverAppBar(
+            pinned: true,
+            floating: true,
+            snap: true,
+            flexibleSpace: LayoutSwitch(),
+          ),
+          if (ref.watch(switchControllerProvider).position == SwitchPosition.left)
+            SliverList(
+              delegate: SliverChildListDelegate(
+                likes
+                    .map(
+                      (Like like) => Dismissible(
+                        key: ObjectKey(like),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
+                        child: ListItem(
+                          label: like.animal.name,
+                          subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
+                          subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
+                          imageUrl: like.animal.photos.first.reference,
+                          onPressed: () {
+                            print('NOT IMPLEMENTED'); // ignore: avoid_print
+                          },
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          if (ref.watch(switchControllerProvider).position == SwitchPosition.right)
+            SliverGrid(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150,
+                mainAxisSpacing: 1.0,
+                crossAxisSpacing: 1.0,
+              ),
+              delegate: SliverChildListDelegate(
+                likes
+                    .map((Like like) => InteractiveGridTile(
+                          key: ObjectKey(like),
+                          image: like.animal.photos.first.reference,
+                          floatingButton: FloatingButton(
+                            onPressed: () => ref.read(likesControllerProvider.notifier).unlike(like),
+                            svgAsset: RescadoConstants.iconHeartBroken,
+                            semanticsLabel: context.i10n.labelUnlike,
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
+// Some clean spacing at the bottom of the list
+          const SliverToBoxAdapter(
+            child: SizedBox(
+              height: 25.0,
+            ),
+          ),
+        ],
       );
 
   Widget _buildPlaceholder({required String label, required ActionButton actionButton, required String asset}) {
@@ -362,7 +423,10 @@ class ProfileView extends ConsumerWidget {
           actionButton,
           Align(
             alignment: Alignment.bottomRight,
-            child: SvgPicture.asset(asset),
+            child: SizedBox(
+              height: 150.0,
+              child: SvgPicture.asset(asset),
+            ),
           )
         ],
       ),

@@ -12,6 +12,7 @@
   "labelAnonymous": "Anonymous",
   "labelAge": "Age",
   "labelBack": "Back",
+  "labelCreateGroup": "Form a group",
   "labelDiscover": "Discover",
   "labelEdit": "Edit",
   "labelFemaleCat": "Female",
@@ -33,8 +34,9 @@
   "labelUnlike": "Unlike",
   "labelWeight": "Weight",
 
-  //TODO @Qrivi please use Duolingo skills
   "messageEmptyLikes": "Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!",
+  "messageNoGroup": "Van plan om samen met je partner of huisgenoot een dier te adopteren? Vorm een groep om gemakkelijk jullie gemeenschappelijke likes hier terug te vinden!",
+  "messageNoMatches": "Jullie hebben nog geen gemeenschappelijke likes binnen jullie groep. Stel jullie filters wat op elkaar af en swipe nog meer om jullie kans op matches te verhogen!",
 
   "labelJoin": "Join {value}!",
   "@labelJoin": {

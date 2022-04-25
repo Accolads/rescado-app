@@ -12,6 +12,7 @@
   "labelAnonymous": "Anoniempje",
   "labelAge": "Leeftijd",
   "labelBack": "Terug",
+  "labelCreateGroup": "Vorm een groep",
   "labelDiscover": "Ontdekken",
   "labelEdit": "Wijzigen",
   "labelFemaleCat": "Kattin",
@@ -34,6 +35,8 @@
   "labelWeight": "Gewicht",
 
   "messageEmptyLikes": "Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!",
+  "messageNoGroup": "Van plan om samen met je partner of huisgenoot een dier te adopteren? Vorm een groep om gemakkelijk jullie gemeenschappelijke likes hier terug te vinden!",
+  "messageNoMatches": "Jullie hebben nog geen gemeenschappelijke likes binnen jullie groep. Stel jullie filters wat op elkaar af en swipe nog meer om jullie kans op matches te verhogen!",
 
   "labelJoin": "Swipe met {value}!",
   "@labelJoin": {
