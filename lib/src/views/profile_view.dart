@@ -177,8 +177,14 @@ class ProfileView extends ConsumerWidget {
             ],
             body: TabBarView(
               children: [
-                _buildLikesPane(),
-                _buildMatchesPane(),
+                _buildLikesPane(
+                  context: context,
+                  ref: ref,
+                ),
+                _buildMatchesPane(
+                  context: context,
+                  ref: ref,
+                ),
               ],
             ),
           ),
@@ -237,119 +243,113 @@ class ProfileView extends ConsumerWidget {
         .toList();
   }
 
-  Widget _buildLikesPane() => Consumer(
-        builder: (BuildContext context, WidgetRef ref, _) {
-          return ref.watch(likesControllerProvider).when(
-                data: (List<Like> likes) {
-                  return CustomScrollView(slivers: <Widget>[
-                    CupertinoSliverRefreshControl(
-                      onRefresh: () async {
-                        await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                        await ref.read(likesControllerProvider.notifier).fetchLikes();
-                      },
-                      builder: _buildRefreshIndicator(),
-                    ),
-                    if (likes.isEmpty)
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: _buildPlaceholder(
-                          label: context.i10n.messageEmptyLikes,
-                          actionButton: ActionButton(
-                            label: context.i10n.labelSwipeTime,
-                            onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
-                            svgAsset: RescadoConstants.iconHeartOutline,
-                          ),
-                          asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
-                        ),
-                      )
-                    else
-                      ..._buildLikesList(
-                        context: context,
-                        ref: ref,
-                        likes: likes,
-                      )
-                  ]);
+  Widget _buildLikesPane({required BuildContext context, required WidgetRef ref}) => ref.watch(likesControllerProvider).when(
+        data: (List<Like> likes) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
+                  await ref.read(likesControllerProvider.notifier).fetchLikes();
                 },
-                error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
-                loading: () => const Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    child: AnimatedLogo(),
+                builder: _buildRefreshIndicator(),
+              ),
+              if (likes.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _buildPlaceholder(
+                    label: context.i10n.messageEmptyLikes,
+                    actionButton: ActionButton(
+                      label: context.i10n.labelSwipeTime,
+                      onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                      svgAsset: RescadoConstants.iconHeartOutline,
+                    ),
+                    asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
                   ),
-                ),
-              );
+                )
+              else
+                ..._buildLikesList(
+                  context: context,
+                  ref: ref,
+                  likes: likes,
+                )
+            ],
+          );
         },
+        error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
+        loading: () => const Center(
+          child: SizedBox(
+            width: 50.0,
+            child: AnimatedLogo(),
+          ),
+        ),
       );
 
-  Widget _buildMatchesPane() => Consumer(
-        builder: (BuildContext context, WidgetRef ref, _) {
-          return ref.read(accountControllerProvider).when(
-                data: (Account account) {
-                  final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
-                  if (confirmedGroup == null) {
-                    return _buildPlaceholder(
-                      label: context.i10n.messageNoGroup,
-                      actionButton: ActionButton(
-                        label: context.i10n.labelCreateGroup,
-                        onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
-                        svgAsset: RescadoConstants.iconUsers,
-                      ),
-                      asset: RescadoConstants.illustrationTinyPeopleBigPhones,
-                    );
-                  } else {
-                    return ref.watch(matchesControllerProvider).when(
-                          data: (List<Like> likes) {
-                            return CustomScrollView(
-                              slivers: <Widget>[
-                                CupertinoSliverRefreshControl(
-                                    onRefresh: () async {
-                                      await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                                      await ref.read(matchesControllerProvider.notifier).fetchMatches();
-                                    },
-                                    builder: _buildRefreshIndicator()),
-                                if (likes.isEmpty)
-                                  SliverFillRemaining(
-                                    hasScrollBody: false,
-                                    child: _buildPlaceholder(
-                                      label: context.i10n.messageNoMatches,
-                                      actionButton: ActionButton(
-                                        label: context.i10n.labelSwipeTime,
-                                        onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
-                                        svgAsset: RescadoConstants.iconHeartOutline,
-                                      ),
-                                      asset: RescadoConstants.illustrationPeopleSittingOnCouch,
-                                    ),
-                                  )
-                                else
-                                  ..._buildLikesList(
-                                    context: context,
-                                    ref: ref,
-                                    likes: likes,
-                                  )
-                              ],
-                            );
-                          },
-                          error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
-                          loading: () => const Center(
-                            child: SizedBox(
-                              width: 50.0,
-                              child: AnimatedLogo(
-                                play: true,
+  Widget _buildMatchesPane({required BuildContext context, required WidgetRef ref}) => ref.read(accountControllerProvider).when(
+        data: (Account account) {
+          final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
+          if (confirmedGroup == null) {
+            return _buildPlaceholder(
+              label: context.i10n.messageNoGroup,
+              actionButton: ActionButton(
+                label: context.i10n.labelCreateGroup,
+                onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                svgAsset: RescadoConstants.iconUsers,
+              ),
+              asset: RescadoConstants.illustrationTinyPeopleBigPhones,
+            );
+          } else {
+            return ref.watch(matchesControllerProvider).when(
+                  data: (List<Like> likes) {
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        CupertinoSliverRefreshControl(
+                            onRefresh: () async {
+                              await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
+                              await ref.read(matchesControllerProvider.notifier).fetchMatches();
+                            },
+                            builder: _buildRefreshIndicator()),
+                        if (likes.isEmpty)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: _buildPlaceholder(
+                              label: context.i10n.messageNoMatches,
+                              actionButton: ActionButton(
+                                label: context.i10n.labelSwipeTime,
+                                onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                                svgAsset: RescadoConstants.iconHeartOutline,
                               ),
+                              asset: RescadoConstants.illustrationPeopleSittingOnCouch,
                             ),
-                          ),
-                        );
-                  }
-                },
-                error: (_, __) => const Text('error!!'), // TODO Properly handle error scenarios
-                loading: () => const Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    child: AnimatedLogo(),
+                          )
+                        else
+                          ..._buildLikesList(
+                            context: context,
+                            ref: ref,
+                            likes: likes,
+                          )
+                      ],
+                    );
+                  },
+                  error: (_, __) => const Text('error!!'), // TODO Handle error scenarios properly
+                  loading: () => const Center(
+                    child: SizedBox(
+                      width: 50.0,
+                      child: AnimatedLogo(
+                        play: true,
+                      ),
+                    ),
                   ),
-                ),
-              );
+                );
+          }
         },
+        error: (_, __) => const Text('error!!'), // TODO Properly handle error scenarios
+        loading: () => const Center(
+          child: SizedBox(
+            width: 50.0,
+            child: AnimatedLogo(),
+          ),
+        ),
       );
 
   List<Widget> _buildLikesList({required BuildContext context, required WidgetRef ref, required List<Like> likes}) => <Widget>[
