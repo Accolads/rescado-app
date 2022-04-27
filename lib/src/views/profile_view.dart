@@ -255,17 +255,14 @@ class ProfileView extends ConsumerWidget {
                 builder: _buildRefreshIndicator(),
               ),
               if (likes.isEmpty)
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: _buildPlaceholder(
-                    label: context.i10n.messageEmptyLikes,
-                    actionButton: ActionButton(
-                      label: context.i10n.labelSwipeTime,
-                      onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
-                      svgAsset: RescadoConstants.iconHeartOutline,
-                    ),
-                    asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
+                ..._buildPlaceholder(
+                  label: context.i10n.messageEmptyLikes,
+                  actionButton: ActionButton(
+                    label: context.i10n.labelSwipeTime,
+                    onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                    svgAsset: RescadoConstants.iconHeartOutline,
                   ),
+                  asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
                 )
               else
                 ..._buildLikesList(
@@ -289,14 +286,16 @@ class ProfileView extends ConsumerWidget {
         data: (Account account) {
           final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
           if (confirmedGroup == null) {
-            return _buildPlaceholder(
-              label: context.i10n.messageNoGroup,
-              actionButton: ActionButton(
-                label: context.i10n.labelCreateGroup,
-                onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
-                svgAsset: RescadoConstants.iconUsers,
+            return CustomScrollView(
+              slivers: _buildPlaceholder(
+                label: context.i10n.messageNoGroup,
+                actionButton: ActionButton(
+                  label: context.i10n.labelCreateGroup,
+                  onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                  svgAsset: RescadoConstants.iconUsers,
+                ),
+                asset: RescadoConstants.illustrationTinyPeopleBigPhones,
               ),
-              asset: RescadoConstants.illustrationTinyPeopleBigPhones,
             );
           } else {
             return ref.watch(matchesControllerProvider).when(
@@ -310,17 +309,14 @@ class ProfileView extends ConsumerWidget {
                             },
                             builder: _buildRefreshIndicator()),
                         if (likes.isEmpty)
-                          SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: _buildPlaceholder(
-                              label: context.i10n.messageNoMatches,
-                              actionButton: ActionButton(
-                                label: context.i10n.labelSwipeTime,
-                                onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
-                                svgAsset: RescadoConstants.iconHeartOutline,
-                              ),
-                              asset: RescadoConstants.illustrationPeopleSittingOnCouch,
+                          ..._buildPlaceholder(
+                            label: context.i10n.messageNoMatches,
+                            actionButton: ActionButton(
+                              label: context.i10n.labelSwipeTime,
+                              onPressed: () => ref.watch(tabControllerProvider.notifier).setActiveTab(SwipeView.tabIndex),
+                              svgAsset: RescadoConstants.iconHeartOutline,
                             ),
+                            asset: RescadoConstants.illustrationPeopleSittingOnCouch,
                           )
                         else
                           ..._buildLikesList(
@@ -423,29 +419,30 @@ class ProfileView extends ConsumerWidget {
         );
       };
 
-  Widget _buildPlaceholder({required String label, required ActionButton actionButton, required String asset}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Text(label),
-          const SizedBox(
-            height: 26.0,
-          ),
-          actionButton,
-          Align(
-            alignment: Alignment.bottomRight,
-            child: SizedBox(
-              height: 150.0, // TODO This is not the way to do this. Standard boxfit for SvgPicture is contain which means the image will glue to the top left. This implies that if the SVG does not fill the SizedBox in height, there will be empty pixels at the bottom -- whereas we want this image to be sticky to the bottom. Column is not the right parent widget as this will be problematic on smaller phones where the text and button should overlap with the illustration. Having to scroll in order to read text is very bad UX.
-              child: SvgPicture.asset(asset),
+  List<Widget> _buildPlaceholder({required String label, required ActionButton actionButton, required String asset}) => [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 80.0, right: 30.0, bottom: 10.0, left: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(label),
+                const SizedBox(height: 30.0),
+                actionButton,
+              ],
             ),
-          )
-        ],
-      ),
-    );
-  }
+          ),
+        ),
+        SliverFillRemaining(
+          fillOverscroll: true,
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: SvgPicture.asset(
+              asset,
+              width: 220.0,
+            ),
+          ),
+        ),
+      ];
 }
