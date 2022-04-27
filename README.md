@@ -32,7 +32,7 @@ If asked for an iOS bundle ID, it's `org.rescado.ios`. 👍
 
 ```shell
 cd ios
-pod clean
+pod cache clean --all
 pod update
 ```
 And cross your fingers.
