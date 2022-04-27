@@ -440,7 +440,7 @@ class ProfileView extends ConsumerWidget {
           Align(
             alignment: Alignment.bottomRight,
             child: SizedBox(
-              height: 150.0,
+              height: 150.0, // TODO This is not the way to do this. Standard boxfit for SvgPicture is contain which means the image will glue to the top left. This implies that if the SVG does not fill the SizedBox in height, there will be empty pixels at the bottom -- whereas we want this image to be sticky to the bottom. Column is not the right parent widget as this will be problematic on smaller phones where the text and button should overlap with the illustration. Having to scroll in order to read text is very bad UX.
               child: SvgPicture.asset(asset),
             ),
           )
