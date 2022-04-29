@@ -1,6 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
-import 'package:rescado/src/data/models/group.dart';
 import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/services/providers/api_client.dart';
 import 'package:rescado/src/utils/logger.dart';
