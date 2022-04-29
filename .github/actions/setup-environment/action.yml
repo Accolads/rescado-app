@@ -9,12 +9,12 @@ runs:
       with:
         distribution: 'adopt'
         java-version: '12'
-    - name: Setup Flutter 2.8.1
+    - name: Setup Flutter 2.10.5
       id: setup-flutter
       uses: subosito/flutter-action@v2.4.0
       with:
         channel: 'stable'
-        flutter-version: '2.8.1'
+        flutter-version: '2.10.5'
     - name: Fetch dependencies
       id: fetch-dependencies
       run: flutter pub get
