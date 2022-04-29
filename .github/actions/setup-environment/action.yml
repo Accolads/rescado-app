@@ -11,7 +11,7 @@ runs:
         java-version: '12'
     - name: Setup Flutter 2.8.1
       id: setup-flutter
-      uses: subosito/flutter-action@v1.5.3
+      uses: subosito/flutter-action@v2.4.0
       with:
         channel: 'stable'
         flutter-version: '2.8.1'
