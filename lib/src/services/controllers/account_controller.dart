@@ -29,7 +29,7 @@ class AccountController extends StateNotifier<AsyncValue<Account>> {
       );
 
       account = await _read(accountRepositoryProvider).patch(
-        account.copyWith(avatar: avatar),
+        account: account.copyWith(avatar: avatar),
       );
     }
     state = AsyncData(account);

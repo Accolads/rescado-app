@@ -12,7 +12,7 @@ final accountRepositoryProvider = Provider<AccountRepository>(
 abstract class AccountRepository {
   Future<Account> get();
 
-  Future<Account> patch(Account account);
+  Future<Account> patch({required Account account});
 }
 
 class ApiAccountRepository implements AccountRepository {
@@ -36,7 +36,7 @@ class ApiAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<Account> patch(Account account) async {
+  Future<Account> patch({required Account account}) async {
     _logger.d('patch()');
 
     final endpoint = Uri.parse('${RescadoConstants.api}/account');
