@@ -5,6 +5,7 @@ import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
 
+// Simple toggle to let the user decide on list view or grid view.
 class LayoutSwitch extends ConsumerWidget {
   const LayoutSwitch({
     Key? key,
@@ -20,6 +21,7 @@ class LayoutSwitch extends ConsumerWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
+          // The label on the left of the switch
           GestureDetector(
             onTap: () => ref.read(switchControllerProvider.notifier).onTap(SwitchPosition.left),
             child: Padding(
@@ -30,6 +32,7 @@ class LayoutSwitch extends ConsumerWidget {
               ),
             ),
           ),
+          // The actual switch
           GestureDetector(
             onTap: () => ref.read(switchControllerProvider.notifier).onTap(),
             onHorizontalDragStart: (_) => ref.read(switchControllerProvider.notifier).startDragging(),
@@ -62,6 +65,7 @@ class LayoutSwitch extends ConsumerWidget {
               ],
             ),
           ),
+          // The label on the right of the switch
           GestureDetector(
             onTap: () => ref.read(switchControllerProvider.notifier).onTap(SwitchPosition.right),
             child: Padding(
