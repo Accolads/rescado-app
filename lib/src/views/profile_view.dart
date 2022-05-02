@@ -58,7 +58,8 @@ class ProfileView extends ConsumerWidget {
                   AppBarButton(
                     semanticsLabel: context.i10n.labelEdit,
                     svgAsset: RescadoConstants.iconEdit,
-                    onPressed: () => print('TODO NOT IMPLEMENTED'), // ignore: avoid_print
+                    // TODO implement onPressed()
+                    onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                   ),
                 ],
                 flexibleSpace: PageTitle(
@@ -107,9 +108,8 @@ class ProfileView extends ConsumerWidget {
                                                 child: RoundedButton(
                                                   semanticsLabel: context.i10n.labelAddFriend,
                                                   svgAsset: RescadoConstants.iconUserPlus,
-                                                  onPressed: () {
-                                                    print('TODO NOT IMPLEMENTED'); // ignore: avoid_print
-                                                  },
+                                                  // TODO implement onPressed()
+                                                  onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                                                 ),
                                               )
                                             ],
@@ -236,9 +236,8 @@ class ProfileView extends ConsumerWidget {
               stretched: true,
               label: context.i10n.labelJoin(context.localizeList(group.confirmedMembers.map((member) => member.name).toList())),
               svgAsset: RescadoConstants.iconUsers,
-              onPressed: () {
-                print('TODO NOT IMPLEMENTED'); // ignore: avoid_print
-              },
+              // TODO implement onPressed()
+              onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
             ))
         .toList();
   }
@@ -369,9 +368,8 @@ class ProfileView extends ConsumerWidget {
                         subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
                         subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
                         imageUrl: like.animal.photos.first.reference,
-                        onPressed: () {
-                          print('TODO NOT IMPLEMENTED'); // ignore: avoid_print
-                        },
+                        // TODO implement onPressed()
+                        onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                       ),
                     ),
                   )

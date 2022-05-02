@@ -89,6 +89,7 @@ class SwipeableStack extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: GestureDetector(
+                    // TODO implement onTap()
                     onTap: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
                     child: Stack(
                       fit: StackFit.expand,
