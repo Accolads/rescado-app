@@ -6,7 +6,7 @@ import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
-import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:rescado/src/views/buttons/rounded_button.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 
 // Stack of cards the user can swipe left or right
@@ -152,16 +152,16 @@ class SwipeableStack extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    FloatingButton(
+                    RoundedButton(
                       color: const Color(0xFFEE575F),
-                      size: FloatingButtonSize.big,
+                      size: RoundedButtonSize.big,
                       svgAsset: RescadoConstants.iconCross,
                       semanticsLabel: context.i10n.labelSkip,
                       onPressed: () => ref.read(cardControllerProvider.notifier).swipeLeft(),
                     ),
-                    FloatingButton(
+                    RoundedButton(
                       color: const Color(0xFFEE575F),
-                      size: FloatingButtonSize.big,
+                      size: RoundedButtonSize.big,
                       svgAsset: RescadoConstants.iconHeartOutline,
                       semanticsLabel: context.i10n.labelLike,
                       onPressed: () => ref.read(cardControllerProvider.notifier).swipeRight(),

@@ -28,7 +28,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     state = const AsyncLoading();
 
     // Require LikeController to be initialized
-    _read(likesControllerProvider).value;
+    _read(likeControllerProvider).value;
 
     // Get some cards to start with, and make the stack interactable
     state = AsyncData(CardData(
@@ -120,7 +120,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     }
 
     // Let CardController know about the action, handle it there
-    _read(likesControllerProvider.notifier).skip(state.value!.animals.first);
+    _read(likeControllerProvider.notifier).skip(state.value!.animals.first);
 
     state = AsyncData(state.value!.copyWith(
       offset: state.value!.offset + Offset(-_boxWidth, -_boxWidth / 2),
@@ -143,7 +143,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
     }
 
     // Let CardController know about the action, handle it there
-    _read(likesControllerProvider.notifier).like(state.value!.animals.first);
+    _read(likeControllerProvider.notifier).like(state.value!.animals.first);
 
     state = AsyncData(state.value!.copyWith(
       offset: state.value!.offset + Offset(_boxWidth, -_boxWidth / 2),

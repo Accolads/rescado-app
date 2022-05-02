@@ -47,30 +47,4 @@ class AppBarButton extends ConsumerWidget {
       ),
     );
   }
-
-// @override
-// Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
-//       style: ElevatedButton.styleFrom(
-//         primary: ref.watch(settingsControllerProvider).activeTheme.backgroundColor,
-//         shadowColor: color ?? ref.watch(settingsControllerProvider).activeTheme.accentColor,
-//         minimumSize: _size,
-//         shape: const CircleBorder(),
-//         splashFactory: NoSplash.splashFactory,
-//       ).merge(
-//         ButtonStyle(
-//           elevation: MaterialStateProperty.resolveWith<double>(
-//             (Set<MaterialState> states) => states.contains(MaterialState.pressed) ? 3.0 : 1.0,
-//           ),
-//         ),
-//       ),
-//       onPressed: () => onPressed(),
-//       child: SimpleTooltip(
-//         message: semanticsLabel,
-//         child: SvgPicture.asset(
-//           svgAsset,
-//           color: color ?? ref.watch(settingsControllerProvider).activeTheme.accentColor,
-//           fit: BoxFit.contain,
-//         ),
-//       ),
-//     );
 }

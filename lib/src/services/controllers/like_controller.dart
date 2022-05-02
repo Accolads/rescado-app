@@ -5,16 +5,16 @@ import 'package:rescado/src/data/repositories/card_repository.dart';
 import 'package:rescado/src/services/controllers/match_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
-final likesControllerProvider = StateNotifierProvider<LikesController, AsyncValue<List<Like>>>(
-  (ref) => LikesController(ref.read).._initialize(),
+final likeControllerProvider = StateNotifierProvider<LikeController, AsyncValue<List<Like>>>(
+  (ref) => LikeController(ref.read).._initialize(),
 );
 
-class LikesController extends StateNotifier<AsyncValue<List<Like>>> {
+class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
   static final _logger = addLogger('LikeController');
 
   final Reader _read;
 
-  LikesController(this._read) : super(const AsyncValue.loading());
+  LikeController(this._read) : super(const AsyncValue.loading());
 
   void _initialize() async {
     _logger.d('initialize()');
@@ -55,7 +55,7 @@ class LikesController extends StateNotifier<AsyncValue<List<Like>>> {
 
     if (cardAction.liked != null && cardAction.liked!.contains(like.animal)) {
       state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
-      _read(matchesControllerProvider.notifier).deleteMatch(like);
+      _read(matchControllerProvider.notifier).deleteMatch(like);
 
       state = AsyncValue.data(state.value!.toList());
     }

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:rescado/src/views/buttons/rounded_button.dart';
 
-class InteractiveGridTile extends StatefulWidget {
+class GridItem extends StatefulWidget {
   final String image;
-  final FloatingButton floatingButton;
+  final RoundedButton roundedButton;
 
-  const InteractiveGridTile({Key? key, required this.image, required this.floatingButton}) : super(key: key);
+  const GridItem({
+    Key? key,
+    required this.image,
+    required this.roundedButton,
+  }) : super(key: key);
 
   @override
-  _GridTileState createState() => _GridTileState();
+  _GridItemState createState() => _GridItemState();
 }
 
-class _GridTileState extends State<InteractiveGridTile> {
+class _GridItemState extends State<GridItem> {
   bool showAction = false;
 
   @override
@@ -34,7 +38,7 @@ class _GridTileState extends State<InteractiveGridTile> {
             ),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
-              child: showAction ? Center(child: widget.floatingButton) : const SizedBox(),
+              child: showAction ? Center(child: widget.roundedButton) : const SizedBox(),
             ),
           ],
         ));

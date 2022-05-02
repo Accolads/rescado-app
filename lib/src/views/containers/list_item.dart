@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
-import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:rescado/src/views/buttons/rounded_button.dart';
 
 class ListItem extends ConsumerWidget {
   final String label;
   final String? subLabel1;
   final String? subLabel2;
   final String imageUrl;
-  final FloatingButton? button;
+  final RoundedButton? button;
   final Function onPressed;
 
   final double _borderRadius = 20.0;

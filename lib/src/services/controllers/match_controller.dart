@@ -3,16 +3,16 @@ import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/repositories/group_repository.dart';
 import 'package:rescado/src/utils/logger.dart';
 
-final matchesControllerProvider = StateNotifierProvider<MatchesController, AsyncValue<List<Like>>>(
-  (ref) => MatchesController(ref.read).._initialize(),
+final matchControllerProvider = StateNotifierProvider<MatchController, AsyncValue<List<Like>>>(
+  (ref) => MatchController(ref.read).._initialize(),
 );
 
-class MatchesController extends StateNotifier<AsyncValue<List<Like>>> {
+class MatchController extends StateNotifier<AsyncValue<List<Like>>> {
   static final _logger = addLogger('MatchController');
 
   final Reader _read;
 
-  MatchesController(this._read) : super(const AsyncValue.loading());
+  MatchController(this._read) : super(const AsyncValue.loading());
 
   void _initialize() async {
     _logger.d('initialize()');

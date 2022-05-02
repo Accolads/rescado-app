@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/appbar_button.dart';
-import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:rescado/src/views/buttons/rounded_button.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 
 // Placeholder view.
@@ -44,7 +44,7 @@ class DiscoverView extends StatelessWidget {
                         height: 50.0,
                       ),
                       // For demo purposes
-                      FloatingButton(
+                      RoundedButton(
                         semanticsLabel: 'Do not press',
                         svgAsset: RescadoConstants.iconHeartBroken,
                         onPressed: () {

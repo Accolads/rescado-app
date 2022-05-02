@@ -18,12 +18,12 @@ import 'package:rescado/src/services/providers/device_data.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/buttons/appbar_button.dart';
-import 'package:rescado/src/views/buttons/floating_button.dart';
+import 'package:rescado/src/views/buttons/rounded_button.dart';
+import 'package:rescado/src/views/containers/grid_item.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
-import 'package:rescado/src/views/misc/interactive_grid_tile.dart';
 import 'package:rescado/src/views/misc/layout_switch.dart';
 import 'package:rescado/src/views/swipe_view.dart';
 
@@ -58,7 +58,7 @@ class ProfileView extends ConsumerWidget {
                   AppBarButton(
                     semanticsLabel: context.i10n.labelEdit,
                     svgAsset: RescadoConstants.iconEdit,
-                    onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
+                    onPressed: () => print('TODO NOT IMPLEMENTED'), // ignore: avoid_print
                   ),
                 ],
                 flexibleSpace: PageTitle(
@@ -104,11 +104,11 @@ class ProfileView extends ConsumerWidget {
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupConfirmedMembers.length), // last value is "number of avatars - 1"
-                                                child: FloatingButton(
+                                                child: RoundedButton(
                                                   semanticsLabel: context.i10n.labelAddFriend,
                                                   svgAsset: RescadoConstants.iconUserPlus,
                                                   onPressed: () {
-                                                    print('NOT IMPLEMENTED'); // ignore: avoid_print
+                                                    print('TODO NOT IMPLEMENTED'); // ignore: avoid_print
                                                   },
                                                 ),
                                               )
@@ -237,20 +237,20 @@ class ProfileView extends ConsumerWidget {
               label: context.i10n.labelJoin(context.localizeList(group.confirmedMembers.map((member) => member.name).toList())),
               svgAsset: RescadoConstants.iconUsers,
               onPressed: () {
-                print('NOT IMPLEMENTED'); // ignore: avoid_print
+                print('TODO NOT IMPLEMENTED'); // ignore: avoid_print
               },
             ))
         .toList();
   }
 
-  Widget _buildLikesPane({required BuildContext context, required WidgetRef ref}) => ref.watch(likesControllerProvider).when(
+  Widget _buildLikesPane({required BuildContext context, required WidgetRef ref}) => ref.watch(likeControllerProvider).when(
         data: (List<Like> likes) {
           return CustomScrollView(
             slivers: <Widget>[
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
                   await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                  await ref.read(likesControllerProvider.notifier).fetchLikes();
+                  await ref.read(likeControllerProvider.notifier).fetchLikes();
                 },
                 builder: _buildRefreshIndicator(),
               ),
@@ -298,14 +298,14 @@ class ProfileView extends ConsumerWidget {
               ),
             );
           } else {
-            return ref.watch(matchesControllerProvider).when(
+            return ref.watch(matchControllerProvider).when(
                   data: (List<Like> likes) {
                     return CustomScrollView(
                       slivers: <Widget>[
                         CupertinoSliverRefreshControl(
                             onRefresh: () async {
                               await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                              await ref.read(matchesControllerProvider.notifier).fetchMatches();
+                              await ref.read(matchControllerProvider.notifier).fetchMatches();
                             },
                             builder: _buildRefreshIndicator()),
                         if (likes.isEmpty)
@@ -363,14 +363,14 @@ class ProfileView extends ConsumerWidget {
                     (Like like) => Dismissible(
                       key: ObjectKey(like),
                       direction: DismissDirection.startToEnd,
-                      onDismissed: (_) => ref.read(likesControllerProvider.notifier).unlike(like),
+                      onDismissed: (_) => ref.read(likeControllerProvider.notifier).unlike(like),
                       child: ListItem(
                         label: like.animal.name,
                         subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
                         subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
                         imageUrl: like.animal.photos.first.reference,
                         onPressed: () {
-                          print('NOT IMPLEMENTED'); // ignore: avoid_print
+                          print('TODO NOT IMPLEMENTED'); // ignore: avoid_print
                         },
                       ),
                     ),
@@ -387,11 +387,11 @@ class ProfileView extends ConsumerWidget {
             ),
             delegate: SliverChildListDelegate(
               likes
-                  .map((Like like) => InteractiveGridTile(
+                  .map((Like like) => GridItem(
                         key: ObjectKey(like),
                         image: like.animal.photos.first.reference,
-                        floatingButton: FloatingButton(
-                          onPressed: () => ref.read(likesControllerProvider.notifier).unlike(like),
+                        roundedButton: RoundedButton(
+                          onPressed: () => ref.read(likeControllerProvider.notifier).unlike(like),
                           svgAsset: RescadoConstants.iconHeartBroken,
                           semanticsLabel: context.i10n.labelUnlike,
                         ),

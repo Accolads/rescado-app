@@ -4,29 +4,29 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/views/misc/simple_tooltip.dart';
 
-enum FloatingButtonSize {
+enum RoundedButtonSize {
   small,
   big,
 }
 
-class FloatingButton extends ConsumerWidget {
+class RoundedButton extends ConsumerWidget {
   final Color? color;
-  final FloatingButtonSize? size;
+  final RoundedButtonSize? size;
   final String semanticsLabel;
   final String svgAsset;
   final Function onPressed;
 
   Size get _size {
     switch (size) {
-      case FloatingButtonSize.big:
+      case RoundedButtonSize.big:
         return const Size.square(60.0);
-      case FloatingButtonSize.small:
+      case RoundedButtonSize.small:
       default:
         return const Size.square(45.0);
     }
   }
 
-  const FloatingButton({
+  const RoundedButton({
     Key? key,
     this.color,
     this.size,

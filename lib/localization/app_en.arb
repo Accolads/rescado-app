@@ -8,9 +8,9 @@
   "errorBodyAuthOffline": "Looks like we can't reach our servers! Can you check your internet connection and try again?",
 
   "labelAddFriend": "Add someone",
+  "labelAge": "Age",
   "labelAnd": "and",
   "labelAnonymous": "Anonymous",
-  "labelAge": "Age",
   "labelBack": "Back",
   "labelCreateGroup": "Form a group",
   "labelDiscover": "Discover",
