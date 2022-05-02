@@ -119,7 +119,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       return;
     }
 
-    // Let CardController know about the action, handle it there
+    // Let LikeController know about the action, handle it there
     _read(likeControllerProvider.notifier).skip(state.value!.animals.first);
 
     state = AsyncData(state.value!.copyWith(
@@ -142,7 +142,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       return;
     }
 
-    // Let CardController know about the action, handle it there
+    // Let LikeController know about the action, handle it there
     _read(likeControllerProvider.notifier).like(state.value!.animals.first);
 
     state = AsyncData(state.value!.copyWith(
