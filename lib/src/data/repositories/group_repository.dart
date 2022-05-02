@@ -11,7 +11,6 @@ final groupRepositoryProvider = Provider<GroupRepository>(
 // All API endpoints regarding group.
 abstract class GroupRepository {
   Future<List<Like>> getMatches();
-  
 }
 
 class ApiGroupRepository implements GroupRepository {
