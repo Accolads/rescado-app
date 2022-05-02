@@ -37,10 +37,7 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     // TODO if liking/skipping fails, we should perhaps introduce a controller for an error UI or use main_tab_controller, and listen to it in MainView so we can eg. show a non-obtrusive toast or banner informing that something failed.
     _read(cardRepositoryProvider).addLiked(animals: [animal]);
 
-    state.value!.add(Like(
-      animal: animal,
-      timestamp: DateTime.now(),
-    ));
+    state.value!.add(Like.fromAnimal(animal));
   }
 
   void skip(Animal animal) {
