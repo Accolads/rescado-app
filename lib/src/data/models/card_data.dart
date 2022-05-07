@@ -24,13 +24,13 @@ class CardData {
   });
 
   CardData copyWith({
-    final List<Animal>? animals,
-    final Offset? offset,
-    final double? angle,
-    final bool? isTouched,
-    final bool? isDraggable,
-    final bool? isDragging,
-    final bool? isDragged,
+    List<Animal>? animals,
+    Offset? offset,
+    double? angle,
+    bool? isTouched,
+    bool? isDraggable,
+    bool? isDragging,
+    bool? isDragged,
   }) =>
       CardData(
         animals: animals ?? this.animals,

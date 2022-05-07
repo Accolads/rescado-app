@@ -26,8 +26,8 @@ class SwitchData {
   });
 
   SwitchData copyWith({
-    final double? horizontalOffset,
-    final bool? isDragging,
+    double? horizontalOffset,
+    bool? isDragging,
   }) =>
       SwitchData(
         horizontalOffset: horizontalOffset ?? this.horizontalOffset,
