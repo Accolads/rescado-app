@@ -16,31 +16,38 @@ class GridItem extends StatefulWidget {
 }
 
 class _GridItemState extends State<GridItem> {
-  bool showAction = false;
+  final Duration _duration = const Duration(milliseconds: 100);
+
+  bool _showAction = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onLongPress: () => setState(() => showAction = !showAction),
-        child: Stack(
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 500),
-              opacity: showAction ? 0.5 : 1.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(widget.image),
-                  ),
+      //TODO set showAction back to false after 5 seconds
+      onLongPress: () => setState(() => _showAction = !_showAction),
+      child: Stack(
+        children: [
+          AnimatedOpacity(
+            duration: _duration,
+            opacity: _showAction ? 0.5 : 1.0,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(widget.image),
                 ),
               ),
             ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              child: showAction ? Center(child: widget.roundedButton) : const SizedBox(),
+          ),
+          AnimatedScale(
+            duration: _duration,
+            scale: _showAction ? 1 : 0,
+            child: Center(
+              child: widget.roundedButton,
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
