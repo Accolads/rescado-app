@@ -6,8 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 
-// Fixed width (!) button with icon and label. Should only be used for small command-like labels.
+// Fixed width (unless stretched) button with icon and label. Should only be used for small command-like labels.
 class ActionButton extends ConsumerWidget {
+  final bool stretched;
   final String label;
   final String svgAsset;
   final Function onPressed;
@@ -16,6 +17,7 @@ class ActionButton extends ConsumerWidget {
 
   const ActionButton({
     Key? key,
+    this.stretched = false,
     required this.label,
     required this.svgAsset,
     required this.onPressed,
@@ -23,7 +25,7 @@ class ActionButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => SizedBox(
-        width: 160.0, // Button max width
+        width: stretched ? double.infinity : 160.0, // Button max width
         child: Material(
           color: ref.watch(settingsControllerProvider).activeTheme.accentDimmedColor,
           borderRadius: BorderRadius.circular(_borderRadius),

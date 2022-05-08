@@ -12,7 +12,7 @@ final accountRepositoryProvider = Provider<AccountRepository>(
 abstract class AccountRepository {
   Future<Account> get();
 
-  Future<Account> patch({required String name, required String email, required String password, required String avatar});
+  Future<Account> patch({required Account account});
 }
 
 class ApiAccountRepository implements AccountRepository {
@@ -36,10 +36,16 @@ class ApiAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<Account> patch({required String name, required String email, required String password, required String avatar}) {
+  Future<Account> patch({required Account account}) async {
     _logger.d('patch()');
 
-    // TODO: implement patchAccount
-    throw UnimplementedError();
+    final endpoint = Uri.parse('${RescadoConstants.api}/account');
+
+    final response = await _read(apiClientProvider).patchJson(
+      endpoint,
+      body: account.toJson(),
+    ) as Map<String, dynamic>;
+
+    return Account.fromJson(response);
   }
 }

@@ -24,6 +24,11 @@ class _AnimatedLogoState extends State<AnimatedLogo> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(seconds: 1),
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatedLogo oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
     if (widget.play) {
       _animationController.repeat(reverse: true);

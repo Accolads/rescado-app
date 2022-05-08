@@ -83,6 +83,7 @@ class _MainViewState extends ConsumerState<MainView> with SingleTickerProviderSt
             controller: _tabController,
             indicator: CircleTabIndicator(
               color: ref.watch(settingsControllerProvider).activeTheme.accentColor,
+              top: true,
             ),
             padding: const EdgeInsets.symmetric(vertical: 7.0),
             onTap: (value) => ref.watch(tabControllerProvider.notifier).setActiveTab(value),

@@ -27,3 +27,12 @@ dart pub global activate flutterfire_cli
 flutterfire configure
 ```
 If asked for an iOS bundle ID, it's `org.rescado.ios`. 👍
+
+## If iOS build fails
+
+```shell
+cd ios
+pod cache clean --all
+pod update
+```
+And cross your fingers.

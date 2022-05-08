@@ -4,7 +4,7 @@ version: 1.0.0+SNAPSHOT
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0-0 <3.0.0"
 
 dependencies:
   flutter:
@@ -13,10 +13,12 @@ dependencies:
     sdk: flutter
 
   animations: ^2.0.2
+  collection: ^1.15.0
   device_info_plus: ^3.2.0
   firebase_analytics: ^9.0.5 # Required for Crashlytics on Android, but seems to be a bug currently, seeing issues on GitHub
   firebase_core: ^1.11.0
   firebase_crashlytics: ^2.4.5
+  firebase_storage: ^10.2.9
   flutter_hooks: ^0.18.1
   flutter_svg: ^1.0.0
   geolocator: ^8.0.1
@@ -29,7 +31,7 @@ dependencies:
 
 dev_dependencies:
   flutter_launcher_icons: ^0.9.2
-  flutter_lints: ^1.0.0
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 
@@ -44,11 +46,10 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/dummies/
     - assets/icons/
     - assets/illustrations/
     - assets/logo/
-   # - assets/images/
-   # - assets/photos/
 
   fonts:
    - family: M+ Rounded 1c

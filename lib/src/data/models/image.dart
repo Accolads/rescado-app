@@ -29,4 +29,10 @@ class Image {
         type: ImageType.values.byName((json['type'] as String).toLowerCase()),
         source: ImageSource.values.byName((json['source'] as String).toLowerCase()),
       );
+
+  factory Image.fromFirebase({required ImageType type, required String url}) => Image._(
+        reference: url,
+        type: type,
+        source: ImageSource.internal,
+      );
 }

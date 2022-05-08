@@ -7,21 +7,45 @@
   "errorTitleAuthOffline": "Je bent precies offline",
   "errorBodyAuthOffline": "Het lukt niet om de servers te pingen. Kan je je verbinding controleren en nog eens proberen?",
 
+  "labelAddFriend": "Voeg iemand toe",
   "labelAge": "Leeftijd",
+  "labelAnd": "en",
+  "labelAnonymous": "Anoniempje",
   "labelBack": "Terug",
+  "labelCreateGroup": "Vorm groep",
   "labelDiscover": "Ontdekken",
+  "labelEdit": "Wijzigen",
   "labelFemaleCat": "Kattin",
   "labelFemaleDog": "Teefje",
+  "labelGrid": "Raster",
   "labelLike": "Leuk",
+  "labelLikes": "Leukerds",
+  "labelList": "Lijst",
   "labelMaleCat": "Kater",
   "labelMaleDog": "Reu",
+  "labelMatches": "Matches",
   "labelProfile": "Profiel",
   "labelRetry": "Herproberen",
   "labelSex": "Geslacht",
   "labelShare": "Delen",
   "labelSkip": "Volgende",
   "labelSwipe": "Swipen",
+  "labelSwipeTime": "Swipen maar",
+  "labelUnlike": "Verwijderen",
   "labelWeight": "Gewicht",
+
+  "messageEmptyLikes": "Eens je dieren geliket hebt, kan je hier een overzichtje terugvinden. Maar het ziet ernaar uit dat je nog geen hartjes uitgedeeld hebt!",
+  "messageNoGroup": "Van plan om samen met je partner of huisgenoot een dier te adopteren? Vorm een groep om gemakkelijk jullie gemeenschappelijke likes hier terug te vinden!",
+  "messageNoMatches": "Jullie hebben nog geen gemeenschappelijke likes binnen jullie groep. Stel jullie filters wat op elkaar af en swipe nog meer om jullie kans op matches te verhogen!",
+
+  "labelJoin": "Swipe met {value}!",
+  "@labelJoin": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
 
   "unitKilogram": "{value} kg",
   "@unitKilogram": {

@@ -53,6 +53,8 @@ class RescadoConstants {
 
   static String get iconCross => 'assets/icons/cross.svg';
 
+  static String get iconEdit => 'assets/icons/edit.svg';
+
   static String get iconEnvelope => 'assets/icons/envelope.svg';
 
   static String get iconHeartBroken => 'assets/icons/heart-broken.svg';
@@ -69,6 +71,8 @@ class RescadoConstants {
 
   static String get iconRefresh => 'assets/icons/refresh.svg';
 
+  static String get iconSettings => 'assets/icons/settings.svg';
+
   static String get iconShareAndroid => 'assets/icons/share-android.svg';
 
   static String get iconShareiOS => 'assets/icons/share-ios.svg';
@@ -81,11 +85,23 @@ class RescadoConstants {
 
   // endregion
 
+  // region Image assets
+
+  static String get imageDefaultProfilePicture => 'assets/dummies/0.jpg';
+
+  // endregion
+
   // region Illustration assets
 
   static String get illustrationCuteCatOutside => 'assets/illustrations/cute-cat-outside.svg'; // TODO cleanup if unused
 
+  static String get illustrationTinyPeopleBigPhones => 'assets/illustrations/tiny-people-big-phones.svg';
+
+  static String get illustrationPeopleSittingOnCouch => 'assets/illustrations/people-sitting-on-couch.svg';
+
   static String get illustrationWomanHoldingAHeart => 'assets/illustrations/woman-holding-a-heart.svg'; // TODO cleanup if unused
+
+  static String get illustrationWomanHoldingPhoneWithHearts => 'assets/illustrations/woman-holding-a-phone-with-hearts.svg';
 
   static String get illustrationWomanOnChairWithPhone => 'assets/illustrations/woman-on-chair-with-phone.svg'; // TODO cleanup if unused
 

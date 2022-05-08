@@ -57,9 +57,9 @@ class ApiCardRepository implements CardRepository {
 
     final endpoint = Uri.parse('${RescadoConstants.api}/cards/liked?detailed=true');
 
-    final response = await _read(apiClientProvider).getJson(
+    final response = List<Map<String, dynamic>>.from(await _read(apiClientProvider).getJson(
       endpoint,
-    ) as List<Map<String, dynamic>>; // TODO Test/try because pretty sure this gives casting errors
+    ) as List);
 
     return response.map((like) => Like.fromJson(like)).toList();
   }
@@ -73,9 +73,9 @@ class ApiCardRepository implements CardRepository {
     final response = await _read(apiClientProvider).postJson(
       endpoint,
       body: jsonEncode({
-        'ids': animals.map((animal) => animal.id),
+        'ids': animals.map((animal) => animal.id).toList(),
       }),
-    ) as Map<String, dynamic>; // TODO Test/try because pretty sure this gives casting errors
+    ) as Map<String, dynamic>;
 
     return CardAction.fromJsonWithAnimalData(response, animals);
   }
@@ -89,9 +89,9 @@ class ApiCardRepository implements CardRepository {
     final response = await _read(apiClientProvider).deleteJson(
       endpoint,
       body: jsonEncode({
-        'ids': animals.map((animal) => animal.id),
+        'ids': animals.map((animal) => animal.id).toList(),
       }),
-    ) as Map<String, dynamic>; // TODO Test/try because pretty sure this gives casting errors
+    ) as Map<String, dynamic>;
 
     return CardAction.fromJsonWithAnimalData(response, animals);
   }
@@ -103,7 +103,7 @@ class ApiCardRepository implements CardRepository {
   Future<CardAction> addSkipped({required List<Animal> animals}) async {
     _logger.d('addSkipped()');
 
-    final endpoint = Uri.parse('${RescadoConstants.api}/cards/liked');
+    final endpoint = Uri.parse('${RescadoConstants.api}/cards/skipped');
 
     final response = await _read(apiClientProvider).postJson(
       endpoint,
@@ -126,5 +126,5 @@ class ApiCardRepository implements CardRepository {
     );
   }
 
-  // endregion
+// endregion
 }

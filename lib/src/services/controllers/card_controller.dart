@@ -7,6 +7,7 @@ import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/card_data.dart';
 import 'package:rescado/src/data/repositories/card_repository.dart';
 import 'package:rescado/src/services/controllers/filter_controller.dart';
+import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final cardControllerProvider = StateNotifierProvider<CardController, AsyncValue<CardData>>(
@@ -25,6 +26,9 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
   void _initialize() async {
     _logger.d('initialize()');
     state = const AsyncLoading();
+
+    // Require LikeController to be initialized
+    _read(likeControllerProvider).value;
 
     // Get some cards to start with, and make the stack interactable
     state = AsyncData(CardData(
@@ -115,7 +119,8 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       return;
     }
 
-    // TODO Persist via API
+    // Let LikeController know about the action, handle it there
+    _read(likeControllerProvider.notifier).skip(state.value!.animals.first);
 
     state = AsyncData(state.value!.copyWith(
       offset: state.value!.offset + Offset(-_boxWidth, -_boxWidth / 2),
@@ -126,7 +131,7 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       isDragged: true,
     ));
 
-    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, removeTopCard);
+    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, _removeTopCard);
   }
 
   void swipeRight() {
@@ -137,7 +142,8 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       return;
     }
 
-    // TODO Persist via API
+    // Let LikeController know about the action, handle it there
+    _read(likeControllerProvider.notifier).like(state.value!.animals.first);
 
     state = AsyncData(state.value!.copyWith(
       offset: state.value!.offset + Offset(_boxWidth, -_boxWidth / 2),
@@ -148,10 +154,10 @@ class CardController extends StateNotifier<AsyncValue<CardData>> {
       isDragged: true,
     ));
 
-    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, removeTopCard);
+    Future.delayed(RescadoConstants.swipeableCardAnimationDuration, _removeTopCard);
   }
 
-  void removeTopCard() async {
+  void _removeTopCard() async {
     _logger.d('removeTopCard()');
 
     state = AsyncData(state.value!.copyWith(
