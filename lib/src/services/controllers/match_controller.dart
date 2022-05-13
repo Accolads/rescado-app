@@ -30,7 +30,9 @@ class MatchController extends StateNotifier<AsyncValue<List<Like>>> {
   }
 
   void deleteMatch(Like like) {
-    state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
-    state = AsyncValue.data(state.value!.toList());
+    if (state.value != null) {
+      state.value!.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
+      state = AsyncValue.data(state.value!.toList());
+    }
   }
 }
