@@ -245,7 +245,7 @@ class ProfileView extends ConsumerWidget {
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
                   await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                  await ref.read(likeControllerProvider.notifier).fetchLikes();
+                  return await ref.read(likeControllerProvider.notifier).fetchLikes();
                 },
                 builder: _buildRefreshIndicator(),
               ),
@@ -301,7 +301,7 @@ class ProfileView extends ConsumerWidget {
                         CupertinoSliverRefreshControl(
                             onRefresh: () async {
                               await Future<dynamic>.delayed(const Duration(milliseconds: 1111));
-                              await ref.read(matchControllerProvider.notifier).fetchMatches();
+                              return await ref.read(matchControllerProvider.notifier).fetchMatches();
                             },
                             builder: _buildRefreshIndicator()),
                         if (likes.isEmpty)
