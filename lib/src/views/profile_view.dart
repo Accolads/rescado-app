@@ -193,6 +193,7 @@ class ProfileView extends ConsumerWidget {
     );
   }
 
+  // Code to render a single avatar. Uses index to calculate size and padding.
   Widget _buildAvatar({required WidgetRef ref, required int index, required String? avatarUrl}) {
     double size = index == 0 ? 45.0 : 34.0;
     double padding = index == 0 ? 15.0 : 30.0 + index * size * 1.6;
@@ -212,36 +213,31 @@ class ProfileView extends ConsumerWidget {
     );
   }
 
-  List<Widget> _buildGroupAvatars({required WidgetRef ref, required Iterable<Membership> members}) {
-    if (members.isEmpty) {
-      return [];
-    }
+  // Code to iteratively call the function above for all the members of a group.
+  List<Widget> _buildGroupAvatars({required WidgetRef ref, required Iterable<Membership> members}) => members.isEmpty
+      ? []
+      : members
+          .mapIndexed((index, member) => _buildAvatar(
+                ref: ref,
+                index: index + 1,
+                avatarUrl: member.avatar?.reference,
+              ))
+          .toList();
 
-    return members
-        .mapIndexed((index, member) => _buildAvatar(
-              ref: ref,
-              index: index + 1,
-              avatarUrl: member.avatar?.reference,
-            ))
-        .toList();
-  }
+  // Code to generate a stretched button for every invite to a group the user has.
+  List<Widget> _buildInviteButtons({required BuildContext context, required WidgetRef ref, required Iterable<Group> groups}) => groups.isEmpty
+      ? []
+      : groups
+          .map((group) => ActionButton(
+                stretched: true,
+                label: context.i10n.labelJoin(context.localizeList(group.confirmedMembers.map((member) => member.name).toList())),
+                svgAsset: RescadoConstants.iconUsers,
+                // TODO implement onPressed()
+                onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
+              ))
+          .toList();
 
-  List<Widget> _buildInviteButtons({required BuildContext context, required WidgetRef ref, required Iterable<Group> groups}) {
-    if (groups.isEmpty) {
-      return [];
-    }
-
-    return groups
-        .map((group) => ActionButton(
-              stretched: true,
-              label: context.i10n.labelJoin(context.localizeList(group.confirmedMembers.map((member) => member.name).toList())),
-              svgAsset: RescadoConstants.iconUsers,
-              // TODO implement onPressed()
-              onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
-            ))
-        .toList();
-  }
-
+  // Code to render the entire pane containing either list or grid items for the user's likes -- but code for actual list/grid is extracted.
   Widget _buildLikesPane({required BuildContext context, required WidgetRef ref}) => ref.watch(likeControllerProvider).when(
         data: (List<Like> likes) {
           return CustomScrollView(
@@ -264,7 +260,7 @@ class ProfileView extends ConsumerWidget {
                   asset: RescadoConstants.illustrationWomanHoldingPhoneWithHearts,
                 )
               else
-                ..._buildLikesList(
+                ..._buildLikes(
                   context: context,
                   ref: ref,
                   likes: likes,
@@ -281,6 +277,7 @@ class ProfileView extends ConsumerWidget {
         ),
       );
 
+  // Code to render the entire pane containing either list or grid items for the user's matches -- but code for actual list/grid is extracted.
   Widget _buildMatchesPane({required BuildContext context, required WidgetRef ref}) => ref.read(accountControllerProvider).when(
         data: (Account account) {
           final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
@@ -318,7 +315,7 @@ class ProfileView extends ConsumerWidget {
                             asset: RescadoConstants.illustrationPeopleSittingOnCouch,
                           )
                         else
-                          ..._buildLikesList(
+                          ..._buildLikes(
                             context: context,
                             ref: ref,
                             likes: likes,
@@ -347,7 +344,8 @@ class ProfileView extends ConsumerWidget {
         ),
       );
 
-  List<Widget> _buildLikesList({required BuildContext context, required WidgetRef ref, required List<Like> likes}) => <Widget>[
+  // Code to generate either a list or grid of the user's likes -- both used for individual and group likes aka matches
+  List<Widget> _buildLikes({required BuildContext context, required WidgetRef ref, required List<Like> likes}) => <Widget>[
         const SliverAppBar(
           pinned: true,
           floating: true,
@@ -362,7 +360,7 @@ class ProfileView extends ConsumerWidget {
                     (Like like) => Dismissible(
                       key: ObjectKey(like),
                       direction: DismissDirection.startToEnd,
-                      onDismissed: (_) => ref.read(likeControllerProvider.notifier).unlike(like),
+                      onDismissed: (_) => ref.read(likeControllerProvider.notifier).unlike(like.animal),
                       child: ListItem(
                         label: like.animal.name,
                         subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
@@ -389,7 +387,7 @@ class ProfileView extends ConsumerWidget {
                         key: ObjectKey(like),
                         image: like.animal.photos.first.reference,
                         roundedButton: RoundedButton(
-                          onPressed: () => ref.read(likeControllerProvider.notifier).unlike(like),
+                          onPressed: () => ref.read(likeControllerProvider.notifier).unlike(like.animal),
                           svgAsset: RescadoConstants.iconHeartBroken,
                           semanticsLabel: context.i10n.labelUnlike,
                         ),
@@ -405,17 +403,15 @@ class ProfileView extends ConsumerWidget {
         ),
       ];
 
-  RefreshControlIndicatorBuilder _buildRefreshIndicator() => (_, RefreshIndicatorMode refreshIndicatorMode, ___, ____, _____) {
-        return Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            width: 40.0,
-            child: AnimatedLogo(
-              play: refreshIndicatorMode == RefreshIndicatorMode.refresh,
-            ),
+  RefreshControlIndicatorBuilder _buildRefreshIndicator() => (_, RefreshIndicatorMode refreshIndicatorMode, ___, ____, _____) => Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          width: 40.0,
+          child: AnimatedLogo(
+            play: refreshIndicatorMode == RefreshIndicatorMode.refresh,
           ),
-        );
-      };
+        ),
+      );
 
   List<Widget> _buildPlaceholder({required String label, required ActionButton actionButton, required String asset}) => [
         SliverToBoxAdapter(

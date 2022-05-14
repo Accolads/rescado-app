@@ -48,6 +48,8 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
   }
 
   void unlike(Like like) async {
+    _logger.d('unlike()');
+
     final cardAction = await _read(cardRepositoryProvider).deleteLiked(animals: [like.animal]);
 
     if (cardAction.liked != null && cardAction.liked!.contains(like.animal)) {
