@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:rescado/src/services/controllers/match_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
+import 'package:rescado/src/utils/custom_clamping_scroll_physics.dart';
 import 'package:rescado/src/utils/extensions.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/buttons/appbar_button.dart';
@@ -245,6 +248,7 @@ class ProfileView extends ConsumerWidget {
   Widget _buildLikesPane({required BuildContext context, required WidgetRef ref}) => ref.watch(likeControllerProvider).when(
         data: (List<Like> likes) {
           return CustomScrollView(
+            physics: Platform.isAndroid ? const CustomClampingScrollPhysics(canUnderscroll: true) : const BouncingScrollPhysics(),
             slivers: <Widget>[
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
@@ -300,6 +304,7 @@ class ProfileView extends ConsumerWidget {
             return ref.watch(matchControllerProvider).when(
                   data: (List<Like> likes) {
                     return CustomScrollView(
+                      physics: Platform.isAndroid ? const CustomClampingScrollPhysics(canUnderscroll: true) : const BouncingScrollPhysics(),
                       slivers: <Widget>[
                         CupertinoSliverRefreshControl(
                             onRefresh: () async {
