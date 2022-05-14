@@ -1,6 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/like.dart';
+import 'package:rescado/src/data/models/membership.dart';
 import 'package:rescado/src/data/repositories/group_repository.dart';
+import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final matchControllerProvider = StateNotifierProvider<MatchController, AsyncValue<List<Like>>>(
@@ -24,17 +28,18 @@ class MatchController extends StateNotifier<AsyncValue<List<Like>>> {
   Future<void> fetchMatches() async {
     _logger.d('fetchMatches()');
 
+    final confirmedGroup = _read(accountControllerProvider).value?.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
+
     state = AsyncValue.data(
-      await _read(groupRepositoryProvider).getMatches(),
+      confirmedGroup == null ? [] : await _read(groupRepositoryProvider).getMatches(),
     );
   }
 
-  void deleteMatch(Like like) {
-    _logger.d('deleteMatch()');
+  void removeAnimal(Animal animal) {
+    _logger.d('removeAnimal()');
 
-    if (state.value != null) {
-      state.value!.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
-      state = AsyncValue.data(state.value!.toList());
-    }
+    state = AsyncValue.data(
+      state.value!.where((like) => like.animal != animal).toList(),
+    );
   }
 }
