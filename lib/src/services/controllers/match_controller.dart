@@ -1,8 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/like.dart';
-import 'package:rescado/src/data/models/membership.dart';
 import 'package:rescado/src/data/repositories/group_repository.dart';
 import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
@@ -28,10 +26,8 @@ class MatchController extends StateNotifier<AsyncValue<List<Like>>> {
   Future<void> fetchMatches() async {
     _logger.d('fetchMatches()');
 
-    final confirmedGroup = _read(accountControllerProvider).value?.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
-
     state = AsyncValue.data(
-      confirmedGroup == null ? [] : await _read(groupRepositoryProvider).getMatches(),
+      _read(accountControllerProvider).value?.confirmedGroup == null ? [] : await _read(groupRepositoryProvider).getMatches(),
     );
   }
 

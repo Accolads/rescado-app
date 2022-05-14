@@ -81,8 +81,7 @@ class ProfileView extends ConsumerWidget {
                           child: ref.watch(accountControllerProvider).when(
                                 data: (Account account) {
                                   final invitedGroups = account.groups.where((group) => group.status == MembershipStatus.invited);
-                                  final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
-                                  final confirmedGroupConfirmedMembers = confirmedGroup?.confirmedMembers ?? [];
+                                  final confirmedGroupMembers = account.confirmedGroup?.confirmedMembers ?? [];
 
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -101,10 +100,10 @@ class ProfileView extends ConsumerWidget {
                                               ),
                                               ..._buildGroupAvatars(
                                                 ref: ref,
-                                                members: confirmedGroupConfirmedMembers,
+                                                members: confirmedGroupMembers,
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupConfirmedMembers.length), // last value is "number of avatars - 1"
+                                                padding: EdgeInsets.only(left: 70.0 + 60.0 * confirmedGroupMembers.length), // last value is "number of avatars - 1"
                                                 child: RoundedButton(
                                                   semanticsLabel: context.i10n.labelAddFriend,
                                                   svgAsset: RescadoConstants.iconUserPlus,
@@ -117,7 +116,7 @@ class ProfileView extends ConsumerWidget {
                                         ),
                                       ),
                                       Text(
-                                        context.localizeList([account.name ?? context.i10n.labelAnonymous, ...confirmedGroupConfirmedMembers.map((member) => member.name)]),
+                                        context.localizeList([account.name ?? context.i10n.labelAnonymous, ...confirmedGroupMembers.map((member) => member.name)]),
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontSize: 20.0,
@@ -280,8 +279,7 @@ class ProfileView extends ConsumerWidget {
   // Code to render the entire pane containing either list or grid items for the user's matches -- but code for actual list/grid is extracted.
   Widget _buildMatchesPane({required BuildContext context, required WidgetRef ref}) => ref.read(accountControllerProvider).when(
         data: (Account account) {
-          final confirmedGroup = account.groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
-          if (confirmedGroup == null) {
+          if (account.confirmedGroup == null) {
             return CustomScrollView(
               slivers: _buildPlaceholder(
                 label: context.i10n.messageNoGroup,
