@@ -13,27 +13,31 @@ class LayoutSwitch extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final labelPadding = ref.watch(switchControllerProvider).trackWidth * 3;
+    final labelPadding = ref.watch(switchControllerProvider).trackWidth / 3;
 
-    return SizedBox(
-      width: double.infinity,
-      height: 50.0,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // The label on the left of the switch
-          GestureDetector(
-            onTap: () => ref.read(switchControllerProvider.notifier).onTap(SwitchPosition.left),
-            child: Padding(
-              padding: EdgeInsets.only(right: labelPadding),
-              child: Text(
-                context.i10n.labelList,
-                style: ref.watch(switchControllerProvider).position == SwitchPosition.left ? const TextStyle(fontWeight: FontWeight.w800) : null,
+    return Row(
+      children: <Widget>[
+        // Label on the left side
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => ref.read(switchControllerProvider.notifier).onTap(SwitchPosition.left),
+              child: Padding(
+                padding: EdgeInsets.all(labelPadding),
+                child: Text(
+                  context.i10n.labelList,
+                  style: ref.watch(switchControllerProvider).position == SwitchPosition.left ? const TextStyle(fontWeight: FontWeight.w800) : null,
+                ),
               ),
             ),
           ),
-          // The actual switch
-          GestureDetector(
+        ),
+        // Toggle perfectly in the middle
+        Align(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () => ref.read(switchControllerProvider.notifier).onTap(),
             onHorizontalDragStart: (_) => ref.read(switchControllerProvider.notifier).startDragging(),
             onHorizontalDragUpdate: (DragUpdateDetails dragUpdateDetails) => ref.read(switchControllerProvider.notifier).handleDragging(dragUpdateDetails),
@@ -41,6 +45,12 @@ class LayoutSwitch extends ConsumerWidget {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
+                // Transparent box to make the gesture detector a bit bigger ergo easier to grab
+                SizedBox(
+                  width: ref.watch(switchControllerProvider).trackWidth + ref.watch(switchControllerProvider).knobWidth,
+                  height: ref.watch(switchControllerProvider).trackWidth + ref.watch(switchControllerProvider).knobWidth,
+                ),
+                // Background track
                 Container(
                   width: ref.watch(switchControllerProvider).trackWidth,
                   height: 5.0,
@@ -49,6 +59,7 @@ class LayoutSwitch extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                 ),
+                // Foreground knob
                 AnimatedContainer(
                   duration: ref.watch(switchControllerProvider).isDragging ? Duration.zero : const Duration(milliseconds: 150),
                   curve: ref.watch(switchControllerProvider).isDragging ? Curves.linear : Curves.easeOut,
@@ -65,19 +76,25 @@ class LayoutSwitch extends ConsumerWidget {
               ],
             ),
           ),
-          // The label on the right of the switch
-          GestureDetector(
-            onTap: () => ref.read(switchControllerProvider.notifier).onTap(SwitchPosition.right),
-            child: Padding(
-              padding: EdgeInsets.only(left: labelPadding),
-              child: Text(
-                context.i10n.labelGrid,
-                style: ref.watch(switchControllerProvider).position == SwitchPosition.right ? const TextStyle(fontWeight: FontWeight.w800) : null,
+        ),
+        // Label on the right side
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => ref.read(switchControllerProvider.notifier).onTap(SwitchPosition.right),
+              child: Padding(
+                padding: EdgeInsets.all(labelPadding),
+                child: Text(
+                  context.i10n.labelGrid,
+                  style: ref.watch(switchControllerProvider).position == SwitchPosition.right ? const TextStyle(fontWeight: FontWeight.w800) : null,
+                ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
