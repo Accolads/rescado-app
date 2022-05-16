@@ -15,6 +15,7 @@ dependencies:
   animations: ^2.0.2
   collection: ^1.15.0
   device_info_plus: ^3.2.0
+  dots_indicator: ^2.1.0
   firebase_analytics: ^9.0.5 # Required for Crashlytics on Android, but seems to be a bug currently, seeing issues on GitHub
   firebase_core: ^1.11.0
   firebase_crashlytics: ^2.4.5

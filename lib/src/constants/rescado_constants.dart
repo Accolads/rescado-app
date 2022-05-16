@@ -13,6 +13,9 @@ class RescadoConstants {
   // The custom header the server expects to reflect the device's name
   static String get deviceHeader => 'user-device';
 
+  // Prefix when using a hero tag
+  static String get heroTagPrefix => 'HeroTag_';
+
   // Maximum angle (in degrees) for the swipeable cards to rotate with
   static double get swipeableCardRotationAngle => 69.0;
 

@@ -4,11 +4,13 @@ import 'package:rescado/src/views/buttons/rounded_button.dart';
 class GridItem extends StatefulWidget {
   final String image;
   final RoundedButton roundedButton;
+  final Function onPressed;
 
   const GridItem({
     Key? key,
     required this.image,
     required this.roundedButton,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class _GridItemState extends State<GridItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () => widget.onPressed(),
       //TODO set showAction back to false after 5 seconds
       onLongPress: () => setState(() => _showAction = !_showAction),
       child: Stack(

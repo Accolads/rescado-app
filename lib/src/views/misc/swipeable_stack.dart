@@ -3,9 +3,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/card_data.dart';
+import 'package:rescado/src/services/controllers/active_animal_controller.dart';
 import 'package:rescado/src/services/controllers/card_controller.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/utils/extensions.dart';
+import 'package:rescado/src/views/animal_view.dart';
 import 'package:rescado/src/views/buttons/rounded_button.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 
@@ -89,14 +91,27 @@ class SwipeableStack extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: GestureDetector(
-                    // TODO implement onTap()
-                    onTap: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
+                    onTap: () {
+                      ref.read(activeAnimalControllerProvider.notifier).updateActiveAnimal(animal: animal);
+                      Navigator.pushNamed(context, AnimalView.viewId).then(
+                        (_) async {
+                          if (ref.read(activeAnimalControllerProvider).value!.isLiked) {
+                            //Wait some time before triggering the swipe animation
+                            await Future<dynamic>.delayed(const Duration(milliseconds: 200));
+                            ref.read(cardControllerProvider.notifier).swipeRight();
+                          }
+                        },
+                      );
+                    },
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.network(
-                          animal.photos[0].reference,
-                          fit: BoxFit.cover,
+                        Hero(
+                          tag: '${RescadoConstants.heroTagPrefix}${animal.id}',
+                          child: Image.network(
+                            animal.photos[0].reference,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         // Shadowbox at the bottom with name and breed
                         Align(
