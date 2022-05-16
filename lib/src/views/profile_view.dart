@@ -7,10 +7,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/constants/rescado_constants.dart';
 import 'package:rescado/src/data/models/account.dart';
+import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/models/membership.dart';
 import 'package:rescado/src/data/models/switch_data.dart';
 import 'package:rescado/src/services/controllers/account_controller.dart';
+import 'package:rescado/src/services/controllers/active_animal_controller.dart';
 import 'package:rescado/src/services/controllers/like_controller.dart';
 import 'package:rescado/src/services/controllers/main_tab_controller.dart';
 import 'package:rescado/src/services/controllers/match_controller.dart';
@@ -19,6 +21,7 @@ import 'package:rescado/src/services/controllers/switch_controller.dart';
 import 'package:rescado/src/services/providers/device_data.dart';
 import 'package:rescado/src/utils/custom_clamping_scroll_physics.dart';
 import 'package:rescado/src/utils/extensions.dart';
+import 'package:rescado/src/views/animal_view.dart';
 import 'package:rescado/src/views/buttons/action_button.dart';
 import 'package:rescado/src/views/buttons/appbar_button.dart';
 import 'package:rescado/src/views/buttons/rounded_button.dart';
@@ -369,8 +372,7 @@ class ProfileView extends ConsumerWidget {
                         subLabel1: '${like.animal.breed}, ${context.i10n.unitYear(like.animal.age)} ${like.animal.sex.toSymbol()}',
                         subLabel2: '${like.animal.shelter.city}, ${like.animal.shelter.country} ${ref.read(deviceDataProvider).getDistance(like.animal.shelter.coordinates)}',
                         imageUrl: like.animal.photos.first.reference,
-                        // TODO implement onPressed()
-                        onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
+                        onPressed: () => _openAnimalView(context: context, ref: ref, animal: like.animal),
                       ),
                     ),
                   )
@@ -394,6 +396,7 @@ class ProfileView extends ConsumerWidget {
                           svgAsset: RescadoConstants.iconHeartBroken,
                           semanticsLabel: context.i10n.labelUnlike,
                         ),
+                        onPressed: () => _openAnimalView(context: context, ref: ref, animal: like.animal),
                       ))
                   .toList(),
             ),
@@ -405,6 +408,18 @@ class ProfileView extends ConsumerWidget {
           ),
         ),
       ];
+
+  void _openAnimalView({required BuildContext context, required WidgetRef ref, required Animal animal}) {
+    ref.read(activeAnimalControllerProvider.notifier).updateActiveAnimal(animal: animal, isLiked: true);
+    Navigator.pushNamed(context, AnimalView.viewId).then(
+      (_) async {
+        //When animal is unliked in detail view, remove from list
+        if (!ref.read(activeAnimalControllerProvider).value!.isLiked) {
+          ref.read(likeControllerProvider.notifier).unlike(animal);
+        }
+      },
+    );
+  }
 
   RefreshControlIndicatorBuilder _buildRefreshIndicator() => (_, RefreshIndicatorMode refreshIndicatorMode, ___, ____, _____) => Center(
         child: Container(
