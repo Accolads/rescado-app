@@ -37,7 +37,9 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     // TODO if liking/skipping fails, we should perhaps introduce a controller for an error UI or use main_tab_controller, and listen to it in MainView so we can eg. show a non-obtrusive toast or banner informing that something failed.
     _read(cardRepositoryProvider).addLiked(animals: [animal]);
 
-    state.value!.add(Like.fromAnimal(animal));
+    state = AsyncValue.data(
+      [...state.value!, Like.fromAnimal(animal)],
+    );
   }
 
   void skip(Animal animal) {
@@ -47,14 +49,19 @@ class LikeController extends StateNotifier<AsyncValue<List<Like>>> {
     _read(cardRepositoryProvider).addSkipped(animals: [animal]);
   }
 
-  void unlike(Like like) async {
-    final cardAction = await _read(cardRepositoryProvider).deleteLiked(animals: [like.animal]);
+  void unlike(Animal animal) async {
+    _logger.d('unlike()');
 
-    if (cardAction.liked != null && cardAction.liked!.contains(like.animal)) {
-      state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
-      _read(matchControllerProvider.notifier).deleteMatch(like);
+    // TODO Same remark as above. This should not fail silently but let the user know.
+    _read(cardRepositoryProvider).deleteLiked(animals: [animal]);
 
-      state = AsyncValue.data(state.value!.toList());
+    state = AsyncValue.data(
+      state.value!.where((like) => like.animal != animal).toList(),
+    );
+
+    // Update matchControllerProvider state too if holding animals.
+    if (_read(matchControllerProvider).value!.isNotEmpty) {
+      _read(matchControllerProvider.notifier).removeAnimal(animal);
     }
   }
 }

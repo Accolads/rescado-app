@@ -58,7 +58,7 @@ class DeviceData {
 
   // Gets the distance between given coordinates and the device's location.
   String getDistance(Coordinates coordinates) {
-    _logger.d('getDistance()');
+    // _logger.d('getDistance()');
 
     // TODO Figure out a way to do this with the most recent position using getLocation()
     if (_cachedPositionData == null) {

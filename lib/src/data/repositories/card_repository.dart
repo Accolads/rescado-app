@@ -108,9 +108,9 @@ class ApiCardRepository implements CardRepository {
     final response = await _read(apiClientProvider).postJson(
       endpoint,
       body: jsonEncode({
-        'ids': animals.map((animal) => animal.id),
+        'ids': animals.map((animal) => animal.id).toList(),
       }),
-    ) as Map<String, dynamic>; // TODO Test/try because pretty sure this gives casting errors
+    ) as Map<String, dynamic>;
 
     return CardAction.fromJsonWithAnimalData(response, animals);
   }

@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rescado/src/data/models/animal.dart';
 import 'package:rescado/src/data/models/like.dart';
 import 'package:rescado/src/data/repositories/group_repository.dart';
+import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/utils/logger.dart';
 
 final matchControllerProvider = StateNotifierProvider<MatchController, AsyncValue<List<Like>>>(
@@ -25,12 +27,15 @@ class MatchController extends StateNotifier<AsyncValue<List<Like>>> {
     _logger.d('fetchMatches()');
 
     state = AsyncValue.data(
-      await _read(groupRepositoryProvider).getMatches(),
+      _read(accountControllerProvider).value?.confirmedGroup == null ? [] : await _read(groupRepositoryProvider).getMatches(),
     );
   }
 
-  void deleteMatch(Like like) {
-    state.value?.removeWhere((apiLike) => apiLike.animal.id == like.animal.id);
-    state = AsyncValue.data(state.value!.toList());
+  void removeAnimal(Animal animal) {
+    _logger.d('removeAnimal()');
+
+    state = AsyncValue.data(
+      state.value!.where((like) => like.animal != animal).toList(),
+    );
   }
 }

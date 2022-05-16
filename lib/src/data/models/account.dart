@@ -1,5 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:rescado/src/data/models/group.dart';
 import 'package:rescado/src/data/models/image.dart';
+
+import 'membership.dart';
 
 enum AccountStatus {
   anonymous,
@@ -34,6 +37,8 @@ class Account {
     this.avatar,
     required this.groups,
   });
+
+  Group? get confirmedGroup => groups.where((group) => group.status == MembershipStatus.confirmed).firstOrNull;
 
   factory Account.fromJson(Map<String, dynamic> json) => Account._(
         id: json['id'] as int,
