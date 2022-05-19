@@ -60,6 +60,10 @@ class CustomTheme {
           ),
           unselectedLabelColor: primaryDimmedColor,
         ),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+        }),
       );
 
   CustomTheme._({

@@ -61,14 +61,21 @@ class AnimalView extends ConsumerWidget {
                         ),
                       ),
                       Positioned(
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                              color: ref.watch(settingsControllerProvider).activeTheme.backgroundColor,
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(50),
+                        child: Hero(
+                          tag: '${RescadoConstants.heroTagPrefix}${animal.id}_container',
+                          createRectTween: (begin, end) => MaterialRectArcTween(
+                            begin: Rect.fromLTRB(Platform.isAndroid ? begin!.left : begin!.right, begin.bottom, begin.right, begin.bottom),
+                            end: end,
+                          ),
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: ref.watch(settingsControllerProvider).activeTheme.backgroundColor,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(50),
+                                ),
                               ),
                             ),
                           ),

@@ -108,10 +108,17 @@ class SwipeableStack extends StatelessWidget {
                       children: [
                         Hero(
                           tag: '${RescadoConstants.heroTagPrefix}${animal.id}',
-                          child: Image.network(
-                            animal.photos[0].reference,
-                            fit: BoxFit.cover,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Image.network(
+                              animal.photos[0].reference,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                        ),
+                        Hero(
+                          tag: '${RescadoConstants.heroTagPrefix}${animal.id}_container',
+                          child: const SizedBox(),
                         ),
                         // Shadowbox at the bottom with name and breed
                         Align(
