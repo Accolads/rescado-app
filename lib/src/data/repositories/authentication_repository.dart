@@ -20,6 +20,8 @@ abstract class AuthenticationRepository {
 
   Future<Authentication> login({required String email, required String password});
 
+  Future<void> logout();
+
   Future<Authentication> refresh();
 
   Future<Authentication> recover();
@@ -86,6 +88,13 @@ class ApiAuthenticationRepository implements AuthenticationRepository {
       Token.fromJwt(response['jwt'] as String),
     );
     return Authentication.fromJson(response);
+  }
+
+  @override
+  Future<void> logout() async {
+    _logger.d('logout()');
+
+    await _read(deviceStorageProvider).deleteToken();
   }
 
   @override

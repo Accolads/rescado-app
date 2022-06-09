@@ -27,6 +27,7 @@ import 'package:rescado/src/views/buttons/appbar_button.dart';
 import 'package:rescado/src/views/buttons/rounded_button.dart';
 import 'package:rescado/src/views/containers/grid_item.dart';
 import 'package:rescado/src/views/containers/list_item.dart';
+import 'package:rescado/src/views/edit_profile_view.dart';
 import 'package:rescado/src/views/labels/page_title.dart';
 import 'package:rescado/src/views/misc/animated_logo.dart';
 import 'package:rescado/src/views/misc/circle_tab_indicator.dart';
@@ -64,8 +65,7 @@ class ProfileView extends ConsumerWidget {
                   AppBarButton(
                     semanticsLabel: context.i10n.labelEdit,
                     svgAsset: RescadoConstants.iconEdit,
-                    // TODO implement onPressed()
-                    onPressed: () => print('NOT IMPLEMENTED'), // ignore: avoid_print
+                    onPressed: () => Navigator.pushNamed(context, EditProfileView.viewId),
                   ),
                 ],
                 flexibleSpace: PageTitle(

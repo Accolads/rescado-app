@@ -4,6 +4,7 @@ import 'package:rescado/src/data/models/account.dart';
 import 'package:rescado/src/data/models/authentication.dart';
 import 'package:rescado/src/data/repositories/authentication_repository.dart';
 import 'package:rescado/src/exceptions/api_exception.dart';
+import 'package:rescado/src/services/controllers/account_controller.dart';
 import 'package:rescado/src/services/providers/device_storage.dart';
 import 'package:rescado/src/utils/logger.dart';
 
@@ -25,8 +26,25 @@ class AuthenticationController extends StateNotifier<AsyncValue<Authentication>>
     renewSession();
   }
 
+  Future<void> login({required String email, required String password}) async {
+    _logger.d('login()');
+
+    final authentication = await _read(authenticationRepositoryProvider).login(email: email, password: password);
+
+    await _read(accountControllerProvider.notifier).getAccount();
+    state = AsyncData(authentication);
+  }
+
+  Future<void> logout() async {
+    _logger.d('logout()');
+
+    await _read(authenticationRepositoryProvider).logout();
+    _read(accountControllerProvider.notifier).unsetAccount();
+    state = AsyncData(Authentication.loggedOut());
+  }
+
   // Will attempt to create if necessary, refresh if possible, or recover a dead session if the user was anonymous. Fetches account details if applicable.
-  void renewSession() async {
+  Future<void> renewSession() async {
     _logger.d('renewSession()');
     state = const AsyncLoading();
 

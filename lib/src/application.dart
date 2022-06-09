@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rescado/src/services/controllers/settings_controller.dart';
 import 'package:rescado/src/views/animal_view.dart';
 import 'package:rescado/src/views/authentication_view.dart';
+import 'package:rescado/src/views/edit_profile_view.dart';
 import 'package:rescado/src/views/main_view.dart';
 import 'package:rescado/src/views/splash_view.dart';
 
@@ -25,6 +26,7 @@ class Application extends ConsumerWidget {
         routes: {
           AnimalView.viewId: (context) => const AnimalView(),
           AuthenticationView.viewId: (context) => const AuthenticationView(),
+          EditProfileView.viewId: (context) => const EditProfileView(),
           MainView.viewId: (context) => const MainView(),
           SplashView.viewId: (context) => const SplashView(),
         },

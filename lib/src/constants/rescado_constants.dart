@@ -37,6 +37,8 @@ class RescadoConstants {
   // Initial tab index on the main view
   static int get mainViewInitialTab => 1;
 
+  static String get emailValidatorRegex => r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+
   // region Text styles
 
   //  Small titles used in cards, buttons or popups that prompt for action
@@ -91,6 +93,8 @@ class RescadoConstants {
   // region Image assets
 
   static String get imageDefaultProfilePicture => 'assets/dummies/0.jpg';
+
+  static String get imageAuthenticationBanner => 'assets/images/authentication-banner.jpeg';
 
   // endregion
 
