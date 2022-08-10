@@ -125,5 +125,13 @@ class DeviceStorage {
     }
   }
 
-  // endregion
+  Future<void> deleteToken() async {
+    _logger.d('deleteToken()');
+
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove(_tokenKey);
+    _tokenCache = null;
+  }
+
+// endregion
 }

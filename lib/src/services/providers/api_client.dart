@@ -142,6 +142,10 @@ class ApiClient extends BaseClient {
       _logger.e('The server did not respond with JSON data!', error, stackTrace);
       throw ServerException();
     } catch (error, stackTrace) {
+      if (error is ApiException) {
+        rethrow;
+      }
+
       // When something is very wrong.
       _logger.e('Something went very wrong', error, stackTrace);
       throw ServerException();

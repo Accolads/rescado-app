@@ -60,6 +60,27 @@ class CustomTheme {
           ),
           unselectedLabelColor: primaryDimmedColor,
         ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: accentColor,
+          selectionColor: accentColor.withOpacity(0.4),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          suffixIconColor: primaryColor,
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: borderColor,
+            ),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: accentColor,
+            ),
+          ),
+        ),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+        }),
       );
 
   CustomTheme._({

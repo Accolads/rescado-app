@@ -50,6 +50,7 @@ flutter:
     - assets/dummies/
     - assets/icons/
     - assets/illustrations/
+    - assets/images/
     - assets/logo/
 
   fonts:
