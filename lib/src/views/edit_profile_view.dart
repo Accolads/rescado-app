@@ -55,7 +55,7 @@ class EditProfileViewState extends ConsumerState<EditProfileView> {
                         if (account.status == AccountStatus.enrolled)
                           TextButton(
                             child: Text(
-                              "Save",
+                              'Save',
                               style: TextStyle(color: ref.watch(settingsControllerProvider).activeTheme.accentColor),
                             ),
                             onPressed: () {
